@@ -1,0 +1,11 @@
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\obj\Debug\SmartWaste-API.Services.csprojResolveAssemblyReference.cache
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmartWaste-API.Services.dll
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmartWaste-API.Services.pdb
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmarteWaste-API.Contracts.dll
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmartWaste-API.Business.dll
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\EntityFramework.dll
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmarteWaste-API.Contracts.pdb
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\SmartWaste-API.Business.pdb
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\bin\Debug\EntityFramework.xml
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\obj\Debug\SmartWaste-API.Services.dll
+C:\dev\git\SmartWaste-API\SmartWaste-API.Services\obj\Debug\SmartWaste-API.Services.pdb

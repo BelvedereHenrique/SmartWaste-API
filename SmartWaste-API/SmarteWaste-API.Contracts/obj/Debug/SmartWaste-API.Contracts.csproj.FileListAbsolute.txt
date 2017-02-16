@@ -1,0 +1,5 @@
+C:\dev\git\SmartWaste-API\SmarteWaste-API.Contracts\bin\Debug\SmarteWaste-API.Contracts.dll
+C:\dev\git\SmartWaste-API\SmarteWaste-API.Contracts\bin\Debug\SmarteWaste-API.Contracts.pdb
+C:\dev\git\SmartWaste-API\SmarteWaste-API.Contracts\obj\Debug\SmartWaste-API.Contracts.csprojResolveAssemblyReference.cache
+C:\dev\git\SmartWaste-API\SmarteWaste-API.Contracts\obj\Debug\SmarteWaste-API.Contracts.dll
+C:\dev\git\SmartWaste-API\SmarteWaste-API.Contracts\obj\Debug\SmarteWaste-API.Contracts.pdb
