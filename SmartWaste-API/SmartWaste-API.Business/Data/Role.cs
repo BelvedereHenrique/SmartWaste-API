@@ -12,24 +12,17 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Role
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public Role()
         {
-            this.Person = new HashSet<Person>();
             this.UserRoles = new HashSet<UserRole>();
         }
     
         public System.Guid ID { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string RecoveryToken { get; set; }
-        public Nullable<System.DateTime> RecoveredOn { get; set; }
-        public Nullable<System.DateTime> ExpirationDate { get; set; }
+        public string Name { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> Person { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }

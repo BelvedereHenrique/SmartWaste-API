@@ -55,6 +55,7 @@
     <Compile Include="ContractParser\CityContractParser.cs" />
     <Compile Include="ContractParser\CountryContractParser.cs" />
     <Compile Include="ContractParser\PersonContractParser.cs" />
+    <Compile Include="ContractParser\RoleContractParser.cs" />
     <Compile Include="ContractParser\StateContractParser.cs" />
     <Compile Include="ContractParser\UserContractParser.cs" />
     <Compile Include="CountryRepository.cs" />
@@ -133,6 +134,9 @@
     <Compile Include="Data\PointType.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\Role.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\Route.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
@@ -149,6 +153,9 @@
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\User.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UserRole.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ICityRepository.cs" />
@@ -186,6 +193,7 @@
       <DependentUpon>DatabaseContext.edmx</DependentUpon>
       <LastGenOutput>DatabaseContext.cs</LastGenOutput>
     </Content>
+    <Content Include="Data\Scripts\add-roles.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmarteWaste-API.Contracts\SmartWaste-API.Contracts.csproj">

@@ -183,6 +183,13 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Route">
           <Key>
             <PropertyRef Name="ID" />
@@ -238,6 +245,14 @@
           <Property Name="RecoveryToken" Type="varchar" MaxLength="10" />
           <Property Name="RecoveredOn" Type="datetime" />
           <Property Name="ExpirationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" />
+          <Property Name="RoleID" Type="uniqueidentifier" />
         </EntityType>
         <Association Name="fk_city_address">
           <End Role="City" Type="Self.City" Multiplicity="1" />
@@ -635,6 +650,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserRole_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="smartwastedevModelStoreContainer">
           <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
@@ -656,12 +695,14 @@
           <EntitySet Name="PointHistory" EntityType="Self.PointHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointStatus" EntityType="Self.PointStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointType" EntityType="Self.PointType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Route" EntityType="Self.Route" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RouteHistory" EntityType="Self.RouteHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoutePoint" EntityType="Self.RoutePoint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RouteStatus" EntityType="Self.RouteStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="fk_city_address" Association="Self.fk_city_address">
             <End Role="City" EntitySet="City" />
             <End Role="Address" EntitySet="Address" />
@@ -793,6 +834,14 @@
           <AssociationSet Name="fk_state_country" Association="Self.fk_state_country">
             <End Role="Country" EntitySet="Country" />
             <End Role="State" EntitySet="State" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Role" Association="Self.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="Self.FK_UserRole_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -1098,6 +1147,7 @@
           <Property Name="RecoveredOn" Type="DateTime" Precision="3" />
           <Property Name="ExpirationDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Person_User" FromRole="User" ToRole="Person" />
+          <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_User" FromRole="User" ToRole="UserRole" />
         </EntityType>
         <Association Name="fk_city_address">
           <End Role="City" Type="Self.City" Multiplicity="1" />
@@ -1654,7 +1704,59 @@
             <End Role="RouteStatus" EntitySet="RouteStatus" />
             <End Role="RouteHistory" EntitySet="RouteHistory" />
           </AssociationSet>
+          <EntitySet Name="Roles" EntityType="smartwaste.devModel.Role" />
+          <EntitySet Name="UserRoles" EntityType="smartwaste.devModel.UserRole" />
+          <AssociationSet Name="FK_UserRole_Role" Association="smartwaste.devModel.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="smartwaste.devModel.FK_UserRole_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Guid" />
+          <Property Name="RoleID" Type="Guid" />
+          <NavigationProperty Name="Role" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="UserRole" ToRole="Role" />
+          <NavigationProperty Name="User" Relationship="smartwaste.devModel.FK_UserRole_User" FromRole="UserRole" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserRole_Role">
+          <End Type="smartwaste.devModel.Role" Role="Role" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Type="smartwaste.devModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1918,6 +2020,23 @@
                 <ScalarProperty Name="RecoveryToken" ColumnName="RecoveryToken" />
                 <ScalarProperty Name="RecoveredOn" ColumnName="RecoveredOn" />
                 <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="smartwaste.devModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="smartwaste.devModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

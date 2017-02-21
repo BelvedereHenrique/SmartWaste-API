@@ -21,7 +21,8 @@ namespace SmartWaste_API.Business.ContractParser
                 Login = entitie.Login,
                 Password = entitie.Password,
                 RecoveredOn = entitie.RecoveredOn,
-                RecoveryToken = entitie.RecoveryToken
+                RecoveryToken = entitie.RecoveryToken,
+                Roles = entitie.UserRoles.Select(x => x.Role.ToContract()).ToList()
             };
         }
 

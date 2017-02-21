@@ -51,5 +51,7 @@ namespace SmartWaste_API.Business.Data
         public virtual DbSet<RouteStatus> RouteStatus { get; set; }
         public virtual DbSet<State> State { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
     }
 }

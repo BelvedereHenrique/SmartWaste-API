@@ -11,16 +11,20 @@ namespace SmarteWaste_API.Contracts
 {
     public class IdentityContract : IIdentityModel
     {
-        public IdentityContract()
-        {
-            Roles = new List<string>();
-        }
-
         public bool IsAuthenticated { get; set; }
         public string Login { get; set; }
         public string AuthenticationType { get; set; }
         public UserContract User { get; set; }
         public PersonContract Person { get; set; }
-        public List<string> Roles { get; set; }
+        public List<string> Roles
+        {
+            get
+            {
+                if (User == null)
+                    return new List<string>();
+
+                return User.Roles.Select(x => x.Name).ToList();
+            }
+        }
     }
 }

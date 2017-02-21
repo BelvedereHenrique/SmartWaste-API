@@ -11,6 +11,6 @@ namespace SmartWaste_API.Library.Security
         bool IsAuthenticated { get; set; }
         string Login { get; set; }
         string AuthenticationType { get; set; }
-        List<string> Roles { get; set; }
+        List<string> Roles { get; }
     }
 }

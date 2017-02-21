@@ -64,6 +64,10 @@
         <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Route" ManuallyRouted="false" />
         <AssociationConnector Association="smartwaste.devModel.FK_RoutePoint_Route" ManuallyRouted="false" />
         <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Status" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Role" Width="1.5" PointX="3.75" PointY="9.125" />
+        <EntityTypeShape EntityType="smartwaste.devModel.UserRole" Width="1.5" PointX="6" PointY="18.875" />
+        <AssociationConnector Association="smartwaste.devModel.FK_UserRole_Role" />
+        <AssociationConnector Association="smartwaste.devModel.FK_UserRole_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

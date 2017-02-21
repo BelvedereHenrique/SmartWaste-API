@@ -8,8 +8,9 @@ namespace SmartWaste_API.Services.Security
 {
     public static class RolesName
     {
-        public const string COMPANY_ADMIN = "company_admin";
-        public const string COMPANY_USER = "company_user";
-        public const string USER = "user";
+        public const string COMPANY_ADMIN = "COMPANY_ADMIN";
+        public const string COMPANY_ROUTE = "COMPANY_ROUTE";
+        public const string COMPANY_USER = "COMPANY_USER";
+        public const string USER = "USER";
     }
 }
