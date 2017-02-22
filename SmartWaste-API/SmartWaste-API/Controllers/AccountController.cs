@@ -1,5 +1,7 @@
+
 ﻿using SmarteWaste_API.Contracts.Account;
 using SmarteWaste_API.Contracts.Address;
+using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Models;
 using SmartWaste_API.Services;
 using SmartWaste_API.Services.Interfaces;
@@ -74,6 +76,11 @@ namespace SmartWaste_API.Controllers
             {
                 return Ok(new JsonModel<bool>(ex));
             }
+        }
+        [HttpPost]
+        public IHttpActionResult SavePersonalProfile(PersonalSubscriptionFormContract data)
+        {
+            return Ok(new JsonModel<bool>(true));
         }
     }
 }
