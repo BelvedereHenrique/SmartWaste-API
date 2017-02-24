@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Net.Mail;
 namespace SmartWaste_API.Services
 {
     public class PersonService : IPersonService

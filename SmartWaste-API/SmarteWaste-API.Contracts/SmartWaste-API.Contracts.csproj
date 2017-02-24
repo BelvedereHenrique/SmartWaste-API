@@ -46,6 +46,8 @@
     <Compile Include="Address\CityContract.cs" />
     <Compile Include="Address\CountryContract.cs" />
     <Compile Include="Address\StateContract.cs" />
+    <Compile Include="Identification\IdentificationContract.cs" />
+    <Compile Include="Identification\IdentificationFilterContract.cs" />
     <Compile Include="IdentityContract.cs" />
     <Compile Include="OperationResult\OperationMessageResult.cs" />
     <Compile Include="OperationResult\OperationResult.cs" />

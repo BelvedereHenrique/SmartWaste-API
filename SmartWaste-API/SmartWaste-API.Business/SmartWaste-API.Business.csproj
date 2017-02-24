@@ -161,14 +161,13 @@
     <Compile Include="Data\UserRole.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-
     <Compile Include="Data\vw_GetPoints.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-
     <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
+    <Compile Include="Interfaces\IIdentificationRepository.cs" />
     <Compile Include="Interfaces\IPersonRepository.cs" />
     <Compile Include="Interfaces\IPointRepository.cs" />
     <Compile Include="Interfaces\IStateRepository.cs" />
@@ -210,6 +209,10 @@
     <ProjectReference Include="..\SmarteWaste-API.Contracts\SmartWaste-API.Contracts.csproj">
       <Project>{77cf2127-bd61-4dc0-a338-4acafec7658d}</Project>
       <Name>SmartWaste-API.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Library\SmartWaste-API.Library.csproj">
+      <Project>{75878157-15e1-4135-ae5c-68fb2ec9a1dd}</Project>
+      <Name>SmartWaste-API.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

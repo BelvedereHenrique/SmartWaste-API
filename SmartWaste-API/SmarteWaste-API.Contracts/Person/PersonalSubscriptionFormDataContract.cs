@@ -14,8 +14,20 @@ namespace SmarteWaste_API.Contracts.Person
         [DataMember]
         public PersonalSubscriptionPasswordContract PasswordConfirmation { get; set; }
         [DataMember]
-        public string State { get; set; }
+        public string CPF { get; set; }
         [DataMember]
-        public string City { get; set; }
+        public int Country { get; set; }
+        [DataMember]
+        public int State { get; set; }
+        [DataMember]
+        public int City { get; set; }
+        [DataMember]
+        public string Line1 { get; set; }
+        [DataMember]
+        public string Line2 { get; set; }
+        [DataMember]
+        public string ZipCode { get; set; }
+        [DataMember]
+        public string Neighborhood { get; set; }
     }
 }

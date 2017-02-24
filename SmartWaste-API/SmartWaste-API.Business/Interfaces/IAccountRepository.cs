@@ -1,9 +1,6 @@
-﻿using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Person;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartWaste_API.Business.Interfaces
 {
@@ -11,5 +8,6 @@ namespace SmartWaste_API.Business.Interfaces
     {
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
         bool CheckEnterprise(AccountEnterpriseContract enterprise);
+        void AddPersonal(PersonalSubscriptionFormContract data);
     }
 }

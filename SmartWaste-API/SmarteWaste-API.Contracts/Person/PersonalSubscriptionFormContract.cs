@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace SmarteWaste_API.Contracts.Person
 {
@@ -9,5 +10,7 @@ namespace SmarteWaste_API.Contracts.Person
         public PersonalSubscriptionFormDataContract Fields { get; set; }
         [DataMember]
         public bool IsValid { get; set; }
+        [DataMember]
+        public Guid RoleID{ get; set; }
     }
 }

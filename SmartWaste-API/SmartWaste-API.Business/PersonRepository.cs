@@ -4,8 +4,6 @@ using SmartWaste_API.Business.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartWaste_API.Business
 {
@@ -41,7 +39,9 @@ namespace SmartWaste_API.Business
             return context.People.Where(x =>
                 (filter.ID == null || filter.ID == x.ID) &&
                 (filter.UserID == null || filter.UserID == x.UserID) &&
-                (filter.CompanyID == null || filter.CompanyID == x.CompanyID)
+                (filter.CompanyID == null || filter.CompanyID == x.CompanyID)&&
+                (String.IsNullOrEmpty(filter.Email) || filter.Email == x.Email)&&
+                (String.IsNullOrEmpty(filter.Document) || x.Identifications.Any(y=>y.Value == filter.Document))
             );
         }
     }

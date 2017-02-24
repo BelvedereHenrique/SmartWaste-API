@@ -18,5 +18,11 @@ namespace SmartWaste_API.Library
 
             return hash.ToLower() == hash2.ToLower();
         }
+        public static string Create(string data) {
+            var md5 = MD5.Create();
+            var byteArray = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(data));
+            var hash = byteArray.Aggregate(new StringBuilder(), (s, b) => s.Append(b.ToString("X2"))).ToString();
+            return hash;
+        }
     }
 }

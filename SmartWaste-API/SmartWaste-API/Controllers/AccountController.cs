@@ -7,10 +7,6 @@ using SmartWaste_API.Services;
 using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Web.Http;
 
 namespace SmartWaste_API.Controllers
@@ -25,8 +21,8 @@ namespace SmartWaste_API.Controllers
             _personService = _pService;
             _addressService = _aService;
             _accountService = _accService;
-        }
 
+        }
         public IHttpActionResult GetCountries()
         {
             try
@@ -80,7 +76,51 @@ namespace SmartWaste_API.Controllers
         [HttpPost]
         public IHttpActionResult SavePersonalProfile(PersonalSubscriptionFormContract data)
         {
-            return Ok(new JsonModel<bool>(true));
+            try
+            {
+                if (_accountService.ValidatePersonalForm(data))
+                {
+                    _accountService.AddPersonal(data);
+                    return Ok(new JsonModel<bool>(true));
+                }
+                else
+                {
+                    return Ok(new JsonModel<string>("Invalid form"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Ok(new JsonModel<bool>(e));
+            }
         }
+        [HttpGet]
+        public IHttpActionResult CheckEmailAvailability(string email)
+        {
+            try
+            {
+                var availability = _accountService.CheckEmailAvailability(email);
+                return Ok(new JsonModel<bool>(availability));
+            }
+            catch (Exception e)
+            {
+                return Ok(new JsonModel<bool>(e));
+                throw;
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult CheckCPFAvailability(string cpf)
+        {
+            try
+            {
+                var availability = _accountService.CheckCPFAvailability(cpf);
+                return Ok(new JsonModel<bool>(availability));
+            }
+            catch (Exception e)
+            {
+                return Ok(new JsonModel<bool>(e));
+                throw;
+            }
+        }
+
     }
 }
