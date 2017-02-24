@@ -12,21 +12,21 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class PointStatus
+    public partial class PointStatu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PointStatus()
+        public PointStatu()
         {
-            this.Point = new HashSet<Point>();
-            this.PointHistory = new HashSet<PointHistory>();
+            this.Points = new HashSet<Point>();
+            this.PointHistories = new HashSet<PointHistory>();
         }
     
         public int ID { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Point> Point { get; set; }
+        public virtual ICollection<Point> Points { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PointHistory> PointHistory { get; set; }
+        public virtual ICollection<PointHistory> PointHistories { get; set; }
     }
 }

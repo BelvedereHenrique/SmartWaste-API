@@ -25,33 +25,34 @@ namespace SmartWaste_API.Business.Data
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Address> Address { get; set; }
-        public virtual DbSet<City> City { get; set; }
-        public virtual DbSet<Company> Company { get; set; }
-        public virtual DbSet<CompanyAddress> CompanyAddress { get; set; }
-        public virtual DbSet<Country> Country { get; set; }
-        public virtual DbSet<Device> Device { get; set; }
-        public virtual DbSet<DeviceHistory> DeviceHistory { get; set; }
-        public virtual DbSet<DeviceStatus> DeviceStatus { get; set; }
-        public virtual DbSet<DeviceType> DeviceType { get; set; }
-        public virtual DbSet<EmployeeCompanyRequest> EmployeeCompanyRequest { get; set; }
-        public virtual DbSet<Identification> Identification { get; set; }
-        public virtual DbSet<IdentificationType> IdentificationType { get; set; }
-        public virtual DbSet<Parameters> Parameters { get; set; }
-        public virtual DbSet<Person> Person { get; set; }
-        public virtual DbSet<PersonAddress> PersonAddress { get; set; }
-        public virtual DbSet<PersonType> PersonType { get; set; }
-        public virtual DbSet<Point> Point { get; set; }
-        public virtual DbSet<PointHistory> PointHistory { get; set; }
-        public virtual DbSet<PointStatus> PointStatus { get; set; }
-        public virtual DbSet<PointType> PointType { get; set; }
-        public virtual DbSet<Route> Route { get; set; }
-        public virtual DbSet<RouteHistory> RouteHistory { get; set; }
-        public virtual DbSet<RoutePoint> RoutePoint { get; set; }
-        public virtual DbSet<RouteStatus> RouteStatus { get; set; }
-        public virtual DbSet<State> State { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<CompanyAddress> CompanyAddresses { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Device> Devices { get; set; }
+        public virtual DbSet<DeviceHistory> DeviceHistories { get; set; }
+        public virtual DbSet<DeviceStatu> DeviceStatus { get; set; }
+        public virtual DbSet<DeviceType> DeviceTypes { get; set; }
+        public virtual DbSet<EmployeeCompanyRequest> EmployeeCompanyRequests { get; set; }
+        public virtual DbSet<Identification> Identifications { get; set; }
+        public virtual DbSet<IdentificationType> IdentificationTypes { get; set; }
+        public virtual DbSet<Parameter> Parameters { get; set; }
+        public virtual DbSet<Person> People { get; set; }
+        public virtual DbSet<PersonAddress> PersonAddresses { get; set; }
+        public virtual DbSet<PersonType> PersonTypes { get; set; }
+        public virtual DbSet<Point> Points { get; set; }
+        public virtual DbSet<PointHistory> PointHistories { get; set; }
+        public virtual DbSet<PointStatu> PointStatus { get; set; }
+        public virtual DbSet<PointType> PointTypes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
+        public virtual DbSet<RouteHistory> RouteHistories { get; set; }
+        public virtual DbSet<RoutePoint> RoutePoints { get; set; }
+        public virtual DbSet<RouteStatu> RouteStatus { get; set; }
+        public virtual DbSet<State> States { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<vw_GetPoints> vw_GetPoints { get; set; }
     }
 }

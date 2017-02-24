@@ -17,8 +17,8 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Route()
         {
-            this.RouteHistory = new HashSet<RouteHistory>();
-            this.RoutePoint = new HashSet<RoutePoint>();
+            this.RouteHistories = new HashSet<RouteHistory>();
+            this.RoutePoints = new HashSet<RoutePoint>();
         }
     
         public System.Guid ID { get; set; }
@@ -30,10 +30,10 @@ namespace SmartWaste_API.Business.Data
     
         public virtual Person Person { get; set; }
         public virtual Person Person1 { get; set; }
-        public virtual RouteStatus RouteStatus { get; set; }
+        public virtual RouteStatu RouteStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteHistory> RouteHistory { get; set; }
+        public virtual ICollection<RouteHistory> RouteHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RoutePoint> RoutePoint { get; set; }
+        public virtual ICollection<RoutePoint> RoutePoints { get; set; }
     }
 }

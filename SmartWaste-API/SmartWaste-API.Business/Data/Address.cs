@@ -17,9 +17,9 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Address()
         {
-            this.CompanyAddress = new HashSet<CompanyAddress>();
-            this.PersonAddress = new HashSet<PersonAddress>();
-            this.Point = new HashSet<Point>();
+            this.CompanyAddresses = new HashSet<CompanyAddress>();
+            this.PersonAddresses = new HashSet<PersonAddress>();
+            this.Points = new HashSet<Point>();
         }
     
         public System.Guid ID { get; set; }
@@ -33,10 +33,10 @@ namespace SmartWaste_API.Business.Data
     
         public virtual City City { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyAddress> CompanyAddress { get; set; }
+        public virtual ICollection<CompanyAddress> CompanyAddresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonAddress> PersonAddress { get; set; }
+        public virtual ICollection<PersonAddress> PersonAddresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Point> Point { get; set; }
+        public virtual ICollection<Point> Points { get; set; }
     }
 }

@@ -12,17 +12,16 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class PointHistory
+    public partial class vw_GetPoints
     {
         public System.Guid ID { get; set; }
-        public System.DateTime Date { get; set; }
         public int StatusID { get; set; }
+        public Nullable<System.Guid> DeviceID { get; set; }
+        public int TypeID { get; set; }
+        public System.Guid AddressID { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         public System.Guid PersonID { get; set; }
-        public string Reason { get; set; }
-        public System.Guid PointID { get; set; }
-    
-        public virtual Person Person { get; set; }
-        public virtual Point Point { get; set; }
-        public virtual PointStatu PointStatu { get; set; }
+        public System.Guid UserID { get; set; }
     }
 }

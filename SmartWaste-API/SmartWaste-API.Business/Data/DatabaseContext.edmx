@@ -155,7 +155,7 @@
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AddressID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="StatusID" Type="int" Nullable="false" />
-          <Property Name="DeviceID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DeviceID" Type="uniqueidentifier" />
           <Property Name="TypeID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PointHistory">
@@ -253,6 +253,29 @@
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" />
           <Property Name="RoleID" Type="uniqueidentifier" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_GetPoints">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="AddressID" />
+            <PropertyRef Name="Latitude" />
+            <PropertyRef Name="Longitude" />
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="DeviceID" Type="uniqueidentifier" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="AddressID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
+          <Property Name="Longitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
+          <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <Association Name="fk_city_address">
           <End Role="City" Type="Self.City" Multiplicity="1" />
@@ -483,7 +506,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Point_Device">
-          <End Role="Device" Type="Self.Device" Multiplicity="1" />
+          <End Role="Device" Type="Self.Device" Multiplicity="0..1" />
           <End Role="Point" Type="Self.Point" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Device">
@@ -703,6 +726,19 @@
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vw_GetPoints" EntityType="Self.vw_GetPoints" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_GetPoints].[ID] AS [ID], 
+    [vw_GetPoints].[StatusID] AS [StatusID], 
+    [vw_GetPoints].[DeviceID] AS [DeviceID], 
+    [vw_GetPoints].[TypeID] AS [TypeID], 
+    [vw_GetPoints].[AddressID] AS [AddressID], 
+    [vw_GetPoints].[Latitude] AS [Latitude], 
+    [vw_GetPoints].[Longitude] AS [Longitude], 
+    [vw_GetPoints].[PersonID] AS [PersonID], 
+    [vw_GetPoints].[UserID] AS [UserID]
+    FROM [dbo].[vw_GetPoints] AS [vw_GetPoints]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_city_address" Association="Self.fk_city_address">
             <End Role="City" EntitySet="City" />
             <End Role="Address" EntitySet="Address" />
@@ -848,32 +884,203 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="smartwaste.devModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SmartWasteDatabaseConnection" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Addresses" EntityType="smartwaste.devModel.Address" />
+          <EntitySet Name="Cities" EntityType="smartwaste.devModel.City" />
+          <EntitySet Name="Companies" EntityType="smartwaste.devModel.Company" />
+          <EntitySet Name="CompanyAddresses" EntityType="smartwaste.devModel.CompanyAddress" />
+          <EntitySet Name="Countries" EntityType="smartwaste.devModel.Country" />
+          <EntitySet Name="Devices" EntityType="smartwaste.devModel.Device" />
+          <EntitySet Name="DeviceHistories" EntityType="smartwaste.devModel.DeviceHistory" />
+          <EntitySet Name="DeviceStatus" EntityType="smartwaste.devModel.DeviceStatu" />
+          <EntitySet Name="DeviceTypes" EntityType="smartwaste.devModel.DeviceType" />
+          <EntitySet Name="EmployeeCompanyRequests" EntityType="smartwaste.devModel.EmployeeCompanyRequest" />
+          <EntitySet Name="Identifications" EntityType="smartwaste.devModel.Identification" />
+          <EntitySet Name="IdentificationTypes" EntityType="smartwaste.devModel.IdentificationType" />
+          <EntitySet Name="Parameters" EntityType="smartwaste.devModel.Parameter" />
+          <EntitySet Name="People" EntityType="smartwaste.devModel.Person" />
+          <EntitySet Name="PersonAddresses" EntityType="smartwaste.devModel.PersonAddress" />
+          <EntitySet Name="PersonTypes" EntityType="smartwaste.devModel.PersonType" />
+          <EntitySet Name="Points" EntityType="smartwaste.devModel.Point" />
+          <EntitySet Name="PointHistories" EntityType="smartwaste.devModel.PointHistory" />
+          <EntitySet Name="PointStatus" EntityType="smartwaste.devModel.PointStatu" />
+          <EntitySet Name="PointTypes" EntityType="smartwaste.devModel.PointType" />
+          <EntitySet Name="Roles" EntityType="smartwaste.devModel.Role" />
+          <EntitySet Name="Routes" EntityType="smartwaste.devModel.Route" />
+          <EntitySet Name="RouteHistories" EntityType="smartwaste.devModel.RouteHistory" />
+          <EntitySet Name="RoutePoints" EntityType="smartwaste.devModel.RoutePoint" />
+          <EntitySet Name="RouteStatus" EntityType="smartwaste.devModel.RouteStatu" />
+          <EntitySet Name="States" EntityType="smartwaste.devModel.State" />
+          <EntitySet Name="Users" EntityType="smartwaste.devModel.User" />
+          <EntitySet Name="UserRoles" EntityType="smartwaste.devModel.UserRole" />
+          <AssociationSet Name="fk_city_address" Association="smartwaste.devModel.fk_city_address">
+            <End Role="City" EntitySet="Cities" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyAddress_Address" Association="smartwaste.devModel.FK_CompanyAddress_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="CompanyAddress" EntitySet="CompanyAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonAddress_Address" Association="smartwaste.devModel.FK_PersonAddress_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="PersonAddress" EntitySet="PersonAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Point_Address" Association="smartwaste.devModel.FK_Point_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="fk_city_state" Association="smartwaste.devModel.fk_city_state">
+            <End Role="State" EntitySet="States" />
+            <End Role="City" EntitySet="Cities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyAddress_Company" Association="smartwaste.devModel.FK_CompanyAddress_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="CompanyAddress" EntitySet="CompanyAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_Company" Association="smartwaste.devModel.FK_Person_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="fk_state_country" Association="smartwaste.devModel.fk_state_country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="State" EntitySet="States" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Device_DeviceType" Association="smartwaste.devModel.FK_Device_DeviceType">
+            <End Role="DeviceType" EntitySet="DeviceTypes" />
+            <End Role="Device" EntitySet="Devices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Device_Status" Association="smartwaste.devModel.FK_Device_Status">
+            <End Role="DeviceStatu" EntitySet="DeviceStatus" />
+            <End Role="Device" EntitySet="Devices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeviceHistory_Device" Association="smartwaste.devModel.FK_DeviceHistory_Device">
+            <End Role="Device" EntitySet="Devices" />
+            <End Role="DeviceHistory" EntitySet="DeviceHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Point_Device" Association="smartwaste.devModel.FK_Point_Device">
+            <End Role="Device" EntitySet="Devices" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeviceHistory_DeviceStatus" Association="smartwaste.devModel.FK_DeviceHistory_DeviceStatus">
+            <End Role="DeviceStatu" EntitySet="DeviceStatus" />
+            <End Role="DeviceHistory" EntitySet="DeviceHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeviceHistory_Person" Association="smartwaste.devModel.FK_DeviceHistory_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="DeviceHistory" EntitySet="DeviceHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeCompanyRequest_Person" Association="smartwaste.devModel.FK_EmployeeCompanyRequest_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeCompanyRequest_Person1" Association="smartwaste.devModel.FK_EmployeeCompanyRequest_Person1">
+            <End Role="Person" EntitySet="People" />
+            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Identification_IdentificationType" Association="smartwaste.devModel.FK_Identification_IdentificationType">
+            <End Role="IdentificationType" EntitySet="IdentificationTypes" />
+            <End Role="Identification" EntitySet="Identifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Identification_Person" Association="smartwaste.devModel.FK_Identification_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Identification" EntitySet="Identifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_PersonType" Association="smartwaste.devModel.FK_Person_PersonType">
+            <End Role="PersonType" EntitySet="PersonTypes" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_User" Association="smartwaste.devModel.FK_Person_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonAddress_Person" Association="smartwaste.devModel.FK_PersonAddress_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PersonAddress" EntitySet="PersonAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointHistory_Person" Association="smartwaste.devModel.FK_PointHistory_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PointHistory" EntitySet="PointHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Person" Association="smartwaste.devModel.FK_Route_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Person2" Association="smartwaste.devModel.FK_Route_Person2">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Point_PointStatus" Association="smartwaste.devModel.FK_Point_PointStatus">
+            <End Role="PointStatu" EntitySet="PointStatus" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Point_PointType" Association="smartwaste.devModel.FK_Point_PointType">
+            <End Role="PointType" EntitySet="PointTypes" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointHistory_Point" Association="smartwaste.devModel.FK_PointHistory_Point">
+            <End Role="Point" EntitySet="Points" />
+            <End Role="PointHistory" EntitySet="PointHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoutePoint_Point" Association="smartwaste.devModel.FK_RoutePoint_Point">
+            <End Role="Point" EntitySet="Points" />
+            <End Role="RoutePoint" EntitySet="RoutePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointHistory_PointStatus" Association="smartwaste.devModel.FK_PointHistory_PointStatus">
+            <End Role="PointStatu" EntitySet="PointStatus" />
+            <End Role="PointHistory" EntitySet="PointHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Role" Association="smartwaste.devModel.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Status" Association="smartwaste.devModel.FK_Route_Status">
+            <End Role="RouteStatu" EntitySet="RouteStatus" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteHistory_Route" Association="smartwaste.devModel.FK_RouteHistory_Route">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="RouteHistory" EntitySet="RouteHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoutePoint_Route" Association="smartwaste.devModel.FK_RoutePoint_Route">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="RoutePoint" EntitySet="RoutePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteHistory_Status" Association="smartwaste.devModel.FK_RouteHistory_Status">
+            <End Role="RouteStatu" EntitySet="RouteStatus" />
+            <End Role="RouteHistory" EntitySet="RouteHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="smartwaste.devModel.FK_UserRole_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <EntitySet Name="vw_GetPoints" EntityType="smartwaste.devModel.vw_GetPoints" />
+        </EntityContainer>
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Line1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Line2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Neighborhood" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" Nullable="false" />
-          <Property Name="Longitude" Type="Decimal" Precision="8" Scale="6" Nullable="false" />
+          <Property Name="Line1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Line2" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Neighborhood" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
           <Property Name="CityID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="City" Relationship="Self.fk_city_address" FromRole="Address" ToRole="City" />
-          <NavigationProperty Name="CompanyAddress" Relationship="Self.FK_CompanyAddress_Address" FromRole="Address" ToRole="CompanyAddress" />
-          <NavigationProperty Name="PersonAddress" Relationship="Self.FK_PersonAddress_Address" FromRole="Address" ToRole="PersonAddress" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_Point_Address" FromRole="Address" ToRole="Point" />
+          <NavigationProperty Name="City" Relationship="smartwaste.devModel.fk_city_address" FromRole="Address" ToRole="City" />
+          <NavigationProperty Name="CompanyAddresses" Relationship="smartwaste.devModel.FK_CompanyAddress_Address" FromRole="Address" ToRole="CompanyAddress" />
+          <NavigationProperty Name="PersonAddresses" Relationship="smartwaste.devModel.FK_PersonAddress_Address" FromRole="Address" ToRole="PersonAddress" />
+          <NavigationProperty Name="Points" Relationship="smartwaste.devModel.FK_Point_Address" FromRole="Address" ToRole="Point" />
         </EntityType>
         <EntityType Name="City">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="false" />
           <Property Name="StateID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="Self.fk_city_address" FromRole="City" ToRole="Address" />
-          <NavigationProperty Name="State" Relationship="Self.fk_city_state" FromRole="City" ToRole="State" />
+          <NavigationProperty Name="Addresses" Relationship="smartwaste.devModel.fk_city_address" FromRole="City" ToRole="Address" />
+          <NavigationProperty Name="State" Relationship="smartwaste.devModel.fk_city_state" FromRole="City" ToRole="State" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -882,8 +1089,8 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="CNPJ" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="CompanyAddress" Relationship="Self.FK_CompanyAddress_Company" FromRole="Company" ToRole="CompanyAddress" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Person_Company" FromRole="Company" ToRole="Person" />
+          <NavigationProperty Name="CompanyAddresses" Relationship="smartwaste.devModel.FK_CompanyAddress_Company" FromRole="Company" ToRole="CompanyAddress" />
+          <NavigationProperty Name="People" Relationship="smartwaste.devModel.FK_Person_Company" FromRole="Company" ToRole="Person" />
         </EntityType>
         <EntityType Name="CompanyAddress">
           <Key>
@@ -892,8 +1099,8 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="CompanyID" Type="Guid" Nullable="false" />
           <Property Name="AddressID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_CompanyAddress_Address" FromRole="CompanyAddress" ToRole="Address" />
-          <NavigationProperty Name="Company" Relationship="Self.FK_CompanyAddress_Company" FromRole="CompanyAddress" ToRole="Company" />
+          <NavigationProperty Name="Address" Relationship="smartwaste.devModel.FK_CompanyAddress_Address" FromRole="CompanyAddress" ToRole="Address" />
+          <NavigationProperty Name="Company" Relationship="smartwaste.devModel.FK_CompanyAddress_Company" FromRole="CompanyAddress" ToRole="Company" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -902,20 +1109,20 @@
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
           <Property Name="Initials" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="State" Relationship="Self.fk_state_country" FromRole="Country" ToRole="State" />
+          <NavigationProperty Name="States" Relationship="smartwaste.devModel.fk_state_country" FromRole="Country" ToRole="State" />
         </EntityType>
         <EntityType Name="Device">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="InternalID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InternalID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="TypeID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DeviceType" Relationship="Self.FK_Device_DeviceType" FromRole="Device" ToRole="DeviceType" />
-          <NavigationProperty Name="DeviceStatus" Relationship="Self.FK_Device_Status" FromRole="Device" ToRole="DeviceStatus" />
-          <NavigationProperty Name="DeviceHistory" Relationship="Self.FK_DeviceHistory_Device" FromRole="Device" ToRole="DeviceHistory" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_Point_Device" FromRole="Device" ToRole="Point" />
+          <NavigationProperty Name="DeviceType" Relationship="smartwaste.devModel.FK_Device_DeviceType" FromRole="Device" ToRole="DeviceType" />
+          <NavigationProperty Name="DeviceStatu" Relationship="smartwaste.devModel.FK_Device_Status" FromRole="Device" ToRole="DeviceStatu" />
+          <NavigationProperty Name="DeviceHistories" Relationship="smartwaste.devModel.FK_DeviceHistory_Device" FromRole="Device" ToRole="DeviceHistory" />
+          <NavigationProperty Name="Points" Relationship="smartwaste.devModel.FK_Point_Device" FromRole="Device" ToRole="Point" />
         </EntityType>
         <EntityType Name="DeviceHistory">
           <Key>
@@ -925,70 +1132,70 @@
           <Property Name="DeviceID" Type="Guid" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
-          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Device" Relationship="Self.FK_DeviceHistory_Device" FromRole="DeviceHistory" ToRole="Device" />
-          <NavigationProperty Name="DeviceStatus" Relationship="Self.FK_DeviceHistory_DeviceStatus" FromRole="DeviceHistory" ToRole="DeviceStatus" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_DeviceHistory_Person" FromRole="DeviceHistory" ToRole="Person" />
+          <NavigationProperty Name="Device" Relationship="smartwaste.devModel.FK_DeviceHistory_Device" FromRole="DeviceHistory" ToRole="Device" />
+          <NavigationProperty Name="DeviceStatu" Relationship="smartwaste.devModel.FK_DeviceHistory_DeviceStatus" FromRole="DeviceHistory" ToRole="DeviceStatu" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_DeviceHistory_Person" FromRole="DeviceHistory" ToRole="Person" />
         </EntityType>
-        <EntityType Name="DeviceStatus">
+        <EntityType Name="DeviceStatu">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Device" Relationship="Self.FK_Device_Status" FromRole="DeviceStatus" ToRole="Device" />
-          <NavigationProperty Name="DeviceHistory" Relationship="Self.FK_DeviceHistory_DeviceStatus" FromRole="DeviceStatus" ToRole="DeviceHistory" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Devices" Relationship="smartwaste.devModel.FK_Device_Status" FromRole="DeviceStatu" ToRole="Device" />
+          <NavigationProperty Name="DeviceHistories" Relationship="smartwaste.devModel.FK_DeviceHistory_DeviceStatus" FromRole="DeviceStatu" ToRole="DeviceHistory" />
         </EntityType>
         <EntityType Name="DeviceType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Device" Relationship="Self.FK_Device_DeviceType" FromRole="DeviceType" ToRole="Device" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Devices" Relationship="smartwaste.devModel.FK_Device_DeviceType" FromRole="DeviceType" ToRole="Device" />
         </EntityType>
         <EntityType Name="EmployeeCompanyRequest">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Link" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Link" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ClosedOn" Type="DateTime" Precision="3" />
           <Property Name="CreatedByID" Type="Guid" Nullable="false" />
           <Property Name="PersonID" Type="Guid" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_EmployeeCompanyRequest_Person" FromRole="EmployeeCompanyRequest" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_EmployeeCompanyRequest_Person1" FromRole="EmployeeCompanyRequest" ToRole="Person" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person" FromRole="EmployeeCompanyRequest" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person1" FromRole="EmployeeCompanyRequest" ToRole="Person" />
         </EntityType>
         <EntityType Name="Identification">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IdentificationTypeID" Type="Int32" Nullable="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="IdentificationType" Relationship="Self.FK_Identification_IdentificationType" FromRole="Identification" ToRole="IdentificationType" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Identification_Person" FromRole="Identification" ToRole="Person" />
+          <NavigationProperty Name="IdentificationType" Relationship="smartwaste.devModel.FK_Identification_IdentificationType" FromRole="Identification" ToRole="IdentificationType" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_Identification_Person" FromRole="Identification" ToRole="Person" />
         </EntityType>
         <EntityType Name="IdentificationType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Mask" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Identification" Relationship="Self.FK_Identification_IdentificationType" FromRole="IdentificationType" ToRole="Identification" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mask" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Identifications" Relationship="smartwaste.devModel.FK_Identification_IdentificationType" FromRole="IdentificationType" ToRole="Identification" />
         </EntityType>
-        <EntityType Name="Parameters">
+        <EntityType Name="Parameter">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Value" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Person">
@@ -996,22 +1203,22 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="UserID" Type="Guid" Nullable="false" />
           <Property Name="CompanyID" Type="Guid" />
           <Property Name="PersonTypeID" Type="Int32" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Company" Relationship="Self.FK_Person_Company" FromRole="Person" ToRole="Company" />
-          <NavigationProperty Name="DeviceHistory" Relationship="Self.FK_DeviceHistory_Person" FromRole="Person" ToRole="DeviceHistory" />
-          <NavigationProperty Name="EmployeeCompanyRequest" Relationship="Self.FK_EmployeeCompanyRequest_Person" FromRole="Person" ToRole="EmployeeCompanyRequest" />
-          <NavigationProperty Name="EmployeeCompanyRequest1" Relationship="Self.FK_EmployeeCompanyRequest_Person1" FromRole="Person" ToRole="EmployeeCompanyRequest" />
-          <NavigationProperty Name="Identification" Relationship="Self.FK_Identification_Person" FromRole="Person" ToRole="Identification" />
-          <NavigationProperty Name="PersonType" Relationship="Self.FK_Person_PersonType" FromRole="Person" ToRole="PersonType" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Person_User" FromRole="Person" ToRole="User" />
-          <NavigationProperty Name="PersonAddress" Relationship="Self.FK_PersonAddress_Person" FromRole="Person" ToRole="PersonAddress" />
-          <NavigationProperty Name="PointHistory" Relationship="Self.FK_PointHistory_Person" FromRole="Person" ToRole="PointHistory" />
-          <NavigationProperty Name="Route" Relationship="Self.FK_Route_Person" FromRole="Person" ToRole="Route" />
-          <NavigationProperty Name="Route1" Relationship="Self.FK_Route_Person2" FromRole="Person" ToRole="Route" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Company" Relationship="smartwaste.devModel.FK_Person_Company" FromRole="Person" ToRole="Company" />
+          <NavigationProperty Name="DeviceHistories" Relationship="smartwaste.devModel.FK_DeviceHistory_Person" FromRole="Person" ToRole="DeviceHistory" />
+          <NavigationProperty Name="EmployeeCompanyRequests" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person" FromRole="Person" ToRole="EmployeeCompanyRequest" />
+          <NavigationProperty Name="EmployeeCompanyRequests1" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person1" FromRole="Person" ToRole="EmployeeCompanyRequest" />
+          <NavigationProperty Name="Identifications" Relationship="smartwaste.devModel.FK_Identification_Person" FromRole="Person" ToRole="Identification" />
+          <NavigationProperty Name="PersonType" Relationship="smartwaste.devModel.FK_Person_PersonType" FromRole="Person" ToRole="PersonType" />
+          <NavigationProperty Name="User" Relationship="smartwaste.devModel.FK_Person_User" FromRole="Person" ToRole="User" />
+          <NavigationProperty Name="PersonAddresses" Relationship="smartwaste.devModel.FK_PersonAddress_Person" FromRole="Person" ToRole="PersonAddress" />
+          <NavigationProperty Name="PointHistories" Relationship="smartwaste.devModel.FK_PointHistory_Person" FromRole="Person" ToRole="PointHistory" />
+          <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Person" FromRole="Person" ToRole="Route" />
+          <NavigationProperty Name="Routes1" Relationship="smartwaste.devModel.FK_Route_Person2" FromRole="Person" ToRole="Route" />
         </EntityType>
         <EntityType Name="PersonAddress">
           <Key>
@@ -1020,16 +1227,16 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
           <Property Name="AddressID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_PersonAddress_Address" FromRole="PersonAddress" ToRole="Address" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_PersonAddress_Person" FromRole="PersonAddress" ToRole="Person" />
+          <NavigationProperty Name="Address" Relationship="smartwaste.devModel.FK_PersonAddress_Address" FromRole="PersonAddress" ToRole="Address" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_PersonAddress_Person" FromRole="PersonAddress" ToRole="Person" />
         </EntityType>
         <EntityType Name="PersonType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Person_PersonType" FromRole="PersonType" ToRole="Person" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="People" Relationship="smartwaste.devModel.FK_Person_PersonType" FromRole="PersonType" ToRole="Person" />
         </EntityType>
         <EntityType Name="Point">
           <Key>
@@ -1038,14 +1245,14 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="AddressID" Type="Guid" Nullable="false" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
-          <Property Name="DeviceID" Type="Guid" Nullable="false" />
+          <Property Name="DeviceID" Type="Guid" />
           <Property Name="TypeID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="Self.FK_Point_Address" FromRole="Point" ToRole="Address" />
-          <NavigationProperty Name="Device" Relationship="Self.FK_Point_Device" FromRole="Point" ToRole="Device" />
-          <NavigationProperty Name="PointStatus" Relationship="Self.FK_Point_PointStatus" FromRole="Point" ToRole="PointStatus" />
-          <NavigationProperty Name="PointType" Relationship="Self.FK_Point_PointType" FromRole="Point" ToRole="PointType" />
-          <NavigationProperty Name="PointHistory" Relationship="Self.FK_PointHistory_Point" FromRole="Point" ToRole="PointHistory" />
-          <NavigationProperty Name="RoutePoint" Relationship="Self.FK_RoutePoint_Point" FromRole="Point" ToRole="RoutePoint" />
+          <NavigationProperty Name="Address" Relationship="smartwaste.devModel.FK_Point_Address" FromRole="Point" ToRole="Address" />
+          <NavigationProperty Name="Device" Relationship="smartwaste.devModel.FK_Point_Device" FromRole="Point" ToRole="Device" />
+          <NavigationProperty Name="PointStatu" Relationship="smartwaste.devModel.FK_Point_PointStatus" FromRole="Point" ToRole="PointStatu" />
+          <NavigationProperty Name="PointType" Relationship="smartwaste.devModel.FK_Point_PointType" FromRole="Point" ToRole="PointType" />
+          <NavigationProperty Name="PointHistories" Relationship="smartwaste.devModel.FK_PointHistory_Point" FromRole="Point" ToRole="PointHistory" />
+          <NavigationProperty Name="RoutePoints" Relationship="smartwaste.devModel.FK_RoutePoint_Point" FromRole="Point" ToRole="RoutePoint" />
         </EntityType>
         <EntityType Name="PointHistory">
           <Key>
@@ -1055,28 +1262,36 @@
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
-          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PointID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_PointHistory_Person" FromRole="PointHistory" ToRole="Person" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_PointHistory_Point" FromRole="PointHistory" ToRole="Point" />
-          <NavigationProperty Name="PointStatus" Relationship="Self.FK_PointHistory_PointStatus" FromRole="PointHistory" ToRole="PointStatus" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_PointHistory_Person" FromRole="PointHistory" ToRole="Person" />
+          <NavigationProperty Name="Point" Relationship="smartwaste.devModel.FK_PointHistory_Point" FromRole="PointHistory" ToRole="Point" />
+          <NavigationProperty Name="PointStatu" Relationship="smartwaste.devModel.FK_PointHistory_PointStatus" FromRole="PointHistory" ToRole="PointStatu" />
         </EntityType>
-        <EntityType Name="PointStatus">
+        <EntityType Name="PointStatu">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_Point_PointStatus" FromRole="PointStatus" ToRole="Point" />
-          <NavigationProperty Name="PointHistory" Relationship="Self.FK_PointHistory_PointStatus" FromRole="PointStatus" ToRole="PointHistory" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Points" Relationship="smartwaste.devModel.FK_Point_PointStatus" FromRole="PointStatu" ToRole="Point" />
+          <NavigationProperty Name="PointHistories" Relationship="smartwaste.devModel.FK_PointHistory_PointStatus" FromRole="PointStatu" ToRole="PointHistory" />
         </EntityType>
         <EntityType Name="PointType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_Point_PointType" FromRole="PointType" ToRole="Point" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Points" Relationship="smartwaste.devModel.FK_Point_PointType" FromRole="PointType" ToRole="Point" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
         </EntityType>
         <EntityType Name="Route">
           <Key>
@@ -1088,11 +1303,11 @@
           <Property Name="ClosedOn" Type="DateTime" Precision="3" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Route_Person" FromRole="Route" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="Self.FK_Route_Person2" FromRole="Route" ToRole="Person" />
-          <NavigationProperty Name="RouteStatus" Relationship="Self.FK_Route_Status" FromRole="Route" ToRole="RouteStatus" />
-          <NavigationProperty Name="RouteHistory" Relationship="Self.FK_RouteHistory_Route" FromRole="Route" ToRole="RouteHistory" />
-          <NavigationProperty Name="RoutePoint" Relationship="Self.FK_RoutePoint_Route" FromRole="Route" ToRole="RoutePoint" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_Route_Person" FromRole="Route" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="smartwaste.devModel.FK_Route_Person2" FromRole="Route" ToRole="Person" />
+          <NavigationProperty Name="RouteStatu" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="Route" ToRole="RouteStatu" />
+          <NavigationProperty Name="RouteHistories" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="Route" ToRole="RouteHistory" />
+          <NavigationProperty Name="RoutePoints" Relationship="smartwaste.devModel.FK_RoutePoint_Route" FromRole="Route" ToRole="RoutePoint" />
         </EntityType>
         <EntityType Name="RouteHistory">
           <Key>
@@ -1102,9 +1317,9 @@
           <Property Name="RouteID" Type="Guid" Nullable="false" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
-          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Route" Relationship="Self.FK_RouteHistory_Route" FromRole="RouteHistory" ToRole="Route" />
-          <NavigationProperty Name="RouteStatus" Relationship="Self.FK_RouteHistory_Status" FromRole="RouteHistory" ToRole="RouteStatus" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Route" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="RouteHistory" ToRole="Route" />
+          <NavigationProperty Name="RouteStatu" Relationship="smartwaste.devModel.FK_RouteHistory_Status" FromRole="RouteHistory" ToRole="RouteStatu" />
         </EntityType>
         <EntityType Name="RoutePoint">
           <Key>
@@ -1113,615 +1328,41 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="RouteID" Type="Guid" Nullable="false" />
           <Property Name="PointID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Point" Relationship="Self.FK_RoutePoint_Point" FromRole="RoutePoint" ToRole="Point" />
-          <NavigationProperty Name="Route" Relationship="Self.FK_RoutePoint_Route" FromRole="RoutePoint" ToRole="Route" />
+          <NavigationProperty Name="Point" Relationship="smartwaste.devModel.FK_RoutePoint_Point" FromRole="RoutePoint" ToRole="Point" />
+          <NavigationProperty Name="Route" Relationship="smartwaste.devModel.FK_RoutePoint_Route" FromRole="RoutePoint" ToRole="Route" />
         </EntityType>
-        <EntityType Name="RouteStatus">
+        <EntityType Name="RouteStatu">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Route" Relationship="Self.FK_Route_Status" FromRole="RouteStatus" ToRole="Route" />
-          <NavigationProperty Name="RouteHistory" Relationship="Self.FK_RouteHistory_Status" FromRole="RouteStatus" ToRole="RouteHistory" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="RouteStatu" ToRole="Route" />
+          <NavigationProperty Name="RouteHistories" Relationship="smartwaste.devModel.FK_RouteHistory_Status" FromRole="RouteStatu" ToRole="RouteHistory" />
         </EntityType>
         <EntityType Name="State">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="75" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UF" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="UF" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="CountryID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="City" Relationship="Self.fk_city_state" FromRole="State" ToRole="City" />
-          <NavigationProperty Name="Country" Relationship="Self.fk_state_country" FromRole="State" ToRole="Country" />
+          <NavigationProperty Name="Cities" Relationship="smartwaste.devModel.fk_city_state" FromRole="State" ToRole="City" />
+          <NavigationProperty Name="Country" Relationship="smartwaste.devModel.fk_state_country" FromRole="State" ToRole="Country" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Login" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryToken" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="RecoveredOn" Type="DateTime" Precision="3" />
           <Property Name="ExpirationDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Person_User" FromRole="User" ToRole="Person" />
+          <NavigationProperty Name="People" Relationship="smartwaste.devModel.FK_Person_User" FromRole="User" ToRole="Person" />
           <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_User" FromRole="User" ToRole="UserRole" />
-        </EntityType>
-        <Association Name="fk_city_address">
-          <End Role="City" Type="Self.City" Multiplicity="1" />
-          <End Role="Address" Type="Self.Address" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="City">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Address">
-              <PropertyRef Name="CityID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CompanyAddress_Address">
-          <End Role="Address" Type="Self.Address" Multiplicity="1" />
-          <End Role="CompanyAddress" Type="Self.CompanyAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CompanyAddress">
-              <PropertyRef Name="AddressID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PersonAddress_Address">
-          <End Role="Address" Type="Self.Address" Multiplicity="1" />
-          <End Role="PersonAddress" Type="Self.PersonAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PersonAddress">
-              <PropertyRef Name="AddressID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Point_Address">
-          <End Role="Address" Type="Self.Address" Multiplicity="1" />
-          <End Role="Point" Type="Self.Point" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Point">
-              <PropertyRef Name="AddressID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_city_state">
-          <End Role="State" Type="Self.State" Multiplicity="1" />
-          <End Role="City" Type="Self.City" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="State">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="City">
-              <PropertyRef Name="StateID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CompanyAddress_Company">
-          <End Role="Company" Type="Self.Company" Multiplicity="1" />
-          <End Role="CompanyAddress" Type="Self.CompanyAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Company">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CompanyAddress">
-              <PropertyRef Name="CompanyID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Person_Company">
-          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
-          <End Role="Person" Type="Self.Person" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Company">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Person">
-              <PropertyRef Name="CompanyID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_state_country">
-          <End Role="Country" Type="Self.Country" Multiplicity="1" />
-          <End Role="State" Type="Self.State" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="State">
-              <PropertyRef Name="CountryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Device_DeviceType">
-          <End Role="DeviceType" Type="Self.DeviceType" Multiplicity="1" />
-          <End Role="Device" Type="Self.Device" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviceType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Device">
-              <PropertyRef Name="TypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Device_Status">
-          <End Role="DeviceStatus" Type="Self.DeviceStatus" Multiplicity="1" />
-          <End Role="Device" Type="Self.Device" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviceStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Device">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DeviceHistory_Device">
-          <End Role="Device" Type="Self.Device" Multiplicity="1" />
-          <End Role="DeviceHistory" Type="Self.DeviceHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Device">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DeviceHistory">
-              <PropertyRef Name="DeviceID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Point_Device">
-          <End Role="Device" Type="Self.Device" Multiplicity="1" />
-          <End Role="Point" Type="Self.Point" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Device">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Point">
-              <PropertyRef Name="DeviceID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DeviceHistory_DeviceStatus">
-          <End Role="DeviceStatus" Type="Self.DeviceStatus" Multiplicity="1" />
-          <End Role="DeviceHistory" Type="Self.DeviceHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviceStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DeviceHistory">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DeviceHistory_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="DeviceHistory" Type="Self.DeviceHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DeviceHistory">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EmployeeCompanyRequest_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
-          <End Role="EmployeeCompanyRequest" Type="Self.EmployeeCompanyRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EmployeeCompanyRequest">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EmployeeCompanyRequest_Person1">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="EmployeeCompanyRequest" Type="Self.EmployeeCompanyRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EmployeeCompanyRequest">
-              <PropertyRef Name="CreatedByID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Identification_IdentificationType">
-          <End Role="IdentificationType" Type="Self.IdentificationType" Multiplicity="1" />
-          <End Role="Identification" Type="Self.Identification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="IdentificationType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Identification">
-              <PropertyRef Name="IdentificationTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Identification_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Identification" Type="Self.Identification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Identification">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Person_PersonType">
-          <End Role="PersonType" Type="Self.PersonType" Multiplicity="1" />
-          <End Role="Person" Type="Self.Person" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PersonType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Person">
-              <PropertyRef Name="PersonTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Person_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Person" Type="Self.Person" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Person">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PersonAddress_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="PersonAddress" Type="Self.PersonAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PersonAddress">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PointHistory_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="PointHistory" Type="Self.PointHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PointHistory">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Route_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
-          <End Role="Route" Type="Self.Route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Route">
-              <PropertyRef Name="AssignedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Route_Person2">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Route" Type="Self.Route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Route">
-              <PropertyRef Name="CreatedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Point_PointStatus">
-          <End Role="PointStatus" Type="Self.PointStatus" Multiplicity="1" />
-          <End Role="Point" Type="Self.Point" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PointStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Point">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Point_PointType">
-          <End Role="PointType" Type="Self.PointType" Multiplicity="1" />
-          <End Role="Point" Type="Self.Point" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PointType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Point">
-              <PropertyRef Name="TypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PointHistory_Point">
-          <End Role="Point" Type="Self.Point" Multiplicity="1" />
-          <End Role="PointHistory" Type="Self.PointHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Point">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PointHistory">
-              <PropertyRef Name="PointID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RoutePoint_Point">
-          <End Role="Point" Type="Self.Point" Multiplicity="1" />
-          <End Role="RoutePoint" Type="Self.RoutePoint" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Point">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RoutePoint">
-              <PropertyRef Name="PointID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PointHistory_PointStatus">
-          <End Role="PointStatus" Type="Self.PointStatus" Multiplicity="1" />
-          <End Role="PointHistory" Type="Self.PointHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PointStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PointHistory">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Route_Status">
-          <End Role="RouteStatus" Type="Self.RouteStatus" Multiplicity="1" />
-          <End Role="Route" Type="Self.Route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RouteStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Route">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RouteHistory_Route">
-          <End Role="Route" Type="Self.Route" Multiplicity="1" />
-          <End Role="RouteHistory" Type="Self.RouteHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Route">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RouteHistory">
-              <PropertyRef Name="RouteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RoutePoint_Route">
-          <End Role="Route" Type="Self.Route" Multiplicity="1" />
-          <End Role="RoutePoint" Type="Self.RoutePoint" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Route">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RoutePoint">
-              <PropertyRef Name="RouteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RouteHistory_Status">
-          <End Role="RouteStatus" Type="Self.RouteStatus" Multiplicity="1" />
-          <End Role="RouteHistory" Type="Self.RouteHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RouteStatus">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RouteHistory">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="SmartWasteDatabaseConnection" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Address" EntityType="Self.Address" />
-          <EntitySet Name="City" EntityType="Self.City" />
-          <EntitySet Name="Company" EntityType="Self.Company" />
-          <EntitySet Name="CompanyAddress" EntityType="Self.CompanyAddress" />
-          <EntitySet Name="Country" EntityType="Self.Country" />
-          <EntitySet Name="Device" EntityType="Self.Device" />
-          <EntitySet Name="DeviceHistory" EntityType="Self.DeviceHistory" />
-          <EntitySet Name="DeviceStatus" EntityType="Self.DeviceStatus" />
-          <EntitySet Name="DeviceType" EntityType="Self.DeviceType" />
-          <EntitySet Name="EmployeeCompanyRequest" EntityType="Self.EmployeeCompanyRequest" />
-          <EntitySet Name="Identification" EntityType="Self.Identification" />
-          <EntitySet Name="IdentificationType" EntityType="Self.IdentificationType" />
-          <EntitySet Name="Parameters" EntityType="Self.Parameters" />
-          <EntitySet Name="Person" EntityType="Self.Person" />
-          <EntitySet Name="PersonAddress" EntityType="Self.PersonAddress" />
-          <EntitySet Name="PersonType" EntityType="Self.PersonType" />
-          <EntitySet Name="Point" EntityType="Self.Point" />
-          <EntitySet Name="PointHistory" EntityType="Self.PointHistory" />
-          <EntitySet Name="PointStatus" EntityType="Self.PointStatus" />
-          <EntitySet Name="PointType" EntityType="Self.PointType" />
-          <EntitySet Name="Route" EntityType="Self.Route" />
-          <EntitySet Name="RouteHistory" EntityType="Self.RouteHistory" />
-          <EntitySet Name="RoutePoint" EntityType="Self.RoutePoint" />
-          <EntitySet Name="RouteStatus" EntityType="Self.RouteStatus" />
-          <EntitySet Name="State" EntityType="Self.State" />
-          <EntitySet Name="User" EntityType="Self.User" />
-          <AssociationSet Name="fk_city_address" Association="Self.fk_city_address">
-            <End Role="City" EntitySet="City" />
-            <End Role="Address" EntitySet="Address" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CompanyAddress_Address" Association="Self.FK_CompanyAddress_Address">
-            <End Role="Address" EntitySet="Address" />
-            <End Role="CompanyAddress" EntitySet="CompanyAddress" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PersonAddress_Address" Association="Self.FK_PersonAddress_Address">
-            <End Role="Address" EntitySet="Address" />
-            <End Role="PersonAddress" EntitySet="PersonAddress" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Point_Address" Association="Self.FK_Point_Address">
-            <End Role="Address" EntitySet="Address" />
-            <End Role="Point" EntitySet="Point" />
-          </AssociationSet>
-          <AssociationSet Name="fk_city_state" Association="Self.fk_city_state">
-            <End Role="State" EntitySet="State" />
-            <End Role="City" EntitySet="City" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CompanyAddress_Company" Association="Self.FK_CompanyAddress_Company">
-            <End Role="Company" EntitySet="Company" />
-            <End Role="CompanyAddress" EntitySet="CompanyAddress" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Person_Company" Association="Self.FK_Person_Company">
-            <End Role="Company" EntitySet="Company" />
-            <End Role="Person" EntitySet="Person" />
-          </AssociationSet>
-          <AssociationSet Name="fk_state_country" Association="Self.fk_state_country">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="State" EntitySet="State" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Device_DeviceType" Association="Self.FK_Device_DeviceType">
-            <End Role="DeviceType" EntitySet="DeviceType" />
-            <End Role="Device" EntitySet="Device" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Device_Status" Association="Self.FK_Device_Status">
-            <End Role="DeviceStatus" EntitySet="DeviceStatus" />
-            <End Role="Device" EntitySet="Device" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeviceHistory_Device" Association="Self.FK_DeviceHistory_Device">
-            <End Role="Device" EntitySet="Device" />
-            <End Role="DeviceHistory" EntitySet="DeviceHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Point_Device" Association="Self.FK_Point_Device">
-            <End Role="Device" EntitySet="Device" />
-            <End Role="Point" EntitySet="Point" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeviceHistory_DeviceStatus" Association="Self.FK_DeviceHistory_DeviceStatus">
-            <End Role="DeviceStatus" EntitySet="DeviceStatus" />
-            <End Role="DeviceHistory" EntitySet="DeviceHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeviceHistory_Person" Association="Self.FK_DeviceHistory_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="DeviceHistory" EntitySet="DeviceHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EmployeeCompanyRequest_Person" Association="Self.FK_EmployeeCompanyRequest_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EmployeeCompanyRequest_Person1" Association="Self.FK_EmployeeCompanyRequest_Person1">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Identification_IdentificationType" Association="Self.FK_Identification_IdentificationType">
-            <End Role="IdentificationType" EntitySet="IdentificationType" />
-            <End Role="Identification" EntitySet="Identification" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Identification_Person" Association="Self.FK_Identification_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Identification" EntitySet="Identification" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Person_PersonType" Association="Self.FK_Person_PersonType">
-            <End Role="PersonType" EntitySet="PersonType" />
-            <End Role="Person" EntitySet="Person" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Person_User" Association="Self.FK_Person_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Person" EntitySet="Person" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PersonAddress_Person" Association="Self.FK_PersonAddress_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="PersonAddress" EntitySet="PersonAddress" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PointHistory_Person" Association="Self.FK_PointHistory_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="PointHistory" EntitySet="PointHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Route_Person" Association="Self.FK_Route_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Route" EntitySet="Route" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Route_Person2" Association="Self.FK_Route_Person2">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Route" EntitySet="Route" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Point_PointStatus" Association="Self.FK_Point_PointStatus">
-            <End Role="PointStatus" EntitySet="PointStatus" />
-            <End Role="Point" EntitySet="Point" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Point_PointType" Association="Self.FK_Point_PointType">
-            <End Role="PointType" EntitySet="PointType" />
-            <End Role="Point" EntitySet="Point" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PointHistory_Point" Association="Self.FK_PointHistory_Point">
-            <End Role="Point" EntitySet="Point" />
-            <End Role="PointHistory" EntitySet="PointHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RoutePoint_Point" Association="Self.FK_RoutePoint_Point">
-            <End Role="Point" EntitySet="Point" />
-            <End Role="RoutePoint" EntitySet="RoutePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PointHistory_PointStatus" Association="Self.FK_PointHistory_PointStatus">
-            <End Role="PointStatus" EntitySet="PointStatus" />
-            <End Role="PointHistory" EntitySet="PointHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Route_Status" Association="Self.FK_Route_Status">
-            <End Role="RouteStatus" EntitySet="RouteStatus" />
-            <End Role="Route" EntitySet="Route" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RouteHistory_Route" Association="Self.FK_RouteHistory_Route">
-            <End Role="Route" EntitySet="Route" />
-            <End Role="RouteHistory" EntitySet="RouteHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RoutePoint_Route" Association="Self.FK_RoutePoint_Route">
-            <End Role="Route" EntitySet="Route" />
-            <End Role="RoutePoint" EntitySet="RoutePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RouteHistory_Status" Association="Self.FK_RouteHistory_Status">
-            <End Role="RouteStatus" EntitySet="RouteStatus" />
-            <End Role="RouteHistory" EntitySet="RouteHistory" />
-          </AssociationSet>
-          <EntitySet Name="Roles" EntityType="smartwaste.devModel.Role" />
-          <EntitySet Name="UserRoles" EntityType="smartwaste.devModel.UserRole" />
-          <AssociationSet Name="FK_UserRole_Role" Association="smartwaste.devModel.FK_UserRole_Role">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="UserRole" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserRole_User" Association="smartwaste.devModel.FK_UserRole_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="UserRole" EntitySet="UserRoles" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -1733,6 +1374,354 @@
           <NavigationProperty Name="Role" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="UserRole" ToRole="Role" />
           <NavigationProperty Name="User" Relationship="smartwaste.devModel.FK_UserRole_User" FromRole="UserRole" ToRole="User" />
         </EntityType>
+        <Association Name="fk_city_address">
+          <End Type="smartwaste.devModel.City" Role="City" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Address" Role="Address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyAddress_Address">
+          <End Type="smartwaste.devModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="smartwaste.devModel.CompanyAddress" Role="CompanyAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyAddress">
+              <PropertyRef Name="AddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonAddress_Address">
+          <End Type="smartwaste.devModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="smartwaste.devModel.PersonAddress" Role="PersonAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PersonAddress">
+              <PropertyRef Name="AddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Point_Address">
+          <End Type="smartwaste.devModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="AddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_city_state">
+          <End Type="smartwaste.devModel.State" Role="State" Multiplicity="1" />
+          <End Type="smartwaste.devModel.City" Role="City" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="City">
+              <PropertyRef Name="StateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyAddress_Company">
+          <End Type="smartwaste.devModel.Company" Role="Company" Multiplicity="1" />
+          <End Type="smartwaste.devModel.CompanyAddress" Role="CompanyAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyAddress">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Person_Company">
+          <End Type="smartwaste.devModel.Company" Role="Company" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_state_country">
+          <End Type="smartwaste.devModel.Country" Role="Country" Multiplicity="1" />
+          <End Type="smartwaste.devModel.State" Role="State" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="State">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Device_DeviceType">
+          <End Type="smartwaste.devModel.DeviceType" Role="DeviceType" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Device" Role="Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviceType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Device_Status">
+          <End Type="smartwaste.devModel.DeviceStatu" Role="DeviceStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Device" Role="Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviceStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeviceHistory_Device">
+          <End Type="smartwaste.devModel.Device" Role="Device" Multiplicity="1" />
+          <End Type="smartwaste.devModel.DeviceHistory" Role="DeviceHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Device">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DeviceHistory">
+              <PropertyRef Name="DeviceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Point_Device">
+          <End Type="smartwaste.devModel.Device" Role="Device" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Device">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="DeviceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeviceHistory_DeviceStatus">
+          <End Type="smartwaste.devModel.DeviceStatu" Role="DeviceStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.DeviceHistory" Role="DeviceHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviceStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DeviceHistory">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeviceHistory_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.DeviceHistory" Role="DeviceHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DeviceHistory">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeCompanyRequest_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.EmployeeCompanyRequest" Role="EmployeeCompanyRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmployeeCompanyRequest">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeCompanyRequest_Person1">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.EmployeeCompanyRequest" Role="EmployeeCompanyRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmployeeCompanyRequest">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Identification_IdentificationType">
+          <End Type="smartwaste.devModel.IdentificationType" Role="IdentificationType" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Identification" Role="Identification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificationType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Identification">
+              <PropertyRef Name="IdentificationTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Identification_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Identification" Role="Identification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Identification">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Person_PersonType">
+          <End Type="smartwaste.devModel.PersonType" Role="PersonType" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PersonType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="PersonTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Person_User">
+          <End Type="smartwaste.devModel.User" Role="User" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonAddress_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.PersonAddress" Role="PersonAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PersonAddress">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointHistory_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.PointHistory" Role="PointHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PointHistory">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="AssignedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Person2">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Point_PointStatus">
+          <End Type="smartwaste.devModel.PointStatu" Role="PointStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Point_PointType">
+          <End Type="smartwaste.devModel.PointType" Role="PointType" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointHistory_Point">
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="1" />
+          <End Type="smartwaste.devModel.PointHistory" Role="PointHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Point">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PointHistory">
+              <PropertyRef Name="PointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoutePoint_Point">
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="1" />
+          <End Type="smartwaste.devModel.RoutePoint" Role="RoutePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Point">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RoutePoint">
+              <PropertyRef Name="PointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointHistory_PointStatus">
+          <End Type="smartwaste.devModel.PointStatu" Role="PointStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.PointHistory" Role="PointHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PointHistory">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserRole_Role">
           <End Type="smartwaste.devModel.Role" Role="Role" Multiplicity="0..1" />
           <End Type="smartwaste.devModel.UserRole" Role="UserRole" Multiplicity="*" />
@@ -1742,6 +1731,54 @@
             </Principal>
             <Dependent Role="UserRole">
               <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Status">
+          <End Type="smartwaste.devModel.RouteStatu" Role="RouteStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RouteStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteHistory_Route">
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="1" />
+          <End Type="smartwaste.devModel.RouteHistory" Role="RouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RouteHistory">
+              <PropertyRef Name="RouteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoutePoint_Route">
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="1" />
+          <End Type="smartwaste.devModel.RoutePoint" Role="RoutePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RoutePoint">
+              <PropertyRef Name="RouteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteHistory_Status">
+          <End Type="smartwaste.devModel.RouteStatu" Role="RouteStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.RouteHistory" Role="RouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RouteStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RouteHistory">
+              <PropertyRef Name="StatusID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1757,269 +1794,228 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="vw_GetPoints">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="AddressID" />
+            <PropertyRef Name="Latitude" />
+            <PropertyRef Name="Longitude" />
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="DeviceID" Type="Guid" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="AddressID" Type="Guid" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="PersonID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+        </EntityType>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="smartwastedevModelStoreContainer" CdmEntityContainer="SmartWasteDatabaseConnection">
-          <EntitySetMapping Name="Address">
+          <EntitySetMapping Name="Addresses">
             <EntityTypeMapping TypeName="smartwaste.devModel.Address">
               <MappingFragment StoreEntitySet="Address">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Line1" ColumnName="Line1" />
-                <ScalarProperty Name="Line2" ColumnName="Line2" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="Neighborhood" ColumnName="Neighborhood" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="CityID" ColumnName="CityID" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Neighborhood" ColumnName="Neighborhood" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Line2" ColumnName="Line2" />
+                <ScalarProperty Name="Line1" ColumnName="Line1" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="City">
+          <EntitySetMapping Name="Cities">
             <EntityTypeMapping TypeName="smartwaste.devModel.City">
               <MappingFragment StoreEntitySet="City">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Company">
+          <EntitySetMapping Name="Companies">
             <EntityTypeMapping TypeName="smartwaste.devModel.Company">
               <MappingFragment StoreEntitySet="Company">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CNPJ" ColumnName="CNPJ" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CompanyAddress">
+          <EntitySetMapping Name="CompanyAddresses">
             <EntityTypeMapping TypeName="smartwaste.devModel.CompanyAddress">
               <MappingFragment StoreEntitySet="CompanyAddress">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
                 <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Country">
+          <EntitySetMapping Name="Countries">
             <EntityTypeMapping TypeName="smartwaste.devModel.Country">
               <MappingFragment StoreEntitySet="Country">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Device">
+          <EntitySetMapping Name="Devices">
             <EntityTypeMapping TypeName="smartwaste.devModel.Device">
               <MappingFragment StoreEntitySet="Device">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="InternalID" ColumnName="InternalID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
                 <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="InternalID" ColumnName="InternalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DeviceHistory">
+          <EntitySetMapping Name="DeviceHistories">
             <EntityTypeMapping TypeName="smartwaste.devModel.DeviceHistory">
               <MappingFragment StoreEntitySet="DeviceHistory">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DeviceStatus">
-            <EntityTypeMapping TypeName="smartwaste.devModel.DeviceStatus">
+            <EntityTypeMapping TypeName="smartwaste.devModel.DeviceStatu">
               <MappingFragment StoreEntitySet="DeviceStatus">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DeviceType">
+          <EntitySetMapping Name="DeviceTypes">
             <EntityTypeMapping TypeName="smartwaste.devModel.DeviceType">
               <MappingFragment StoreEntitySet="DeviceType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EmployeeCompanyRequest">
+          <EntitySetMapping Name="EmployeeCompanyRequests">
             <EntityTypeMapping TypeName="smartwaste.devModel.EmployeeCompanyRequest">
               <MappingFragment StoreEntitySet="EmployeeCompanyRequest">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Link" ColumnName="Link" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Identification">
+          <EntitySetMapping Name="Identifications">
             <EntityTypeMapping TypeName="smartwaste.devModel.Identification">
               <MappingFragment StoreEntitySet="Identification">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="IdentificationTypeID" ColumnName="IdentificationTypeID" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="IdentificationTypeID" ColumnName="IdentificationTypeID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="IdentificationType">
+          <EntitySetMapping Name="IdentificationTypes">
             <EntityTypeMapping TypeName="smartwaste.devModel.IdentificationType">
               <MappingFragment StoreEntitySet="IdentificationType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Mask" ColumnName="Mask" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Parameters">
-            <EntityTypeMapping TypeName="smartwaste.devModel.Parameters">
+            <EntityTypeMapping TypeName="smartwaste.devModel.Parameter">
               <MappingFragment StoreEntitySet="Parameters">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Person">
+          <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="smartwaste.devModel.Person">
               <MappingFragment StoreEntitySet="Person">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="PersonTypeID" ColumnName="PersonTypeID" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PersonTypeID" ColumnName="PersonTypeID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PersonAddress">
+          <EntitySetMapping Name="PersonAddresses">
             <EntityTypeMapping TypeName="smartwaste.devModel.PersonAddress">
               <MappingFragment StoreEntitySet="PersonAddress">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PersonType">
+          <EntitySetMapping Name="PersonTypes">
             <EntityTypeMapping TypeName="smartwaste.devModel.PersonType">
               <MappingFragment StoreEntitySet="PersonType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Point">
+          <EntitySetMapping Name="Points">
             <EntityTypeMapping TypeName="smartwaste.devModel.Point">
               <MappingFragment StoreEntitySet="Point">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="AddressID" ColumnName="AddressID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
                 <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PointHistory">
+          <EntitySetMapping Name="PointHistories">
             <EntityTypeMapping TypeName="smartwaste.devModel.PointHistory">
               <MappingFragment StoreEntitySet="PointHistory">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
                 <ScalarProperty Name="PointID" ColumnName="PointID" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PointStatus">
-            <EntityTypeMapping TypeName="smartwaste.devModel.PointStatus">
+            <EntityTypeMapping TypeName="smartwaste.devModel.PointStatu">
               <MappingFragment StoreEntitySet="PointStatus">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PointType">
+          <EntitySetMapping Name="PointTypes">
             <EntityTypeMapping TypeName="smartwaste.devModel.PointType">
               <MappingFragment StoreEntitySet="PointType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Route">
-            <EntityTypeMapping TypeName="smartwaste.devModel.Route">
-              <MappingFragment StoreEntitySet="Route">
                 <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="AssignedBy" ColumnName="AssignedBy" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RouteHistory">
-            <EntityTypeMapping TypeName="smartwaste.devModel.RouteHistory">
-              <MappingFragment StoreEntitySet="RouteHistory">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RoutePoint">
-            <EntityTypeMapping TypeName="smartwaste.devModel.RoutePoint">
-              <MappingFragment StoreEntitySet="RoutePoint">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
-                <ScalarProperty Name="PointID" ColumnName="PointID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RouteStatus">
-            <EntityTypeMapping TypeName="smartwaste.devModel.RouteStatus">
-              <MappingFragment StoreEntitySet="RouteStatus">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="State">
-            <EntityTypeMapping TypeName="smartwaste.devModel.State">
-              <MappingFragment StoreEntitySet="State">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="UF" ColumnName="UF" />
-                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="User">
-            <EntityTypeMapping TypeName="smartwaste.devModel.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Login" ColumnName="Login" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="RecoveryToken" ColumnName="RecoveryToken" />
-                <ScalarProperty Name="RecoveredOn" ColumnName="RecoveredOn" />
-                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2031,11 +2027,88 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="smartwaste.devModel.Route">
+              <MappingFragment StoreEntitySet="Route">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="AssignedBy" ColumnName="AssignedBy" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RouteHistories">
+            <EntityTypeMapping TypeName="smartwaste.devModel.RouteHistory">
+              <MappingFragment StoreEntitySet="RouteHistory">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoutePoints">
+            <EntityTypeMapping TypeName="smartwaste.devModel.RoutePoint">
+              <MappingFragment StoreEntitySet="RoutePoint">
+                <ScalarProperty Name="PointID" ColumnName="PointID" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RouteStatus">
+            <EntityTypeMapping TypeName="smartwaste.devModel.RouteStatu">
+              <MappingFragment StoreEntitySet="RouteStatus">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="States">
+            <EntityTypeMapping TypeName="smartwaste.devModel.State">
+              <MappingFragment StoreEntitySet="State">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="UF" ColumnName="UF" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="smartwaste.devModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="RecoveredOn" ColumnName="RecoveredOn" />
+                <ScalarProperty Name="RecoveryToken" ColumnName="RecoveryToken" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserRoles">
             <EntityTypeMapping TypeName="smartwaste.devModel.UserRole">
               <MappingFragment StoreEntitySet="UserRole">
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_GetPoints">
+            <EntityTypeMapping TypeName="smartwaste.devModel.vw_GetPoints">
+              <MappingFragment StoreEntitySet="vw_GetPoints">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

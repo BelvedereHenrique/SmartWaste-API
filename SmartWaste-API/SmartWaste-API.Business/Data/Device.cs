@@ -17,8 +17,8 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Device()
         {
-            this.DeviceHistory = new HashSet<DeviceHistory>();
-            this.Point = new HashSet<Point>();
+            this.DeviceHistories = new HashSet<DeviceHistory>();
+            this.Points = new HashSet<Point>();
         }
     
         public System.Guid ID { get; set; }
@@ -27,10 +27,10 @@ namespace SmartWaste_API.Business.Data
         public int TypeID { get; set; }
     
         public virtual DeviceType DeviceType { get; set; }
-        public virtual DeviceStatus DeviceStatus { get; set; }
+        public virtual DeviceStatu DeviceStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DeviceHistory> DeviceHistory { get; set; }
+        public virtual ICollection<DeviceHistory> DeviceHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Point> Point { get; set; }
+        public virtual ICollection<Point> Points { get; set; }
     }
 }

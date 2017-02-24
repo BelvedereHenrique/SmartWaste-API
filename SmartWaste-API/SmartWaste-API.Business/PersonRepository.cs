@@ -29,7 +29,7 @@ namespace SmartWaste_API.Business
 
         private IQueryable<Data.Person> Filter(Data.SmartWasteDatabaseConnection context, PersonFilterContract filter)
         {
-            return context.Person.Where(x =>
+            return context.People.Where(x =>
                 (filter.ID == null || filter.ID == x.ID) &&
                 (filter.UserID == null || filter.UserID == x.UserID) &&
                 (filter.CompanyID == null || filter.CompanyID == x.CompanyID)

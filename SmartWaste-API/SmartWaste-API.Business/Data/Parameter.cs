@@ -12,7 +12,7 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Parameters
+    public partial class Parameter
     {
         public System.Guid ID { get; set; }
         public string Name { get; set; }

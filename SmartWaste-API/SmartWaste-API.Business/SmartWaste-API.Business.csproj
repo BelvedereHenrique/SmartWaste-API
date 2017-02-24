@@ -55,6 +55,7 @@
     <Compile Include="ContractParser\CityContractParser.cs" />
     <Compile Include="ContractParser\CountryContractParser.cs" />
     <Compile Include="ContractParser\PersonContractParser.cs" />
+    <Compile Include="ContractParser\PointContractParser.cs" />
     <Compile Include="ContractParser\RoleContractParser.cs" />
     <Compile Include="ContractParser\StateContractParser.cs" />
     <Compile Include="ContractParser\UserContractParser.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Data\DeviceHistory.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\DeviceStatus.cs">
+    <Compile Include="Data\DeviceStatu.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\DeviceType.cs">
@@ -110,7 +111,7 @@
     <Compile Include="Data\IdentificationType.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\Parameters.cs">
+    <Compile Include="Data\Parameter.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Person.cs">
@@ -128,7 +129,7 @@
     <Compile Include="Data\PointHistory.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\PointStatus.cs">
+    <Compile Include="Data\PointStatu.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\PointType.cs">
@@ -146,7 +147,7 @@
     <Compile Include="Data\RoutePoint.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\RouteStatus.cs">
+    <Compile Include="Data\RouteStatu.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\State.cs">
@@ -158,12 +159,17 @@
     <Compile Include="Data\UserRole.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\vw_GetPoints.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
     <Compile Include="Interfaces\IPersonRepository.cs" />
+    <Compile Include="Interfaces\IPointRepository.cs" />
     <Compile Include="Interfaces\IStateRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="PersonRepository.cs" />
+    <Compile Include="PointRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateRepository.cs" />
     <Compile Include="UserRepository.cs" />

@@ -17,7 +17,7 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public IdentificationType()
         {
-            this.Identification = new HashSet<Identification>();
+            this.Identifications = new HashSet<Identification>();
         }
     
         public int ID { get; set; }
@@ -25,6 +25,6 @@ namespace SmartWaste_API.Business.Data
         public string Mask { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Identification> Identification { get; set; }
+        public virtual ICollection<Identification> Identifications { get; set; }
     }
 }

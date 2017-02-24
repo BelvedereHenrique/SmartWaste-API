@@ -29,7 +29,7 @@ namespace SmartWaste_API.Business
 
         public IQueryable<Data.User> Filter(Data.SmartWasteDatabaseConnection context, UserFilterContract filter)
         {
-            return context.User.Where(user => 
+            return context.Users.Where(user => 
                 (filter.ID == null || filter.ID == user.ID) &&
                 (filter.Login == String.Empty || filter.Login.ToLower().Trim() == user.Login.ToLower().Trim())
             ).AsQueryable();

@@ -21,6 +21,6 @@ namespace SmartWaste_API.Business.Data
         public string Reason { get; set; }
     
         public virtual Route Route { get; set; }
-        public virtual RouteStatus RouteStatus { get; set; }
+        public virtual RouteStatu RouteStatu { get; set; }
     }
 }

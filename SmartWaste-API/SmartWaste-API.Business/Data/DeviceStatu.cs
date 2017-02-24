@@ -12,21 +12,21 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class DeviceStatus
+    public partial class DeviceStatu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DeviceStatus()
+        public DeviceStatu()
         {
-            this.Device = new HashSet<Device>();
-            this.DeviceHistory = new HashSet<DeviceHistory>();
+            this.Devices = new HashSet<Device>();
+            this.DeviceHistories = new HashSet<DeviceHistory>();
         }
     
         public int ID { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Device> Device { get; set; }
+        public virtual ICollection<Device> Devices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DeviceHistory> DeviceHistory { get; set; }
+        public virtual ICollection<DeviceHistory> DeviceHistories { get; set; }
     }
 }

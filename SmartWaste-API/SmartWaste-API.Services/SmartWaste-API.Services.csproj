@@ -43,7 +43,9 @@
     <Compile Include="AddressService.cs" />
     <Compile Include="CityService.cs" />
     <Compile Include="CountryService.cs" />
+    <Compile Include="Interfaces\IPointService.cs" />
     <Compile Include="Interfaces\ISecurityService.cs" />
+    <Compile Include="PointService.cs" />
     <Compile Include="Security\RolesName.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="UserService.cs" />

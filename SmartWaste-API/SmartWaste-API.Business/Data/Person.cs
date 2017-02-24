@@ -17,14 +17,14 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
         {
-            this.DeviceHistory = new HashSet<DeviceHistory>();
-            this.EmployeeCompanyRequest = new HashSet<EmployeeCompanyRequest>();
-            this.EmployeeCompanyRequest1 = new HashSet<EmployeeCompanyRequest>();
-            this.Identification = new HashSet<Identification>();
-            this.PersonAddress = new HashSet<PersonAddress>();
-            this.PointHistory = new HashSet<PointHistory>();
-            this.Route = new HashSet<Route>();
-            this.Route1 = new HashSet<Route>();
+            this.DeviceHistories = new HashSet<DeviceHistory>();
+            this.EmployeeCompanyRequests = new HashSet<EmployeeCompanyRequest>();
+            this.EmployeeCompanyRequests1 = new HashSet<EmployeeCompanyRequest>();
+            this.Identifications = new HashSet<Identification>();
+            this.PersonAddresses = new HashSet<PersonAddress>();
+            this.PointHistories = new HashSet<PointHistory>();
+            this.Routes = new HashSet<Route>();
+            this.Routes1 = new HashSet<Route>();
         }
     
         public System.Guid ID { get; set; }
@@ -36,22 +36,22 @@ namespace SmartWaste_API.Business.Data
     
         public virtual Company Company { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DeviceHistory> DeviceHistory { get; set; }
+        public virtual ICollection<DeviceHistory> DeviceHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmployeeCompanyRequest> EmployeeCompanyRequest { get; set; }
+        public virtual ICollection<EmployeeCompanyRequest> EmployeeCompanyRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmployeeCompanyRequest> EmployeeCompanyRequest1 { get; set; }
+        public virtual ICollection<EmployeeCompanyRequest> EmployeeCompanyRequests1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Identification> Identification { get; set; }
+        public virtual ICollection<Identification> Identifications { get; set; }
         public virtual PersonType PersonType { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonAddress> PersonAddress { get; set; }
+        public virtual ICollection<PersonAddress> PersonAddresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PointHistory> PointHistory { get; set; }
+        public virtual ICollection<PointHistory> PointHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Route> Route { get; set; }
+        public virtual ICollection<Route> Routes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Route> Route1 { get; set; }
+        public virtual ICollection<Route> Routes1 { get; set; }
     }
 }

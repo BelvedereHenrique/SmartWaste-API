@@ -17,8 +17,8 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Company()
         {
-            this.CompanyAddress = new HashSet<CompanyAddress>();
-            this.Person = new HashSet<Person>();
+            this.CompanyAddresses = new HashSet<CompanyAddress>();
+            this.People = new HashSet<Person>();
         }
     
         public System.Guid ID { get; set; }
@@ -26,8 +26,8 @@ namespace SmartWaste_API.Business.Data
         public string CNPJ { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyAddress> CompanyAddress { get; set; }
+        public virtual ICollection<CompanyAddress> CompanyAddresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> Person { get; set; }
+        public virtual ICollection<Person> People { get; set; }
     }
 }

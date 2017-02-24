@@ -22,7 +22,7 @@ namespace SmartWaste_API.Business.Data
         public System.Guid PersonID { get; set; }
     
         public virtual Device Device { get; set; }
-        public virtual DeviceStatus DeviceStatus { get; set; }
+        public virtual DeviceStatu DeviceStatu { get; set; }
         public virtual Person Person { get; set; }
     }
 }

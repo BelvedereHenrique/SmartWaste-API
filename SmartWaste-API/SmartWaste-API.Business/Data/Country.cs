@@ -17,7 +17,7 @@ namespace SmartWaste_API.Business.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Country()
         {
-            this.State = new HashSet<State>();
+            this.States = new HashSet<State>();
         }
     
         public int Id { get; set; }
@@ -25,6 +25,6 @@ namespace SmartWaste_API.Business.Data
         public string Initials { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<State> State { get; set; }
+        public virtual ICollection<State> States { get; set; }
     }
 }

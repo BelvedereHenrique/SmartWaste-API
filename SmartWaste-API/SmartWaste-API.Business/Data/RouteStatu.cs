@@ -12,21 +12,21 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class RouteStatus
+    public partial class RouteStatu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RouteStatus()
+        public RouteStatu()
         {
-            this.Route = new HashSet<Route>();
-            this.RouteHistory = new HashSet<RouteHistory>();
+            this.Routes = new HashSet<Route>();
+            this.RouteHistories = new HashSet<RouteHistory>();
         }
     
         public int ID { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Route> Route { get; set; }
+        public virtual ICollection<Route> Routes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteHistory> RouteHistory { get; set; }
+        public virtual ICollection<RouteHistory> RouteHistories { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace SmartWaste_API.Business
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                var list = context.State.Where(x => x.CountryID == CountryID).ToList().ToContract();
+                var list = context.States.Where(x => x.CountryID == CountryID).ToList().ToContract();
                 return list;
             }
         }
