@@ -25,7 +25,5 @@ namespace SmartWaste_API.Services
         {
             return _userRepository.Get(filter);
         }
-
-
     }
 }

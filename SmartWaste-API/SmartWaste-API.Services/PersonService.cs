@@ -21,5 +21,10 @@ namespace SmartWaste_API.Services
         {
             return _personRepository.Get(filter);
         }
+
+        public void SetCompanyID(Guid companyID, PersonFilterContract filter)
+        {
+            _personRepository.SetCompanyID(companyID, filter);
+        }
     }
 }

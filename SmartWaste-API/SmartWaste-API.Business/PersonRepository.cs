@@ -26,6 +26,15 @@ namespace SmartWaste_API.Business
                 return Filter(context, filter).ToList().ToContracts();
             }
         }
+        public void SetCompanyID(Guid companyID, PersonFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var p = Filter(context,filter).FirstOrDefault();
+                p.CompanyID = companyID;
+                context.SaveChanges();
+            }
+        }
 
         private IQueryable<Data.Person> Filter(Data.SmartWasteDatabaseConnection context, PersonFilterContract filter)
         {
