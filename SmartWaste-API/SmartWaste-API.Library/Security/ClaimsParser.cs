@@ -22,7 +22,7 @@ namespace SmartWaste_API.Library.Security
             return claims;
         }
 
-        public static T Parse<T>(ClaimsIdentity claims) where T : IIdentityModel
+        public static T Parse<T>(ClaimsIdentity claims) where T : IIdentityModel, new() 
         {
             var model =  JsonConvert.DeserializeObject<T>(GetClaim<string>(claims, DATA_KEY));
 
