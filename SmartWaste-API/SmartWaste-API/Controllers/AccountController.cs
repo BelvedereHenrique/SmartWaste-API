@@ -1,5 +1,7 @@
-﻿using SmarteWaste_API.Contracts.Address;
+﻿using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Address;
 using SmartWaste_API.Models;
+using SmartWaste_API.Services;
 using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,10 +17,12 @@ namespace SmartWaste_API.Controllers
     {
         private readonly IPersonService _personService;
         private readonly IAddressService _addressService;
-        public AccountController(IPersonService _pService, IAddressService _aService)
+        private readonly IAccountService _accountService;
+        public AccountController(IPersonService _pService, IAddressService _aService, IAccountService _accService)
         {
             _personService = _pService;
             _addressService = _aService;
+            _accountService = _accService;
         }
 
         public IHttpActionResult GetCountries()
@@ -53,6 +57,18 @@ namespace SmartWaste_API.Controllers
             {
                 var cities = _addressService.GetCityList(stateID);
                 return Ok(new JsonModel<List<CityContract>>(cities));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+        public IHttpActionResult SaveEnterprise(AccountEnterpriseContract enterprise)
+        {
+            try
+            {
+                var enterpriseID = _accountService.AddEnterprise(enterprise);
+                return Ok(new JsonModel<bool>(true));
             }
             catch (Exception ex)
             {

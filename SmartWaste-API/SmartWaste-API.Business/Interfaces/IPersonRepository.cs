@@ -11,5 +11,6 @@ namespace SmartWaste_API.Business.Interfaces
     {
         PersonContract Get(PersonFilterContract filter);
         List<PersonContract> GetList(PersonFilterContract filter);
+        void SetCompanyID(Guid companyID, PersonFilterContract filter);
     }
 }

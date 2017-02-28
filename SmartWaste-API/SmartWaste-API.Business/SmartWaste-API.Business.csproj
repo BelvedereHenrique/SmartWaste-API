@@ -43,6 +43,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountRepository.cs" />
     <Compile Include="CityRepository.cs" />
     <Compile Include="ContractParser\CityContractParser.cs" />
     <Compile Include="ContractParser\CountryContractParser.cs" />
@@ -159,9 +161,12 @@
     <Compile Include="Data\UserRole.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+
     <Compile Include="Data\vw_GetPoints.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+
+    <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
     <Compile Include="Interfaces\IPersonRepository.cs" />
