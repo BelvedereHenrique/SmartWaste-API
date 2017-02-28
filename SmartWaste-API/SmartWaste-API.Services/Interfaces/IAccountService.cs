@@ -1,15 +1,15 @@
-﻿using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Person;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartWaste_API.Services.Interfaces
 {
     public interface IAccountService
     {
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
-        
+        void AddPersonal(PersonalSubscriptionFormContract data);
+        bool CheckCPFAvailability(string cpf);
+        bool CheckEmailAvailability(string email);
+        bool ValidatePersonalForm(PersonalSubscriptionFormContract data);
     }
 }
