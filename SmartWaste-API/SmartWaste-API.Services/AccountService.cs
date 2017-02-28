@@ -35,7 +35,6 @@ namespace SmartWaste_API.Services
                //SetCompanyID to Person
                //Restart the password.
                 return entID;
-
             }
             else
                 throw new ArgumentException("Enterprise already Registered");
@@ -61,7 +60,7 @@ namespace SmartWaste_API.Services
             }
             catch (Exception e)
             {
-                throw new ArgumentException("There was an error while saving the profile: "+ e.Message);
+                throw new ArgumentException("There was an error while saving the profile: " + e.Message);
             }
         }
 
@@ -100,21 +99,21 @@ namespace SmartWaste_API.Services
         public bool ValidatePersonalForm(PersonalSubscriptionFormContract data)
         {
             var mailAddres = new MailAddress(data.Fields.Email);
-
-            if (data.IsValid &&
-                !String.IsNullOrEmpty(data.Fields.Name.Trim()) &&
-                data.Fields.Password.Length >= 8 &&
-                data.Fields.PasswordConfirmation.Value.Length >= 8 &&
+            if (
+                (data.IsValid) &&
+                (!String.IsNullOrEmpty(data.Fields.Name.Trim())) &&
+                (data.Fields.Password.Length >= 8) &&
+                (data.Fields.PasswordConfirmation.Value.Length >= 8) &&
                 (data.Fields.Password == data.Fields.PasswordConfirmation.Value) &&
-                data.Fields.CPF.Length == 11)
-                    
-            {
+                (data.Fields.CPF.Length == 11) &&
+                (!String.IsNullOrEmpty(data.Fields.Name)) &&
+                (!String.IsNullOrEmpty(data.Fields.Line1)) &&
+                (!String.IsNullOrEmpty(data.Fields.Neighborhood)) &&
+                (!String.IsNullOrEmpty(data.Fields.ZipCode))
+                )
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }

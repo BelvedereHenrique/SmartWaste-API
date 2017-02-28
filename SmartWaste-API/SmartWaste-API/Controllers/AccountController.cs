@@ -85,7 +85,7 @@ namespace SmartWaste_API.Controllers
                 }
                 else
                 {
-                    return Ok(new JsonModel<string>("Invalid form"));
+                    return Ok(new JsonModel<string>("Invalid form subscription"));
                 }
             }
             catch (Exception e)
