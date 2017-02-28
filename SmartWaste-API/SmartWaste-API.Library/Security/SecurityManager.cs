@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartWaste_API.Library.Security
 {
-    public class SecurityManager<T> : ISecurityManager<T> where T : IIdentityModel
+    public class SecurityManager<T> : ISecurityManager<T> where T : IIdentityModel, new()
     {
         private T _model;
         private IPrincipal _principal;
@@ -25,6 +25,9 @@ namespace SmartWaste_API.Library.Security
         {
             get
             {
+                if (_principal == null || !_principal.Identity.IsAuthenticated)
+                    return new T() { IsAuthenticated = false };
+
                 if (_claimsIdentity == null)
                     _claimsIdentity = _principal.Identity as ClaimsIdentity;
 

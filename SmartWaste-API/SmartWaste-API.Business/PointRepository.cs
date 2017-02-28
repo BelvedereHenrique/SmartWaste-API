@@ -21,9 +21,20 @@ namespace SmartWaste_API.Business
 
         public IQueryable<Data.vw_GetPoints> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
         {
+            int? statusID = null, typeID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            if (filter.Type.HasValue)
+                typeID = (int)filter.Type.Value;
+
             return context.vw_GetPoints.Where(x =>
                 (x.Latitude <= filter.Northwest.Latitude && x.Latitude >= filter.Southeast.Latitude) &&
-                (x.Latitude >= filter.Northwest.Longitude && x.Longitude <= filter.Southeast.Longitude)
+                (x.Latitude >= filter.Northwest.Longitude && x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.PersonID == null || filter.PersonID == x.PersonID) &&
+                (statusID == null || statusID == x.StatusID) &&
+                (typeID == null || typeID == x.TypeID)
             ).AsQueryable();
         }
     }
