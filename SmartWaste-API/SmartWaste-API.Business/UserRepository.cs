@@ -34,5 +34,18 @@ namespace SmartWaste_API.Business
                 (filter.Login == String.Empty || filter.Login.ToLower().Trim() == user.Login.ToLower().Trim())
             ).AsQueryable();
         }
+
+        public void SetUserRoles(Guid userID, List<Guid> rolesID)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                foreach (var role in rolesID)
+                {
+                    if(context.UserRoles.FirstOrDefault(x=>x.UserID == userID && x.RoleID == role) == null)
+                        context.UserRoles.Add(new Data.UserRole() { ID = Guid.NewGuid(), RoleID = role, UserID = userID });
+                }
+                context.SaveChanges();
+            }
+        }
     }
 }

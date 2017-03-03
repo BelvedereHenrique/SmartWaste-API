@@ -11,7 +11,7 @@
           </Key>
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Line1" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Line2" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Line2" Type="varchar" MaxLength="200" />
           <Property Name="ZipCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Neighborhood" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
@@ -1061,7 +1061,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Line1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Line2" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Line2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Neighborhood" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />

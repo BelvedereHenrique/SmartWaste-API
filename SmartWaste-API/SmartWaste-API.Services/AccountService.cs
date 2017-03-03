@@ -8,6 +8,7 @@ using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Business;
 using System.Net.Mail;
 using SmartWaste_API.Services.Security;
+using System.Collections.Generic;
 
 namespace SmartWaste_API.Services
 {
@@ -16,39 +17,90 @@ namespace SmartWaste_API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly ISecurityManager<IdentityContract> _user;
         private readonly IPersonService _personService;
-        private readonly IPersonRepository _personRepository;
+        private readonly IUserService _userService;
 
-        public AccountService(IAccountRepository _accRepo, IPersonService _pService, ISecurityManager<IdentityContract> user, IPersonRepository _person)
+        public AccountService (IAccountRepository _accRepo, IPersonService _pService, IUserService _uService, ISecurityManager<IdentityContract> user)
         {
             _accountRepository = _accRepo;
             _personService = _pService;
+            _userService = _uService;
             _user = user;
-            _personRepository = _person;
         }
 
-        public Guid AddEnterprise(AccountEnterpriseContract enterprise)
+        /// <summary>
+        /// Add an enterprise, set the enterpriseID into Logged User and Restart his password
+        /// </summary>
+        /// <param name="enterprise"></param>
+        /// <returns>EnterpriseID</returns>
+        public Guid DoChangesToNewEnterprise (AccountEnterpriseContract enterprise)
         {
-            if (!CheckEnterprise(enterprise))
+            try
             {
-                var entID = _accountRepository.AddEnterprise(enterprise);
-                _personService.SetCompanyID(entID, new SmarteWaste_API.Contracts.Person.PersonFilterContract() { UserID = _user.User.User.ID });
-               //SetCompanyID to Person
-               //Restart the password.
-                return entID;
+                if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
+                var e = AddEnterprise(enterprise);
+                AddEnterpriseToLoggedUser(e);
+                SetCompanyRolesToLoggedUser();
+                RestartPassword();
+                return e;
             }
-            else
-                throw new ArgumentException("Enterprise already Registered");
+            catch (Exception ex){ throw ex; }
         }
 
-        public bool CheckEnterprise(AccountEnterpriseContract enterprise)
+        /// <summary>
+        /// Add an enterprise into database
+        /// </summary>
+        /// <param name="enterprise"></param>
+        /// <returns>EnterpriseID</returns>
+        public Guid AddEnterprise (AccountEnterpriseContract enterprise)
+        {
+            if (CheckEnterprise (enterprise))
+                throw new ArgumentException (Resources.MessagesResources.AccountServiceMessages.ENTERPRISE_ALREADY_REGISTRED);
+            if (GetUserEnterprise().ID.HasValue)
+                throw new ArgumentException(Resources.MessagesResources.AccountServiceMessages.USER_ALREADY_ASSOCIATED_ENTERPRISE);
+            return _accountRepository.AddEnterprise (enterprise);
+        }
+
+        /// <summary>
+        /// Set enterpriseID to Logged User
+        /// </summary>
+        /// <param name="enterpriseID"></param>
+        private void AddEnterpriseToLoggedUser (Guid enterpriseID)
+        {
+            _personService.SetCompanyID (enterpriseID, new SmarteWaste_API.Contracts.Person.PersonFilterContract() { UserID = _user.User.User.ID });
+        }
+
+        private void SetCompanyRolesToLoggedUser()
+        {
+            var listRoles = new List<Guid>();
+            listRoles.Add(Guid.Parse(RolesID.COMPANY_ADMIN_ID));
+            listRoles.Add(Guid.Parse(RolesID.COMPANY_ROUTE_ID));
+            listRoles.Add(Guid.Parse(RolesID.COMPANY_USER_ID));
+            _userService.SetUserRoles(_user.User.User.ID, listRoles);
+        }
+
+        /// <summary>
+        /// Restart loggedUser password
+        /// </summary>
+        private void RestartPassword () { }
+
+        /// <summary>
+        /// Verify if company is already registred
+        /// </summary>
+        /// <param name="enterprise"></param>
+        /// <returns></returns>
+        public bool CheckEnterprise (AccountEnterpriseContract enterprise)
         {
             return _accountRepository.CheckEnterprise(enterprise);
         }
-             
-        public AccountService(PersonRepository person, AccountRepository account)
+
+        /// <summary>
+        /// Get Enterprise associated with logged User Account
+        /// </summary>
+        /// <returns></returns>
+        public AccountEnterpriseContract GetUserEnterprise()
         {
-            _personRepository = person;
-            _accountRepository = account;
+            if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
+            return _accountRepository.GetUserEnterprise(_user.User.User.ID);
         }
 
         public void AddPersonal(PersonalSubscriptionFormContract data)
@@ -66,7 +118,7 @@ namespace SmartWaste_API.Services
 
         public bool CheckCPFAvailability(string cpf)
         {
-            var userByDocument = _personRepository.Get(new PersonFilterContract()
+            var userByDocument = _personService.Get(new PersonFilterContract()
             {
                 Document = cpf
             });
@@ -80,7 +132,7 @@ namespace SmartWaste_API.Services
         {
             try
             {
-                var userByEmail = _personRepository.Get(new PersonFilterContract()
+                var userByEmail = _personService.Get(new PersonFilterContract()
                 {
                     Email = email
                 });
@@ -114,6 +166,10 @@ namespace SmartWaste_API.Services
                 return true;
 
             return false;
+        }
+        private bool IsAuthenticatedUser()
+        {
+            return _user.User.IsAuthenticated;
         }
     }
 }

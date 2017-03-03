@@ -25,5 +25,9 @@ namespace SmartWaste_API.Services
         {
             return _userRepository.Get(filter);
         }
+        public void SetUserRoles(Guid userID, List<Guid> rolesID)
+        {
+             _userRepository.SetUserRoles(userID, rolesID);
+        }
     }
 }

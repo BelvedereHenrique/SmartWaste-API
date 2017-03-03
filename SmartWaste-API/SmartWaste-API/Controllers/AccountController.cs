@@ -61,11 +61,29 @@ namespace SmartWaste_API.Controllers
                 return Ok(new JsonModel<bool>(ex));
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        public IHttpActionResult GetUserEnterprise()
+        {
+            try
+            {
+                var e = _accountService.GetUserEnterprise();
+                return Ok(new JsonModel<AccountEnterpriseContract>(e));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
         public IHttpActionResult SaveEnterprise(AccountEnterpriseContract enterprise)
         {
             try
             {
-                var enterpriseID = _accountService.AddEnterprise(enterprise);
+                var enterpriseID = _accountService.DoChangesToNewEnterprise(enterprise);
                 return Ok(new JsonModel<bool>(true));
             }
             catch (Exception ex)

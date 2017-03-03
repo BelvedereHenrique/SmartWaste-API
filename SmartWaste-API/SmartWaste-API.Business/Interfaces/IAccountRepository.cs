@@ -9,5 +9,6 @@ namespace SmartWaste_API.Business.Interfaces
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
         bool CheckEnterprise(AccountEnterpriseContract enterprise);
         void AddPersonal(PersonalSubscriptionFormContract data);
+        AccountEnterpriseContract GetUserEnterprise(Guid userID);
     }
 }

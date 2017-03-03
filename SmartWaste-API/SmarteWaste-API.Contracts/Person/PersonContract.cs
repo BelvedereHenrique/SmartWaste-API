@@ -12,6 +12,7 @@ namespace SmarteWaste_API.Contracts.Person
         public string Name { get; set; }
         public Guid UserID { get; set; }
         public Guid? CompanyID { get; set; }
+        public Contracts.Account.AccountEnterpriseContract Company { get; set; }
         public PersonTypeEnum PersonType { get; set; }
         public string Email { get; set; }
     }

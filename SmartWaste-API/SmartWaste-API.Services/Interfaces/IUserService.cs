@@ -11,5 +11,6 @@ namespace SmartWaste_API.Services.Interfaces
     public interface IUserService
     {
         UserContract Get(UserFilterContract filter);
+        void SetUserRoles(Guid userID, List<Guid> rolesID);
     }
 }
