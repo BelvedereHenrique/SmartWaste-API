@@ -60,9 +60,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AccountServiceTests.cs" />
+    <Compile Include="AddressServiceTests.cs" />
+    <Compile Include="CityServiceTests.cs" />
+    <Compile Include="CountryServiceTests.cs" />
+    <Compile Include="PersonServiceTests.cs" />
     <Compile Include="SecurityServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PointServiceTest.cs" />
+    <Compile Include="StateServiceTests.cs" />
+    <Compile Include="UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
