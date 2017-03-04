@@ -13,6 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Library", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Services", "SmartWaste-API.Services\SmartWaste-API.Services.csproj", "{592B4AE6-B8CE-47EC-9893-B7385D336663}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Library.Tests", "SmartWaste-API.Library.Tests\SmartWaste-API.Library.Tests.csproj", "{0DB93B6A-EF44-4659-A778-0DE55E4C5665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Services.Tests", "SmartWaste-API.Services.Tests\SmartWaste-API.Services.Tests.csproj", "{3BA7F732-963A-4518-8A97-3AFF1725CA43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Tests", "SmartWaste-API.Tests\SmartWaste-API.Tests.csproj", "{0B4E31EC-EBD5-4860-97D6-933841953D24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWaste-API.Contracts.Tests", "SmartWaste-API.Contracts.Tests\SmartWaste-API.Contracts.Tests.csproj", "{24C435A2-8BCE-4FB1-997A-4DB3175F086E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +47,22 @@ Global
 		{592B4AE6-B8CE-47EC-9893-B7385D336663}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592B4AE6-B8CE-47EC-9893-B7385D336663}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592B4AE6-B8CE-47EC-9893-B7385D336663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB93B6A-EF44-4659-A778-0DE55E4C5665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB93B6A-EF44-4659-A778-0DE55E4C5665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB93B6A-EF44-4659-A778-0DE55E4C5665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB93B6A-EF44-4659-A778-0DE55E4C5665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BA7F732-963A-4518-8A97-3AFF1725CA43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BA7F732-963A-4518-8A97-3AFF1725CA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BA7F732-963A-4518-8A97-3AFF1725CA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BA7F732-963A-4518-8A97-3AFF1725CA43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B4E31EC-EBD5-4860-97D6-933841953D24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B4E31EC-EBD5-4860-97D6-933841953D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B4E31EC-EBD5-4860-97D6-933841953D24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B4E31EC-EBD5-4860-97D6-933841953D24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C435A2-8BCE-4FB1-997A-4DB3175F086E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C435A2-8BCE-4FB1-997A-4DB3175F086E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C435A2-8BCE-4FB1-997A-4DB3175F086E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C435A2-8BCE-4FB1-997A-4DB3175F086E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

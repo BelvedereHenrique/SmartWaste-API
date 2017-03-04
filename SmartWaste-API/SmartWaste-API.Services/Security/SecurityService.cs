@@ -62,13 +62,6 @@ namespace SmartWaste_API.Services.Security
                 Person = person
             };
 
-            if (person.CompanyID.HasValue && person.PersonType == PersonTypeEnum.LegalPerson)
-                result.Result.Roles.Add(RolesName.COMPANY_ADMIN);
-            else if (person.CompanyID.HasValue)
-                result.Result.Roles.Add(RolesName.COMPANY_USER);
-            else
-                result.Result.Roles.Add(RolesName.USER);
-
             return result;
         }
     }

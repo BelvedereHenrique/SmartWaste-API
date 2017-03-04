@@ -26,7 +26,7 @@ namespace SmartWaste_API.Controllers
             {
                 return Ok(new JsonModel<List<PointContract>>(_pointService.GetList(filter)));
             }
-            catch(Exception ex)
+            catch
             {
                 var error = new JsonModel<bool>(false);
                 error.AddError("There was a error to retrieve the points.");
