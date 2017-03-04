@@ -8,6 +8,7 @@ namespace SmarteWaste_API.Contracts.Account
 {
     public class AccountEnterpriseContract
     {
+        public Guid? ID { get; set; }
         public string  Name { get; set; }
         public string CNPJ { get; set; }
         public Address.AddressContract Address { get; set; }

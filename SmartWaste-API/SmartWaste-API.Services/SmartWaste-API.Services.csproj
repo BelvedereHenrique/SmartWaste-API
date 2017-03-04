@@ -49,6 +49,7 @@
     <Compile Include="Interfaces\IAccountService.cs" />
     <Compile Include="Interfaces\ISecurityService.cs" />
     <Compile Include="PointService.cs" />
+    <Compile Include="Resources\MessagesResources.cs" />
     <Compile Include="Security\RolesName.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="UserService.cs" />

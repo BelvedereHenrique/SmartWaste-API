@@ -11,5 +11,6 @@ namespace SmartWaste_API.Business.Interfaces
     {
         UserContract Get(UserFilterContract filter);
         List<UserContract> GetList(UserFilterContract filter);
+        void SetUserRoles(Guid userID, List<Guid> rolesID);
     }
 }

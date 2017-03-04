@@ -40,6 +40,7 @@ namespace SmartWaste_API.Business
                             ID = addressID,
                             CityID = enterprise.Address.City.ID,
                             Line1 = enterprise.Address.Line1,
+                            Line2 = enterprise.Address.Line2,
                             ZipCode = enterprise.Address.ZipCode,
                             Neighborhood = enterprise.Address.Neighborhood,
                             Latitude = enterprise.Address.Latitude,
@@ -135,6 +136,22 @@ namespace SmartWaste_API.Business
                 }
             }
 
+        }
+
+        public AccountEnterpriseContract GetUserEnterprise(Guid userID)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var enterpriseReturn = new AccountEnterpriseContract();
+                var person = context.People.First(x => x.UserID == userID);
+                if (person.CompanyID.HasValue)
+                {
+                    enterpriseReturn.Name = person.Company.Name;
+                    enterpriseReturn.CNPJ = person.Company.CNPJ;
+                    enterpriseReturn.ID = person.Company.ID;
+                }
+                return enterpriseReturn;
+            }
         }
     }
 }

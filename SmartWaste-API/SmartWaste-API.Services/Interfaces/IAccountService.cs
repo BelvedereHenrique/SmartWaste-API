@@ -6,7 +6,9 @@ namespace SmartWaste_API.Services.Interfaces
 {
     public interface IAccountService
     {
+        Guid DoChangesToNewEnterprise(AccountEnterpriseContract enterprise);
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
+        AccountEnterpriseContract GetUserEnterprise();
         void AddPersonal(PersonalSubscriptionFormContract data);
         bool CheckCPFAvailability(string cpf);
         bool CheckEmailAvailability(string email);
