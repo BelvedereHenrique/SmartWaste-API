@@ -33,7 +33,7 @@ namespace SmartWaste_API.Library.Security
 
         private static T GetClaim<T>(ClaimsIdentity claims, String claimName)
         {
-            var claim = claims.FindFirst(c => c.Type == claimName);
+            var claim = claims.Claims.FirstOrDefault(x => x.Type == claimName);
 
             if (claim == null)
                 return default(T);

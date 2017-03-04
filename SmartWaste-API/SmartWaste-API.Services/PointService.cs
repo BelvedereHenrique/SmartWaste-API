@@ -25,12 +25,17 @@ namespace SmartWaste_API.Services
 
         public List<PointContract> GetList(PointFilterContract filter)
         {
+            return _pointRepository.GetList(CheckFilter(filter));
+        }
+
+        private PointFilterContract CheckFilter(PointFilterContract filter)
+        {
             if (!_user.User.IsAuthenticated)
                 filter.Type = PointTypeEnum.PickupPoint;
             else if (_user.IsInRole(RolesName.USER))
                 filter.PersonID = _user.User.Person.ID;
 
-            return _pointRepository.GetList(filter);
+            return filter;
         }
     }
 }
