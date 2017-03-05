@@ -65,6 +65,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ClaimParserTest.cs" />
+    <Compile Include="SecurityManagerHelper.cs" />
     <Compile Include="SecurityManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MD5HelperTest.cs" />

@@ -31,7 +31,7 @@ namespace SmartWaste_API.Business
         {
             return context.Users.Where(user => 
                 (filter.ID == null || filter.ID == user.ID) &&
-                (filter.Login == String.Empty || filter.Login.ToLower().Trim() == user.Login.ToLower().Trim())
+                (String.IsNullOrEmpty(filter.Login) || filter.Login.ToLower().Trim() == user.Login.ToLower().Trim())
             ).AsQueryable();
         }
 

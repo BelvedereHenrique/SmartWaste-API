@@ -84,6 +84,14 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmailTemplate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="text" Nullable="false" />
+        </EntityType>
         <EntityType Name="EmployeeCompanyRequest">
           <Key>
             <PropertyRef Name="ID" />
@@ -157,6 +165,7 @@
           <Property Name="StatusID" Type="int" Nullable="false" />
           <Property Name="DeviceID" Type="uniqueidentifier" />
           <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="PointRouteStatusID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PointHistory">
           <Key>
@@ -168,6 +177,13 @@
           <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Reason" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="PointID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PointRouteStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="PointStatus">
           <Key>
@@ -195,11 +211,14 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="AssignedBy" Type="uniqueidentifier" />
+          <Property Name="AssignedTo" Type="uniqueidentifier" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="ClosedOn" Type="datetime" />
           <Property Name="StatusID" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CompanyID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ExpectedKilometers" Type="decimal" Precision="7" Scale="3" Nullable="false" />
+          <Property Name="ExpectedMinutes" Type="decimal" Precision="7" Scale="3" Nullable="false" />
         </EntityType>
         <EntityType Name="RouteHistory">
           <Key>
@@ -260,6 +279,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <Key>
             <PropertyRef Name="ID" />
             <PropertyRef Name="StatusID" />
+            <PropertyRef Name="PointRouteStatusID" />
             <PropertyRef Name="TypeID" />
             <PropertyRef Name="AddressID" />
             <PropertyRef Name="Latitude" />
@@ -269,12 +289,61 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           </Key>
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="PointRouteStatusID" Type="int" Nullable="false" />
           <Property Name="DeviceID" Type="uniqueidentifier" />
           <Property Name="TypeID" Type="int" Nullable="false" />
           <Property Name="AddressID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
           <Property Name="Longitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
           <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_GetPointsDetailed">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="PointRouteStatusID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="AddressID" />
+            <PropertyRef Name="Latitude" />
+            <PropertyRef Name="Longitude" />
+            <PropertyRef Name="Line1" />
+            <PropertyRef Name="ZipCode" />
+            <PropertyRef Name="Neighborhood" />
+            <PropertyRef Name="CityID" />
+            <PropertyRef Name="CityName" />
+            <PropertyRef Name="StateID" />
+            <PropertyRef Name="StateName" />
+            <PropertyRef Name="StateAlias" />
+            <PropertyRef Name="CountryID" />
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="PointRouteStatusID" Type="int" Nullable="false" />
+          <Property Name="DeviceID" Type="uniqueidentifier" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="AddressID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
+          <Property Name="Longitude" Type="decimal" Precision="8" Scale="6" Nullable="false" />
+          <Property Name="Line1" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Line2" Type="varchar" MaxLength="200" />
+          <Property Name="ZipCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Neighborhood" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CityID" Type="int" Nullable="false" />
+          <Property Name="CityName" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="StateID" Type="int" Nullable="false" />
+          <Property Name="StateName" Type="varchar" MaxLength="75" Nullable="false" />
+          <Property Name="StateAlias" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="60" />
+          <Property Name="CountryAlias" Type="varchar" MaxLength="10" />
+          <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <Association Name="fk_city_address">
@@ -577,6 +646,18 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Route_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="Route" Type="Self.Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Route_Person">
           <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
           <End Role="Route" Type="Self.Route" Multiplicity="*" />
@@ -585,7 +666,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Route">
-              <PropertyRef Name="AssignedBy" />
+              <PropertyRef Name="AssignedTo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -697,6 +778,18 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="PK_Point_PointRouteStatus">
+          <End Role="PointRouteStatus" Type="Self.PointRouteStatus" Multiplicity="1" />
+          <End Role="Point" Type="Self.Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointRouteStatus">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="PointRouteStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="smartwastedevModelStoreContainer">
           <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
@@ -707,6 +800,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <EntitySet Name="DeviceHistory" EntityType="Self.DeviceHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeviceStatus" EntityType="Self.DeviceStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeviceType" EntityType="Self.DeviceType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailTemplate" EntityType="Self.EmailTemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeCompanyRequest" EntityType="Self.EmployeeCompanyRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Identification" EntityType="Self.Identification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IdentificationType" EntityType="Self.IdentificationType" Schema="dbo" store:Type="Tables" />
@@ -716,6 +810,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <EntitySet Name="PersonType" EntityType="Self.PersonType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Point" EntityType="Self.Point" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointHistory" EntityType="Self.PointHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PointRouteStatus" EntityType="Self.PointRouteStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointStatus" EntityType="Self.PointStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointType" EntityType="Self.PointType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
@@ -730,6 +825,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <DefiningQuery>SELECT 
     [vw_GetPoints].[ID] AS [ID], 
     [vw_GetPoints].[StatusID] AS [StatusID], 
+    [vw_GetPoints].[PointRouteStatusID] AS [PointRouteStatusID], 
     [vw_GetPoints].[DeviceID] AS [DeviceID], 
     [vw_GetPoints].[TypeID] AS [TypeID], 
     [vw_GetPoints].[AddressID] AS [AddressID], 
@@ -738,6 +834,33 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
     [vw_GetPoints].[PersonID] AS [PersonID], 
     [vw_GetPoints].[UserID] AS [UserID]
     FROM [dbo].[vw_GetPoints] AS [vw_GetPoints]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_GetPointsDetailed" EntityType="Self.vw_GetPointsDetailed" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_GetPointsDetailed].[ID] AS [ID], 
+    [vw_GetPointsDetailed].[StatusID] AS [StatusID], 
+    [vw_GetPointsDetailed].[PointRouteStatusID] AS [PointRouteStatusID], 
+    [vw_GetPointsDetailed].[DeviceID] AS [DeviceID], 
+    [vw_GetPointsDetailed].[TypeID] AS [TypeID], 
+    [vw_GetPointsDetailed].[AddressID] AS [AddressID], 
+    [vw_GetPointsDetailed].[Latitude] AS [Latitude], 
+    [vw_GetPointsDetailed].[Longitude] AS [Longitude], 
+    [vw_GetPointsDetailed].[Line1] AS [Line1], 
+    [vw_GetPointsDetailed].[Line2] AS [Line2], 
+    [vw_GetPointsDetailed].[ZipCode] AS [ZipCode], 
+    [vw_GetPointsDetailed].[Neighborhood] AS [Neighborhood], 
+    [vw_GetPointsDetailed].[CityID] AS [CityID], 
+    [vw_GetPointsDetailed].[CityName] AS [CityName], 
+    [vw_GetPointsDetailed].[StateID] AS [StateID], 
+    [vw_GetPointsDetailed].[StateName] AS [StateName], 
+    [vw_GetPointsDetailed].[StateAlias] AS [StateAlias], 
+    [vw_GetPointsDetailed].[CountryID] AS [CountryID], 
+    [vw_GetPointsDetailed].[CountryName] AS [CountryName], 
+    [vw_GetPointsDetailed].[CountryAlias] AS [CountryAlias], 
+    [vw_GetPointsDetailed].[PersonID] AS [PersonID], 
+    [vw_GetPointsDetailed].[Name] AS [Name], 
+    [vw_GetPointsDetailed].[UserID] AS [UserID]
+    FROM [dbo].[vw_GetPointsDetailed] AS [vw_GetPointsDetailed]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_city_address" Association="Self.fk_city_address">
             <End Role="City" EntitySet="City" />
@@ -839,6 +962,10 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <End Role="PointStatus" EntitySet="PointStatus" />
             <End Role="PointHistory" EntitySet="PointHistory" />
           </AssociationSet>
+          <AssociationSet Name="FK_Route_Company" Association="Self.FK_Route_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Route" EntitySet="Route" />
+          </AssociationSet>
           <AssociationSet Name="FK_Route_Person" Association="Self.FK_Route_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="Route" EntitySet="Route" />
@@ -879,6 +1006,10 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <End Role="User" EntitySet="User" />
             <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
+          <AssociationSet Name="PK_Point_PointRouteStatus" Association="Self.PK_Point_PointRouteStatus">
+            <End Role="PointRouteStatus" EntitySet="PointRouteStatus" />
+            <End Role="Point" EntitySet="Point" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -906,7 +1037,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <EntitySet Name="PointStatus" EntityType="smartwaste.devModel.PointStatu" />
           <EntitySet Name="PointTypes" EntityType="smartwaste.devModel.PointType" />
           <EntitySet Name="Roles" EntityType="smartwaste.devModel.Role" />
-          <EntitySet Name="Routes" EntityType="smartwaste.devModel.Route" />
           <EntitySet Name="RouteHistories" EntityType="smartwaste.devModel.RouteHistory" />
           <EntitySet Name="RoutePoints" EntityType="smartwaste.devModel.RoutePoint" />
           <EntitySet Name="RouteStatus" EntityType="smartwaste.devModel.RouteStatu" />
@@ -1001,14 +1131,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <End Role="Person" EntitySet="People" />
             <End Role="PointHistory" EntitySet="PointHistories" />
           </AssociationSet>
-          <AssociationSet Name="FK_Route_Person" Association="smartwaste.devModel.FK_Route_Person">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Route" EntitySet="Routes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Route_Person2" Association="smartwaste.devModel.FK_Route_Person2">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Route" EntitySet="Routes" />
-          </AssociationSet>
           <AssociationSet Name="FK_Point_PointStatus" Association="smartwaste.devModel.FK_Point_PointStatus">
             <End Role="PointStatu" EntitySet="PointStatus" />
             <End Role="Point" EntitySet="Points" />
@@ -1033,6 +1155,35 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <End Role="Role" EntitySet="Roles" />
             <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
+          <AssociationSet Name="FK_RouteHistory_Status" Association="smartwaste.devModel.FK_RouteHistory_Status">
+            <End Role="RouteStatu" EntitySet="RouteStatus" />
+            <End Role="RouteHistory" EntitySet="RouteHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="smartwaste.devModel.FK_UserRole_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <EntitySet Name="vw_GetPoints" EntityType="smartwaste.devModel.vw_GetPoints" />
+          <EntitySet Name="vw_GetPointsDetailed" EntityType="smartwaste.devModel.vw_GetPointsDetailed" />
+          <EntitySet Name="EmailTemplates" EntityType="smartwaste.devModel.EmailTemplate" />
+          <EntitySet Name="PointRouteStatus" EntityType="smartwaste.devModel.PointRouteStatu" />
+          <AssociationSet Name="PK_Point_PointRouteStatus" Association="smartwaste.devModel.PK_Point_PointRouteStatus">
+            <End Role="PointRouteStatu" EntitySet="PointRouteStatus" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <EntitySet Name="Routes" EntityType="smartwaste.devModel.Route" />
+          <AssociationSet Name="FK_Route_Company" Association="smartwaste.devModel.FK_Route_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Person" Association="smartwaste.devModel.FK_Route_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Person2" Association="smartwaste.devModel.FK_Route_Person2">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
           <AssociationSet Name="FK_Route_Status" Association="smartwaste.devModel.FK_Route_Status">
             <End Role="RouteStatu" EntitySet="RouteStatus" />
             <End Role="Route" EntitySet="Routes" />
@@ -1045,15 +1196,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <End Role="Route" EntitySet="Routes" />
             <End Role="RoutePoint" EntitySet="RoutePoints" />
           </AssociationSet>
-          <AssociationSet Name="FK_RouteHistory_Status" Association="smartwaste.devModel.FK_RouteHistory_Status">
-            <End Role="RouteStatu" EntitySet="RouteStatus" />
-            <End Role="RouteHistory" EntitySet="RouteHistories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserRole_User" Association="smartwaste.devModel.FK_UserRole_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="UserRole" EntitySet="UserRoles" />
-          </AssociationSet>
-          <EntitySet Name="vw_GetPoints" EntityType="smartwaste.devModel.vw_GetPoints" />
         </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1091,6 +1233,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <Property Name="CNPJ" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="CompanyAddresses" Relationship="smartwaste.devModel.FK_CompanyAddress_Company" FromRole="Company" ToRole="CompanyAddress" />
           <NavigationProperty Name="People" Relationship="smartwaste.devModel.FK_Person_Company" FromRole="Company" ToRole="Person" />
+          <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Company" FromRole="Company" ToRole="Route" />
         </EntityType>
         <EntityType Name="CompanyAddress">
           <Key>
@@ -1219,7 +1362,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <NavigationProperty Name="PointHistories" Relationship="smartwaste.devModel.FK_PointHistory_Person" FromRole="Person" ToRole="PointHistory" />
           <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Person" FromRole="Person" ToRole="Route" />
           <NavigationProperty Name="Routes1" Relationship="smartwaste.devModel.FK_Route_Person2" FromRole="Person" ToRole="Route" />
-        </EntityType>
+          </EntityType>
         <EntityType Name="PersonAddress">
           <Key>
             <PropertyRef Name="ID" />
@@ -1253,6 +1396,8 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <NavigationProperty Name="PointType" Relationship="smartwaste.devModel.FK_Point_PointType" FromRole="Point" ToRole="PointType" />
           <NavigationProperty Name="PointHistories" Relationship="smartwaste.devModel.FK_PointHistory_Point" FromRole="Point" ToRole="PointHistory" />
           <NavigationProperty Name="RoutePoints" Relationship="smartwaste.devModel.FK_RoutePoint_Point" FromRole="Point" ToRole="RoutePoint" />
+          <Property Name="PointRouteStatusID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PointRouteStatu" Relationship="smartwaste.devModel.PK_Point_PointRouteStatus" FromRole="Point" ToRole="PointRouteStatu" />
         </EntityType>
         <EntityType Name="PointHistory">
           <Key>
@@ -1293,22 +1438,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="UserRoles" Relationship="smartwaste.devModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
         </EntityType>
-        <EntityType Name="Route">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="AssignedBy" Type="Guid" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ClosedOn" Type="DateTime" Precision="3" />
-          <Property Name="StatusID" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_Route_Person" FromRole="Route" ToRole="Person" />
-          <NavigationProperty Name="Person1" Relationship="smartwaste.devModel.FK_Route_Person2" FromRole="Route" ToRole="Person" />
-          <NavigationProperty Name="RouteStatu" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="Route" ToRole="RouteStatu" />
-          <NavigationProperty Name="RouteHistories" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="Route" ToRole="RouteHistory" />
-          <NavigationProperty Name="RoutePoints" Relationship="smartwaste.devModel.FK_RoutePoint_Route" FromRole="Route" ToRole="RoutePoint" />
-        </EntityType>
         <EntityType Name="RouteHistory">
           <Key>
             <PropertyRef Name="ID" />
@@ -1318,8 +1447,8 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="PersonID" Type="Guid" Nullable="false" />
           <Property Name="Reason" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Route" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="RouteHistory" ToRole="Route" />
           <NavigationProperty Name="RouteStatu" Relationship="smartwaste.devModel.FK_RouteHistory_Status" FromRole="RouteHistory" ToRole="RouteStatu" />
+          <NavigationProperty Name="Route" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="RouteHistory" ToRole="Route" />
         </EntityType>
         <EntityType Name="RoutePoint">
           <Key>
@@ -1337,8 +1466,8 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="RouteStatu" ToRole="Route" />
           <NavigationProperty Name="RouteHistories" Relationship="smartwaste.devModel.FK_RouteHistory_Status" FromRole="RouteStatu" ToRole="RouteHistory" />
+          <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="RouteStatu" ToRole="Route" />
         </EntityType>
         <EntityType Name="State">
           <Key>
@@ -1638,30 +1767,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Route_Person">
-          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="0..1" />
-          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Route">
-              <PropertyRef Name="AssignedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Route_Person2">
-          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
-          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Route">
-              <PropertyRef Name="CreatedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Point_PointStatus">
           <End Type="smartwaste.devModel.PointStatu" Role="PointStatu" Multiplicity="1" />
           <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
@@ -1734,6 +1839,183 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RouteHistory_Status">
+          <End Type="smartwaste.devModel.RouteStatu" Role="RouteStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.RouteHistory" Role="RouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RouteStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RouteHistory">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Type="smartwaste.devModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_GetPoints">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="AddressID" />
+            <PropertyRef Name="Latitude" />
+            <PropertyRef Name="Longitude" />
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="PointRouteStatusID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="DeviceID" Type="Guid" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="AddressID" Type="Guid" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="PersonID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="PointRouteStatusID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vw_GetPointsDetailed">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="AddressID" />
+            <PropertyRef Name="Latitude" />
+            <PropertyRef Name="Longitude" />
+            <PropertyRef Name="Line1" />
+            <PropertyRef Name="ZipCode" />
+            <PropertyRef Name="Neighborhood" />
+            <PropertyRef Name="StateName" />
+            <PropertyRef Name="StateAlias" />
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="PointRouteStatusID" />
+            <PropertyRef Name="CityID" />
+            <PropertyRef Name="CityName" />
+            <PropertyRef Name="StateID" />
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="DeviceID" Type="Guid" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="AddressID" Type="Guid" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
+          <Property Name="Line1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Line2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Neighborhood" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="StateAlias" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CountryName" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="CountryAlias" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PersonID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="PointRouteStatusID" Type="Int32" Nullable="false" />
+          <Property Name="CityID" Type="Int32" Nullable="false" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="StateID" Type="Int32" Nullable="false" />
+          <Property Name="CountryID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailTemplate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PointRouteStatu">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Points" Relationship="smartwaste.devModel.PK_Point_PointRouteStatus" FromRole="PointRouteStatu" ToRole="Point" />
+        </EntityType>
+        <Association Name="PK_Point_PointRouteStatus">
+          <End Type="smartwaste.devModel.PointRouteStatu" Role="PointRouteStatu" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointRouteStatu">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="PointRouteStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="AssignedTo" Type="Guid" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosedOn" Type="DateTime" Precision="3" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CompanyID" Type="Guid" Nullable="false" />
+          <Property Name="ExpectedKilometers" Type="Decimal" Nullable="false" Precision="7" Scale="3" />
+          <Property Name="ExpectedMinutes" Type="Decimal" Nullable="false" Precision="7" Scale="3" />
+          <NavigationProperty Name="Company" Relationship="smartwaste.devModel.FK_Route_Company" FromRole="Route" ToRole="Company" />
+          <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_Route_Person" FromRole="Route" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="smartwaste.devModel.FK_Route_Person2" FromRole="Route" ToRole="Person" />
+          <NavigationProperty Name="RouteStatu" Relationship="smartwaste.devModel.FK_Route_Status" FromRole="Route" ToRole="RouteStatu" />
+          <NavigationProperty Name="RouteHistories" Relationship="smartwaste.devModel.FK_RouteHistory_Route" FromRole="Route" ToRole="RouteHistory" />
+          <NavigationProperty Name="RoutePoints" Relationship="smartwaste.devModel.FK_RoutePoint_Route" FromRole="Route" ToRole="RoutePoint" />
+        </EntityType>
+        <Association Name="FK_Route_Company">
+          <End Type="smartwaste.devModel.Company" Role="Company" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Person">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="AssignedTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Person2">
+          <End Type="smartwaste.devModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Route_Status">
           <End Type="smartwaste.devModel.RouteStatu" Role="RouteStatu" Multiplicity="1" />
           <End Type="smartwaste.devModel.Route" Role="Route" Multiplicity="*" />
@@ -1770,51 +2052,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RouteHistory_Status">
-          <End Type="smartwaste.devModel.RouteStatu" Role="RouteStatu" Multiplicity="1" />
-          <End Type="smartwaste.devModel.RouteHistory" Role="RouteHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RouteStatu">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RouteHistory">
-              <PropertyRef Name="StatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserRole_User">
-          <End Type="smartwaste.devModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="smartwaste.devModel.UserRole" Role="UserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="UserRole">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="vw_GetPoints">
-          <Key>
-            <PropertyRef Name="ID" />
-            <PropertyRef Name="StatusID" />
-            <PropertyRef Name="TypeID" />
-            <PropertyRef Name="AddressID" />
-            <PropertyRef Name="Latitude" />
-            <PropertyRef Name="Longitude" />
-            <PropertyRef Name="PersonID" />
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="StatusID" Type="Int32" Nullable="false" />
-          <Property Name="DeviceID" Type="Guid" />
-          <Property Name="TypeID" Type="Int32" Nullable="false" />
-          <Property Name="AddressID" Type="Guid" Nullable="false" />
-          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
-          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="8" Scale="6" />
-          <Property Name="PersonID" Type="Guid" Nullable="false" />
-          <Property Name="UserID" Type="Guid" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1983,6 +2220,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <EntitySetMapping Name="Points">
             <EntityTypeMapping TypeName="smartwaste.devModel.Point">
               <MappingFragment StoreEntitySet="Point">
+                <ScalarProperty Name="PointRouteStatusID" ColumnName="PointRouteStatusID" />
                 <ScalarProperty Name="TypeID" ColumnName="TypeID" />
                 <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
                 <ScalarProperty Name="StatusID" ColumnName="StatusID" />
@@ -2023,18 +2261,6 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
             <EntityTypeMapping TypeName="smartwaste.devModel.Role">
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Routes">
-            <EntityTypeMapping TypeName="smartwaste.devModel.Route">
-              <MappingFragment StoreEntitySet="Route">
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="AssignedBy" ColumnName="AssignedBy" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2101,6 +2327,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
           <EntitySetMapping Name="vw_GetPoints">
             <EntityTypeMapping TypeName="smartwaste.devModel.vw_GetPoints">
               <MappingFragment StoreEntitySet="vw_GetPoints">
+                <ScalarProperty Name="PointRouteStatusID" ColumnName="PointRouteStatusID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
@@ -2109,6 +2336,67 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPoints' does not have a p
                 <ScalarProperty Name="TypeID" ColumnName="TypeID" />
                 <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
                 <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_GetPointsDetailed">
+            <EntityTypeMapping TypeName="smartwaste.devModel.vw_GetPointsDetailed">
+              <MappingFragment StoreEntitySet="vw_GetPointsDetailed">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
+                <ScalarProperty Name="PointRouteStatusID" ColumnName="PointRouteStatusID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="CountryAlias" ColumnName="CountryAlias" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="StateAlias" ColumnName="StateAlias" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="Neighborhood" ColumnName="Neighborhood" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Line2" ColumnName="Line2" />
+                <ScalarProperty Name="Line1" ColumnName="Line1" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="AddressID" ColumnName="AddressID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailTemplates">
+            <EntityTypeMapping TypeName="smartwaste.devModel.EmailTemplate">
+              <MappingFragment StoreEntitySet="EmailTemplate">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PointRouteStatus">
+            <EntityTypeMapping TypeName="smartwaste.devModel.PointRouteStatu">
+              <MappingFragment StoreEntitySet="PointRouteStatus">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="smartwaste.devModel.Route">
+              <MappingFragment StoreEntitySet="Route">
+                <ScalarProperty Name="ExpectedMinutes" ColumnName="ExpectedMinutes" />
+                <ScalarProperty Name="ExpectedKilometers" ColumnName="ExpectedKilometers" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

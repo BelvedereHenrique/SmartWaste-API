@@ -76,6 +76,7 @@
     <Compile Include="PointControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccountControllerTest.cs" />
+    <Compile Include="RouteControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -85,6 +86,18 @@
     <ProjectReference Include="..\SmarteWaste-API.Contracts\SmartWaste-API.Contracts.csproj">
       <Project>{77CF2127-BD61-4DC0-A338-4ACAFEC7658D}</Project>
       <Name>SmartWaste-API.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Contracts.Tests\SmartWaste-API.Contracts.Tests.csproj">
+      <Project>{24C435A2-8BCE-4FB1-997A-4DB3175F086E}</Project>
+      <Name>SmartWaste-API.Contracts.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Library.Tests\SmartWaste-API.Library.Tests.csproj">
+      <Project>{0DB93B6A-EF44-4659-A778-0DE55E4C5665}</Project>
+      <Name>SmartWaste-API.Library.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Library\SmartWaste-API.Library.csproj">
+      <Project>{75878157-15e1-4135-ae5c-68fb2ec9a1dd}</Project>
+      <Name>SmartWaste-API.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartWaste-API.Services\SmartWaste-API.Services.csproj">
       <Project>{592B4AE6-B8CE-47EC-9893-B7385D336663}</Project>

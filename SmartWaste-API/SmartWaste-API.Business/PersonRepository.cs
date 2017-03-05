@@ -42,7 +42,7 @@ namespace SmartWaste_API.Business
                 (filter.CompanyID == null || filter.CompanyID == x.CompanyID)&&
                 (String.IsNullOrEmpty(filter.Email) || filter.Email == x.Email)&&
                 (String.IsNullOrEmpty(filter.Document) || x.Identifications.Any(y=>y.Value == filter.Document))
-            );
+            ).OrderBy(x => x.Name);
         }
     }
 }

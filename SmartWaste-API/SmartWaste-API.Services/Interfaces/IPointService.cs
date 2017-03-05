@@ -10,5 +10,6 @@ namespace SmartWaste_API.Services.Interfaces
     public interface IPointService
     {
         List<PointContract> GetList(PointFilterContract filter);
+        List<PointDetailedContract> GetDetailedList(PointFilterContract filter);
     }
 }

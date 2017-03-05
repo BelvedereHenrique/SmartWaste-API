@@ -70,6 +70,8 @@
     <Compile Include="PointServiceTest.cs" />
     <Compile Include="StateServiceTests.cs" />
     <Compile Include="UserServiceTests.cs" />
+    <Compile Include="RouteServiceTests.cs" />
+    <Compile Include="RouteValidationServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -82,6 +84,14 @@
     <ProjectReference Include="..\SmartWaste-API.Business\SmartWaste-API.Business.csproj">
       <Project>{FBEA8F4E-9C42-48E2-9743-49C99E045C38}</Project>
       <Name>SmartWaste-API.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Contracts.Tests\SmartWaste-API.Contracts.Tests.csproj">
+      <Project>{24C435A2-8BCE-4FB1-997A-4DB3175F086E}</Project>
+      <Name>SmartWaste-API.Contracts.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWaste-API.Library.Tests\SmartWaste-API.Library.Tests.csproj">
+      <Project>{0DB93B6A-EF44-4659-A778-0DE55E4C5665}</Project>
+      <Name>SmartWaste-API.Library.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartWaste-API.Library\SmartWaste-API.Library.csproj">
       <Project>{75878157-15E1-4135-AE5C-68FB2EC9A1DD}</Project>

@@ -8,7 +8,7 @@ namespace SmarteWaste_API.Contracts.Point
 {
     public enum PointTypeEnum
     {
-        CollectPoint = 1,
-        PickupPoint = 2
+        User = 1,
+        CompanyTrashCan = 2
     }
 }

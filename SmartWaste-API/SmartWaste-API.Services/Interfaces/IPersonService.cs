@@ -1,5 +1,6 @@
 ﻿using SmarteWaste_API.Contracts.Person;
 using System;
+using System.Collections.Generic;
 
 namespace SmartWaste_API.Services.Interfaces
 {
@@ -7,5 +8,6 @@ namespace SmartWaste_API.Services.Interfaces
     {
         PersonContract Get(PersonFilterContract filter);
         void SetCompanyID(Guid companyID, PersonFilterContract filter);
+        List<PersonContract> GetList(PersonFilterContract filter);
     }
 }

@@ -17,12 +17,14 @@ namespace SmartWaste_API.Business.ContractParser
             {
                 ID = entitie.ID,
                 Status = (PointStatusEnum)entitie.StatusID,
-                Type = (PointTypeEnum)entitie.TypeID,                                    
-                Latitude = entitie.Latitude,                    
-                Longitude = entitie.Longitude,    
+                Type = (PointTypeEnum)entitie.TypeID,
+                Latitude = entitie.Latitude,
+                Longitude = entitie.Longitude,
                 DeviceID = entitie.DeviceID,
                 PersonID = entitie.PersonID,
-                UserID = entitie.UserID                
+                UserID = entitie.UserID,
+                PointRouteStatus = (PointRouteStatusEnum)entitie.PointRouteStatusID,
+                AddressID = entitie.AddressID
             };
         }
 

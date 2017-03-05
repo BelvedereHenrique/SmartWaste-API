@@ -46,7 +46,6 @@ namespace SmartWaste_API.Business.Data
         public virtual DbSet<PointStatu> PointStatus { get; set; }
         public virtual DbSet<PointType> PointTypes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<RouteHistory> RouteHistories { get; set; }
         public virtual DbSet<RoutePoint> RoutePoints { get; set; }
         public virtual DbSet<RouteStatu> RouteStatus { get; set; }
@@ -54,5 +53,9 @@ namespace SmartWaste_API.Business.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<vw_GetPoints> vw_GetPoints { get; set; }
+        public virtual DbSet<vw_GetPointsDetailed> vw_GetPointsDetailed { get; set; }
+        public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public virtual DbSet<PointRouteStatu> PointRouteStatus { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
     }
 }

@@ -58,7 +58,10 @@
     <Compile Include="ContractParser\CountryContractParser.cs" />
     <Compile Include="ContractParser\PersonContractParser.cs" />
     <Compile Include="ContractParser\PointContractParser.cs" />
+    <Compile Include="ContractParser\PointDetailedContractParser.cs" />
     <Compile Include="ContractParser\RoleContractParser.cs" />
+    <Compile Include="ContractParser\RouteContractParser.cs" />
+    <Compile Include="ContractParser\RouteHistoryContractParser.cs" />
     <Compile Include="ContractParser\StateContractParser.cs" />
     <Compile Include="ContractParser\UserContractParser.cs" />
     <Compile Include="CountryRepository.cs" />
@@ -104,6 +107,9 @@
     <Compile Include="Data\DeviceType.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\EmailTemplate.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\EmployeeCompanyRequest.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
@@ -129,6 +135,9 @@
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\PointHistory.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PointRouteStatu.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\PointStatu.cs">
@@ -164,17 +173,26 @@
     <Compile Include="Data\vw_GetPoints.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\vw_GetPointsDetailed.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
     <Compile Include="Interfaces\IIdentificationRepository.cs" />
     <Compile Include="Interfaces\IPersonRepository.cs" />
+    <Compile Include="Interfaces\IPointInternalRepository.cs" />
     <Compile Include="Interfaces\IPointRepository.cs" />
+    <Compile Include="Interfaces\IRouteHistoryInternalRepository.cs" />
+    <Compile Include="Interfaces\IRouteHistoryRepository.cs" />
+    <Compile Include="Interfaces\IRouteRepository.cs" />
     <Compile Include="Interfaces\IStateRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="PersonRepository.cs" />
     <Compile Include="PointRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteHistoryRepository.cs" />
+    <Compile Include="RouteRepository.cs" />
     <Compile Include="StateRepository.cs" />
     <Compile Include="UserRepository.cs" />
   </ItemGroup>

@@ -42,7 +42,7 @@ namespace SmartWaste_API.Services.Tests
 
         internal IPersonService GetPersonService(IPersonRepository _personRepository)
         {
-            return (IPersonService)new PersonService(_personRepository);
+            return (IPersonService)new PersonService(_personRepository, null);
         }
     }
 }
