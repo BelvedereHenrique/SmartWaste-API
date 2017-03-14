@@ -34,16 +34,12 @@ namespace SmartWaste_API.Services
         /// <returns>EnterpriseID</returns>
         public Guid DoChangesToNewEnterprise (AccountEnterpriseContract enterprise)
         {
-            try
-            {
-                if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
-                var e = AddEnterprise(enterprise);
-                AddEnterpriseToLoggedUser(e);
-                SetCompanyRolesToLoggedUser();
-                RestartPassword();
-                return e;
-            }
-            catch (Exception ex){ throw ex; }
+            if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
+            var e = AddEnterprise(enterprise);
+            AddEnterpriseToLoggedUser(e);
+            SetCompanyRolesToLoggedUser();
+            RestartPassword();
+            return e;
         }
 
         /// <summary>

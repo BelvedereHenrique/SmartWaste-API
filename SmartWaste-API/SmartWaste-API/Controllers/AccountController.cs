@@ -84,7 +84,7 @@ namespace SmartWaste_API.Controllers
             try
             {
                 var enterpriseID = _accountService.DoChangesToNewEnterprise(enterprise);
-                return Ok(new JsonModel<bool>(true));
+                return Ok(new JsonModel<Guid>(enterpriseID));
             }
             catch (Exception ex)
             {

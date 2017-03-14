@@ -9,6 +9,7 @@ namespace SmartWaste_API.Services.Interfaces
         Guid DoChangesToNewEnterprise(AccountEnterpriseContract enterprise);
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
         AccountEnterpriseContract GetUserEnterprise();
+        bool CheckEnterprise(AccountEnterpriseContract enterprise);
         void AddPersonal(PersonalSubscriptionFormContract data);
         bool CheckCPFAvailability(string cpf);
         bool CheckEmailAvailability(string email);

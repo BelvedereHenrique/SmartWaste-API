@@ -15,12 +15,10 @@ namespace SmartWaste_API.Services
     public class CountryService : ICountryService
     {
         private readonly ICountryRepository _countryRepository;
-        private readonly ISecurityManager<IdentityContract> _user;
 
-        public CountryService(ICountryRepository _repo, ISecurityManager<IdentityContract> user)
+        public CountryService(ICountryRepository _repo)
         {
             _countryRepository = _repo;
-            _user = user;
         }
 
         public List<CountryContract> GetList()
