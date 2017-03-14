@@ -19,6 +19,7 @@ namespace SmartWaste_API.Business.Data
         {
             this.CompanyAddresses = new HashSet<CompanyAddress>();
             this.People = new HashSet<Person>();
+            this.Routes = new HashSet<Route>();
         }
     
         public System.Guid ID { get; set; }
@@ -29,5 +30,7 @@ namespace SmartWaste_API.Business.Data
         public virtual ICollection<CompanyAddress> CompanyAddresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Person> People { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Route> Routes { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace SmartWaste_API.Business.Data
         public System.Guid PersonID { get; set; }
         public string Reason { get; set; }
     
-        public virtual Route Route { get; set; }
         public virtual RouteStatu RouteStatu { get; set; }
+        public virtual Route Route { get; set; }
     }
 }

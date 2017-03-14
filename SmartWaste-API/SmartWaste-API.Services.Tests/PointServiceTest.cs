@@ -34,7 +34,7 @@ namespace SmartWaste_API.Services.Tests
             Assert.AreEqual(result, points);
 
             pointService.Verify(x => x.GetList(It.Is((PointFilterContract filter) =>
-                filter.Type == PointTypeEnum.PickupPoint &&
+                filter.Type == PointTypeEnum.CompanyTrashCan &&
                 filter.Status == null &&
                 filter.PersonID == null                
             )), Times.Once);

@@ -8,6 +8,10 @@ using SmartWaste_API.Controllers;
 using SmartWaste_API.Models;
 using System.Web.Http.Results;
 using System.Linq;
+using SmartWaste_API.Library.Security;
+using SmarteWaste_API.Contracts;
+using SmartWaste_API.Library.Tests;
+using SmarteWaste_API.Contracts.Person;
 
 namespace SmartWaste_API.Tests
 {
@@ -23,7 +27,7 @@ namespace SmartWaste_API.Tests
             var pointService = new Mock<IPointService>();
             pointService.Setup(x => x.GetList(It.IsAny<PointFilterContract>())).Returns(points);
 
-            var controller = new PointController(pointService.Object);
+            var controller = new PointController(pointService.Object, null, null);
             var jsonModel = controller.GetList(filter) as OkNegotiatedContentResult<JsonModel<List<PointContract>>>;
 
             Assert.IsTrue(jsonModel.Content.Success);
@@ -40,13 +44,96 @@ namespace SmartWaste_API.Tests
             var pointService = new Mock<IPointService>();
             pointService.Setup(x => x.GetList(It.IsAny<PointFilterContract>())).Throws(new Exception());
 
-            var controller = new PointController(pointService.Object);
+            var controller = new PointController(pointService.Object, null, null);
             var jsonModel = controller.GetList(filter) as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
             Assert.IsFalse(jsonModel.Content.Result);
             Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
             Assert.IsTrue(jsonModel.Content.Messages.All(x => x.IsError && !String.IsNullOrEmpty(x.Message)));
+        }
+
+        [TestMethod]
+        public void GetDetailedListSuccessTest()
+        {
+            var filter = new PointFilterContract();
+            var points = new List<PointDetailedContract>();
+
+            var pointService = new Mock<IPointService>();
+            pointService.Setup(x => x.GetDetailedList(It.IsAny<PointFilterContract>())).Returns(points);
+
+            var controller = new PointController(pointService.Object, null, null);
+            var jsonModel = controller.GetDetailedList(filter) as OkNegotiatedContentResult<JsonModel<List<PointDetailedContract>>>;
+
+            Assert.IsTrue(jsonModel.Content.Success);
+            Assert.AreEqual(jsonModel.Content.Result, points);
+            Assert.AreEqual(jsonModel.Content.Messages.Count, 0);
+        }
+
+        [TestMethod]
+        public void GetDetailedListFailTest()
+        {
+            var filter = new PointFilterContract();            
+
+            var pointService = new Mock<IPointService>();
+            pointService.Setup(x => x.GetDetailedList(It.IsAny<PointFilterContract>())).Throws(new Exception());
+
+            var controller = new PointController(pointService.Object, null, null);
+            var jsonModel = controller.GetDetailedList(filter) as OkNegotiatedContentResult<JsonModel<bool>>;
+
+            Assert.IsFalse(jsonModel.Content.Success);
+            Assert.IsFalse(jsonModel.Content.Result);
+            Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
+            Assert.IsTrue(jsonModel.Content.Messages.All(x => x.IsError && !String.IsNullOrEmpty(x.Message)));
+        }
+
+        [TestMethod]
+        public void GetPeopleFromCompanySuccessfulTest()
+        {
+            var persons = new List<PersonContract>();
+
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var securityManager = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>());
+            
+            var personService = GetPersonService();
+            personService.Setup(x => x.GetList(It.IsAny<PersonFilterContract>())).Returns(persons);
+
+            var controller = new PointController(null, personService.Object, securityManager.Object);
+            var jsonModel = controller.GetPeopleFromCompany() as OkNegotiatedContentResult<JsonModel<List<PersonContract>>>;
+
+            Assert.IsTrue(jsonModel.Content.Success);
+            Assert.AreEqual(jsonModel.Content.Messages.Count, 0);
+            Assert.AreEqual(jsonModel.Content.Result, persons);
+
+            personService.Verify(x => x.GetList(It.IsAny<PersonFilterContract>()), Times.Once);
+            personService.Verify(x => x.GetList(It.Is((PersonFilterContract filter) => filter.CompanyID == person.CompanyID)), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetPeopleFromCompanyFailTest()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var securityManager = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>());
+
+            var personService = GetPersonService();
+            personService.Setup(x => x.GetList(It.IsAny<PersonFilterContract>())).Throws(new Exception());
+
+            var controller = new PointController(null, personService.Object, securityManager.Object);
+            var jsonModel = controller.GetPeopleFromCompany() as OkNegotiatedContentResult<JsonModel<bool>>;
+
+            Assert.IsFalse(jsonModel.Content.Success);
+            Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
+            Assert.AreEqual(jsonModel.Content.Result, false);
+
+            personService.Verify(x => x.GetList(It.IsAny<PersonFilterContract>()), Times.Once);
+            personService.Verify(x => x.GetList(It.Is((PersonFilterContract filter) => filter.CompanyID == person.CompanyID)), Times.Once);
+        }
+
+        private Mock<IPersonService> GetPersonService()
+        {
+            return new Mock<IPersonService>();
         }
     }
 }

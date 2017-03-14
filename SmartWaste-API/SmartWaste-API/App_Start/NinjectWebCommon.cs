@@ -15,6 +15,7 @@ namespace SmartWaste_API.App_Start
     using Ninject.Web.WebApi;
     using System.Security.Principal;
     using System.Security.Claims;
+    using Security;
 
     public static class NinjectWebCommon
     {
@@ -74,8 +75,13 @@ namespace SmartWaste_API.App_Start
         {
             kernel.Bind(x => x.FromAssembliesMatching("SmartWaste-API.*.dll").SelectAllClasses().BindDefaultInterface());
 
-            kernel.Bind<IPrincipal>().ToMethod(context => HttpContext.Current.User)
-                .InRequestScope();
+            kernel.Bind<IPrincipal>().ToMethod((context) =>
+            {
+                if (HttpContext.Current == null || HttpContext.Current.User == null)
+                    return new UnauthorizedUserPrincipal();
+
+                return HttpContext.Current.User;
+            }).InRequestScope();
         }
     }
 }

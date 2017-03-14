@@ -23,5 +23,6 @@ namespace SmartWaste_API.Business.Data
         public decimal Longitude { get; set; }
         public System.Guid PersonID { get; set; }
         public System.Guid UserID { get; set; }
+        public int PointRouteStatusID { get; set; }
     }
 }

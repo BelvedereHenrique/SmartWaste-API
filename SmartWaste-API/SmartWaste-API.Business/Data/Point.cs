@@ -26,6 +26,7 @@ namespace SmartWaste_API.Business.Data
         public int StatusID { get; set; }
         public Nullable<System.Guid> DeviceID { get; set; }
         public int TypeID { get; set; }
+        public int PointRouteStatusID { get; set; }
     
         public virtual Address Address { get; set; }
         public virtual Device Device { get; set; }
@@ -35,5 +36,6 @@ namespace SmartWaste_API.Business.Data
         public virtual ICollection<PointHistory> PointHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RoutePoint> RoutePoints { get; set; }
+        public virtual PointRouteStatu PointRouteStatu { get; set; }
     }
 }

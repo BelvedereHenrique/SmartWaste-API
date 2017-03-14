@@ -8,7 +8,7 @@ namespace SmarteWaste_API.Contracts.Point
 {
     public class PointCoordinatorContract
     {
-        public Decimal Latitude { get; set; }
-        public Decimal Longitude { get; set; }
+        public Decimal? Latitude { get; set; }
+        public Decimal? Longitude { get; set; }
     }
 }

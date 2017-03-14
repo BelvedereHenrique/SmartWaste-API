@@ -22,12 +22,16 @@ namespace SmartWaste_API.Business.Data
         }
     
         public System.Guid ID { get; set; }
-        public Nullable<System.Guid> AssignedBy { get; set; }
+        public Nullable<System.Guid> AssignedTo { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public Nullable<System.DateTime> ClosedOn { get; set; }
         public int StatusID { get; set; }
         public System.Guid CreatedBy { get; set; }
+        public System.Guid CompanyID { get; set; }
+        public decimal ExpectedKilometers { get; set; }
+        public decimal ExpectedMinutes { get; set; }
     
+        public virtual Company Company { get; set; }
         public virtual Person Person { get; set; }
         public virtual Person Person1 { get; set; }
         public virtual RouteStatu RouteStatu { get; set; }

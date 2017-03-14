@@ -50,6 +50,11 @@ namespace SmarteWaste_API.Contracts.OperationResult
         {
             Messages.Add(new OperationMessageResult(isError, message));
         }
+
+        public void Merge(OperationResult operationResult)
+        {
+            this.Messages.AddRange(operationResult.Messages);
+        }
     }
 
     public class OperationResult<T> : OperationResult

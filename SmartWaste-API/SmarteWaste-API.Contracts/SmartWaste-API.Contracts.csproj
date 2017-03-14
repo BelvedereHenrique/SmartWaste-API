@@ -58,12 +58,18 @@
     <Compile Include="Person\PersonTypeEnum.cs" />
     <Compile Include="Point\PointContract.cs" />
     <Compile Include="Point\PointCoordinatorContract.cs" />
+    <Compile Include="Point\PointDetailedContract.cs" />
     <Compile Include="Point\PointFilterContract.cs" />
+    <Compile Include="Point\PointRouteStatusEnum.cs" />
     <Compile Include="Point\PointStatusEnum.cs" />
     <Compile Include="Point\PointTypeEnum.cs" />
     <Compile Include="Person\PersonalSubscriptionFormContract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Role\RoleContract.cs" />
+    <Compile Include="Route\RouteContract.cs" />
+    <Compile Include="Route\RouteFilterContract.cs" />
+    <Compile Include="Route\RouteHistoryContract.cs" />
+    <Compile Include="Route\RouteStatusEnum.cs" />
     <Compile Include="User\UserContract.cs" />
     <Compile Include="User\UserFilterContract.cs" />
   </ItemGroup>
