@@ -1,5 +1,5 @@
 
-﻿using SmarteWaste_API.Contracts.Account;
+using SmarteWaste_API.Contracts.Account;
 using SmarteWaste_API.Contracts.Address;
 using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Models;
@@ -7,6 +7,7 @@ using SmartWaste_API.Services;
 using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace SmartWaste_API.Controllers
@@ -79,12 +80,13 @@ namespace SmartWaste_API.Controllers
 
         [HttpPost]
         [Authorize]
-        public IHttpActionResult SaveEnterprise(AccountEnterpriseContract enterprise)
+        public async Task<IHttpActionResult> SaveEnterprise(AccountEnterpriseContract enterprise)
         {
             try
             {
-                var enterpriseID = _accountService.DoChangesToNewEnterprise(enterprise);
-                return Ok(new JsonModel<Guid>(enterpriseID));
+                Task<Guid> a = _accountService.DoChangesToNewEnterprise(enterprise);
+                await Task.WhenAll(a);
+                return Ok(new JsonModel<bool>(true));
             }
             catch (Exception ex)
             {

@@ -1,12 +1,13 @@
 using SmarteWaste_API.Contracts.Account;
 using SmarteWaste_API.Contracts.Person;
 using System;
+using System.Threading.Tasks;
 
 namespace SmartWaste_API.Services.Interfaces
 {
     public interface IAccountService
     {
-        Guid DoChangesToNewEnterprise(AccountEnterpriseContract enterprise);
+        Task<Guid> DoChangesToNewEnterprise(AccountEnterpriseContract enterprise);
         Guid AddEnterprise(AccountEnterpriseContract enterprise);
         AccountEnterpriseContract GetUserEnterprise();
         bool CheckEnterprise(AccountEnterpriseContract enterprise);
