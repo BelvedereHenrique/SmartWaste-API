@@ -4,6 +4,7 @@
 *.com
 *.class
 *.dll
+*.orig
 *.exe
 *.pdb
 *.dll.config

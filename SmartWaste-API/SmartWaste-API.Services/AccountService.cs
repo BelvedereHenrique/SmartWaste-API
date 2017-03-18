@@ -9,6 +9,10 @@ using SmartWaste_API.Business;
 using System.Net.Mail;
 using SmartWaste_API.Services.Security;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using SmarteWaste_API.Library.Email;
+using SmartWaste_API.Library.Email;
+using System.Globalization;
 
 namespace SmartWaste_API.Services
 {
@@ -18,12 +22,18 @@ namespace SmartWaste_API.Services
         private readonly ISecurityManager<IdentityContract> _user;
         private readonly IPersonService _personService;
         private readonly IUserService _userService;
+        private readonly IParameterService _parameterService;
+        private readonly IEmailSenderService _emailService;
+        private readonly IEmailTemplateService _emailTemplateService;
 
-        public AccountService (IAccountRepository _accRepo, IPersonService _pService, IUserService _uService, ISecurityManager<IdentityContract> user)
+        public AccountService (IAccountRepository _accRepo, IPersonService _pService, IUserService _uService, IParameterService _parameter,IEmailSenderService _email ,IEmailTemplateService _etemplate, ISecurityManager<IdentityContract> user)
         {
             _accountRepository = _accRepo;
             _personService = _pService;
             _userService = _uService;
+            _emailService = _email;
+            _parameterService = _parameter;
+            _emailTemplateService = _etemplate;
             _user = user;
         }
 
@@ -32,14 +42,19 @@ namespace SmartWaste_API.Services
         /// </summary>
         /// <param name="enterprise"></param>
         /// <returns>EnterpriseID</returns>
-        public Guid DoChangesToNewEnterprise (AccountEnterpriseContract enterprise)
+        public async Task<Guid> DoChangesToNewEnterprise (AccountEnterpriseContract enterprise)
         {
-            if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
-            var e = AddEnterprise(enterprise);
-            AddEnterpriseToLoggedUser(e);
-            SetCompanyRolesToLoggedUser();
-            RestartPassword();
-            return e;
+            try
+            {
+                if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
+                var e = AddEnterprise(enterprise);
+                AddEnterpriseToLoggedUser(e);
+                SetCompanyRolesToLoggedUser();
+                RestartPassword();
+                await SendEnterpriseEmail(enterprise.Name);
+                return e;
+            }
+            catch (Exception ex){ throw ex; }
         }
 
         /// <summary>
@@ -97,6 +112,24 @@ namespace SmartWaste_API.Services
         {
             if (!IsAuthenticatedUser()) throw new UnauthorizedAccessException(Resources.MessagesResources.AccountServiceMessages.USER_NOT_AUTHENTICATED);
             return _accountRepository.GetUserEnterprise(_user.User.User.ID);
+        }
+
+        public async Task SendEnterpriseEmail(string enterpriseName)
+        {
+            var model = new EmailContract()
+            {
+                Email = _user.User.Login,
+                //Email = "felipebotelhofelipe@hotmail.com",
+                Informations = _parameterService.GetEmailSenderInformations(),
+                UserName = _user.User.Person.Name
+            };
+
+            var emailTemplate = _emailTemplateService.GetEmailTemplate("createenterprise");
+            var emailSubject = "SmartWaste: No-Reply";
+            var message = emailTemplate;
+            message = message.Replace("{UserName}", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(model.UserName));
+            message = message.Replace("{EnterpriseName}", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(enterpriseName));
+            await _emailService.SendEmailAsync(model.Informations, model.Email, emailSubject, message, null);
         }
 
         public void AddPersonal(PersonalSubscriptionFormContract data)

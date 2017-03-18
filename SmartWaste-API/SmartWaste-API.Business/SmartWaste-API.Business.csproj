@@ -176,10 +176,14 @@
     <Compile Include="Data\vw_GetPointsDetailed.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="EmailTemplateRepository.cs" />
     <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
+    <Compile Include="Interfaces\IEmailSenderRepository.cs" />
     <Compile Include="Interfaces\IIdentificationRepository.cs" />
+    <Compile Include="Interfaces\IEmailTemplateRepository.cs" />
+    <Compile Include="Interfaces\IParameterRepository.cs" />
     <Compile Include="Interfaces\IPersonRepository.cs" />
     <Compile Include="Interfaces\IPointInternalRepository.cs" />
     <Compile Include="Interfaces\IPointRepository.cs" />
@@ -188,6 +192,7 @@
     <Compile Include="Interfaces\IRouteRepository.cs" />
     <Compile Include="Interfaces\IStateRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
+    <Compile Include="ParameterRepository.cs" />
     <Compile Include="PersonRepository.cs" />
     <Compile Include="PointRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
