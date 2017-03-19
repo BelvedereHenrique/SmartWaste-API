@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SmarteWaste_API.Contracts.User;
 using SmartWaste_API.Business.ContractParser;
+using SmarteWaste_API.Contracts.Password;
+using SmartWaste_API.Library;
 
 namespace SmartWaste_API.Business
 {
@@ -24,6 +26,32 @@ namespace SmartWaste_API.Business
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
                 return Filter(context, filter).ToList().ToContracts();
+            }
+        }
+
+        public string SaveToken(string email)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var user = Filter(context,new UserFilterContract() { Login = email }).FirstOrDefault();
+                if (user == null) throw new ArgumentException("There is no user with this email");
+                var token = Guid.NewGuid().ToString().Substring(0,10);
+                user.RecoveryToken = token.ToUpper();
+                user.ExpirationDate = DateTime.Now.AddDays(1);
+                user.RecoveredOn = null;
+                context.SaveChanges();
+                return token;
+            }
+        }
+
+        public void ChangePassword(Guid ID, PasswordContract password)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var user = context.Users.First(x => x.ID == ID);
+                user.Password = MD5Helper.Create(password.Password);
+                user.RecoveredOn = DateTime.Now;
+                context.SaveChanges();
             }
         }
 

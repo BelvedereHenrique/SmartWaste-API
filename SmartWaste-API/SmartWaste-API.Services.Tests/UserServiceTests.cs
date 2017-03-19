@@ -2,6 +2,7 @@
 using Moq;
 using SmarteWaste_API.Contracts.User;
 using SmartWaste_API.Business.Interfaces;
+using SmartWaste_API.Library.Email;
 using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace SmartWaste_API.Services.Tests
             var repo = new Mock<IUserRepository>();
             repo.Setup(x => x.Get(filter)).Returns(user);
 
-            var service = GetUserService(repo.Object);
+            var service = GetUserService(repo.Object,null,null,null);
             var result = service.Get(filter);
 
             Assert.AreEqual(result, user);
@@ -38,15 +39,15 @@ namespace SmartWaste_API.Services.Tests
             var repo = new Mock<IUserRepository>();
             repo.Setup(x => x.SetUserRoles(userID,roles));
 
-            var service = GetUserService(repo.Object);
+            var service = GetUserService(repo.Object,null,null,null);
             service.SetUserRoles(userID,roles);
 
             repo.Verify(x => x.SetUserRoles(userID, roles), Times.Exactly(1));
         }
 
-        internal IUserService GetUserService(IUserRepository _userRepository)
+        internal IUserService GetUserService(IUserRepository _userRepository,IParameterService _parameterService, IEmailTemplateService _emailTemplate, IEmailSenderService _emailService)
         {
-            return (IUserService)new UserService(_userRepository);
+            return (IUserService)new UserService(_userRepository,_parameterService,_emailTemplate, _emailService);
         }
     }
 }

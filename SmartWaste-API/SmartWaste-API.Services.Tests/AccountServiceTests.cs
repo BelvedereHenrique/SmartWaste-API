@@ -86,14 +86,14 @@ namespace SmartWaste_API.Services.Tests
 
             var userService = new Mock<IUserService>();
             userService.Setup(x => x.SetUserRoles(It.IsAny<Guid>(), It.IsAny<List<Guid>>()));
+            userService.Setup(x => x.SendToken(It.IsAny<string>()));
 
-            var parameterService = new Mock<IParameterService>();
+           var parameterService = new Mock<IParameterService>();
             parameterService.Setup(x => x.GetEmailSenderInformations()).Returns(new SmarteWaste_API.Library.Email.SenderInformationsContract());
 
             var emailTemplate = new Mock<IEmailTemplateService>();
             emailTemplate.Setup(x => x.GetEmailTemplate(It.IsAny<string>())).Returns("Mocked template");
-            //TODO: Implement RestartPassword Logic
-
+            
             var email = new Mock<IEmailSenderService>();
             email.Setup(x => x.SendEmailAsync(It.IsAny<SenderInformationsContract>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<HttpPostedFileBase>>())).Returns(Task.FromResult(false));
 

@@ -25,7 +25,7 @@ namespace SmartWaste_API.Tests
             var addressService = new Mock<IAddressService>();
             addressService.Setup(x => x.GetCountryList()).Returns(listCountry);
 
-            var controller = GetAccountController(null, addressService.Object, null);
+            var controller = GetAccountController(null, addressService.Object, null,null);
             var jsonModel = controller.GetCountries() as OkNegotiatedContentResult<JsonModel<List<CountryContract>>>;
             Assert.IsTrue(jsonModel.Content.Success);
             Assert.AreEqual(jsonModel.Content.Result, listCountry);
@@ -38,7 +38,7 @@ namespace SmartWaste_API.Tests
             var addressService = new Mock<IAddressService>();
             addressService.Setup(x => x.GetCountryList()).Throws(new Exception());
 
-            var controller = GetAccountController(null, addressService.Object, null);
+            var controller = GetAccountController(null, addressService.Object, null,null);
             var jsonModel = controller.GetCountries() as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
@@ -54,7 +54,7 @@ namespace SmartWaste_API.Tests
             var addressService = new Mock<IAddressService>();
             addressService.Setup(x => x.GetStateList(MOCKED_COUNTRY_ID)).Returns(listStates);
 
-            var controller = GetAccountController(null, addressService.Object, null);
+            var controller = GetAccountController(null, addressService.Object, null,null);
             var jsonModel = controller.GetStates(MOCKED_COUNTRY_ID) as OkNegotiatedContentResult<JsonModel<List<StateContract>>>;
             Assert.IsTrue(jsonModel.Content.Success);
             Assert.AreEqual(jsonModel.Content.Result, listStates);
@@ -67,7 +67,7 @@ namespace SmartWaste_API.Tests
             var addressService = new Mock<IAddressService>();
             addressService.Setup(x => x.GetStateList(MOCKED_COUNTRY_ID)).Throws(new Exception());
 
-            var controller = GetAccountController(null, addressService.Object, null);
+            var controller = GetAccountController(null, addressService.Object, null,null);
             var jsonModel = controller.GetStates(MOCKED_COUNTRY_ID) as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
@@ -83,7 +83,7 @@ namespace SmartWaste_API.Tests
             var addressService = new Mock<IAddressService>();
             addressService.Setup(x => x.GetCityList(MOCKED_STATE_ID)).Returns(listCitites);
 
-            var controller = GetAccountController(null, addressService.Object, null);
+            var controller = GetAccountController(null, addressService.Object, null,null);
             var jsonModel = controller.GetCities(MOCKED_STATE_ID) as OkNegotiatedContentResult<JsonModel<List<CityContract>>>;
             Assert.IsTrue(jsonModel.Content.Success);
             Assert.AreEqual(jsonModel.Content.Result, listCitites);
@@ -96,7 +96,7 @@ namespace SmartWaste_API.Tests
              var addressService = new Mock<IAddressService>();
              addressService.Setup(x => x.GetCityList(MOCKED_STATE_ID)).Throws(new Exception());
 
-             var controller = GetAccountController(null, addressService.Object, null);
+             var controller = GetAccountController(null, addressService.Object, null,null);
              var jsonModel = controller.GetCities(MOCKED_STATE_ID) as OkNegotiatedContentResult<JsonModel<bool>>;
 
              Assert.IsFalse(jsonModel.Content.Success);
@@ -111,7 +111,7 @@ namespace SmartWaste_API.Tests
             var accountService = new Mock<IAccountService>();
             accountService.Setup(x => x.GetUserEnterprise()).Returns(accountUserEnterprise);
 
-            var controller = GetAccountController(null, null, accountService.Object);
+            var controller = GetAccountController(null, null, accountService.Object,null);
             var jsonModel = controller.GetUserEnterprise() as OkNegotiatedContentResult<JsonModel<AccountEnterpriseContract>>;
 
             Assert.IsTrue(jsonModel.Content.Success);
@@ -128,7 +128,7 @@ namespace SmartWaste_API.Tests
             var accountService = new Mock<IAccountService>();
             accountService.Setup(x => x.GetUserEnterprise()).Throws(new Exception());
 
-            var controller = GetAccountController(null, null, accountService.Object);
+            var controller = GetAccountController(null, null, accountService.Object,null);
             var jsonModel = controller.GetUserEnterprise() as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
@@ -144,7 +144,7 @@ namespace SmartWaste_API.Tests
             var accountService = new Mock<IAccountService>();
             accountService.Setup(x => x.DoChangesToNewEnterprise(enterprise)).ReturnsAsync(enterprise.ID.Value);
 
-            var controller = GetAccountController(null, null, accountService.Object);
+            var controller = GetAccountController(null, null, accountService.Object,null);
             var jsonModel = await controller.SaveEnterprise(enterprise) as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsTrue(jsonModel.Content.Success);
@@ -161,7 +161,7 @@ namespace SmartWaste_API.Tests
             var accountService = new Mock<IAccountService>();
             accountService.Setup(x => x.DoChangesToNewEnterprise(enterprise)).Throws(new Exception());
 
-            var controller = GetAccountController(null, null, accountService.Object);
+            var controller = GetAccountController(null, null, accountService.Object,null);
             var jsonModel = await controller.SaveEnterprise(enterprise) as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
@@ -169,9 +169,9 @@ namespace SmartWaste_API.Tests
             Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
         }
         
-        internal AccountController GetAccountController(IPersonService _personService,IAddressService _addressService, IAccountService _accountService)
+        internal AccountController GetAccountController(IPersonService _personService,IAddressService _addressService, IAccountService _accountService, IUserService _userService)
         {
-            return new AccountController(_personService, _addressService, _accountService);
+            return new AccountController(_personService, _addressService, _accountService,_userService);
         }
     }
 }
