@@ -1,4 +1,5 @@
-﻿using SmarteWaste_API.Contracts.User;
+﻿using SmarteWaste_API.Contracts.Password;
+using SmarteWaste_API.Contracts.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace SmartWaste_API.Business.Interfaces
         UserContract Get(UserFilterContract filter);
         List<UserContract> GetList(UserFilterContract filter);
         void SetUserRoles(Guid userID, List<Guid> rolesID);
+        string SaveToken(string email);
+        void ChangePassword(Guid ID, PasswordContract password);
     }
 }

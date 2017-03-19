@@ -51,6 +51,7 @@
     <Compile Include="IdentityContract.cs" />
     <Compile Include="OperationResult\OperationMessageResult.cs" />
     <Compile Include="OperationResult\OperationResult.cs" />
+    <Compile Include="Password\PasswordContract.cs" />
     <Compile Include="Person\PersonalSubscriptionFormDataContract.cs" />
     <Compile Include="Person\PersonalSubscriptionPasswordContract.cs" />
     <Compile Include="Person\PersonContract.cs" />

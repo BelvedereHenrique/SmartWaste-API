@@ -50,7 +50,7 @@ namespace SmartWaste_API.Services
                 var e = AddEnterprise(enterprise);
                 AddEnterpriseToLoggedUser(e);
                 SetCompanyRolesToLoggedUser();
-                RestartPassword();
+                RestartPassword(_user.User.Login);
                 await SendEnterpriseEmail(enterprise.Name);
                 return e;
             }
@@ -92,7 +92,9 @@ namespace SmartWaste_API.Services
         /// <summary>
         /// Restart loggedUser password
         /// </summary>
-        private void RestartPassword () { }
+        private void RestartPassword (string email) {
+            _userService.SendToken(email);
+        }
 
         /// <summary>
         /// Verify if company is already registred

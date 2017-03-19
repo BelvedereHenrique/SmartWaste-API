@@ -1,6 +1,7 @@
 
 using SmarteWaste_API.Contracts.Account;
 using SmarteWaste_API.Contracts.Address;
+using SmarteWaste_API.Contracts.Password;
 using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Models;
 using SmartWaste_API.Services;
@@ -17,12 +18,13 @@ namespace SmartWaste_API.Controllers
         private readonly IPersonService _personService;
         private readonly IAddressService _addressService;
         private readonly IAccountService _accountService;
-        public AccountController(IPersonService _pService, IAddressService _aService, IAccountService _accService)
+        private readonly IUserService _userService;
+        public AccountController(IPersonService _pService, IAddressService _aService, IAccountService _accService, IUserService _uService)
         {
             _personService = _pService;
             _addressService = _aService;
             _accountService = _accService;
-
+            _userService = _uService;
         }
         public IHttpActionResult GetCountries()
         {
@@ -137,10 +139,52 @@ namespace SmartWaste_API.Controllers
             }
             catch (Exception e)
             {
-                return Ok(new JsonModel<bool>(e));
+                
                 throw;
             }
         }
 
+        [HttpGet]
+        public IHttpActionResult CheckUserToken(string email)
+        {
+            try
+            {
+                var result = _userService.CheckUserToken(email);
+                return Ok(new JsonModel<bool>(result));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IHttpActionResult> SendPasswordToken(EmailModel email)
+        {
+            try
+            {
+                await _userService.SendToken(email.email);
+                return Ok(new JsonModel<bool>(true));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult ChangePassword(PasswordContract password)
+        {
+            try
+            {
+                _userService.ChangePassword(password);
+                return Ok(new JsonModel<bool>(true));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
     }
+
 }
