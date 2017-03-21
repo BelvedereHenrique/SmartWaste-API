@@ -59,6 +59,7 @@ namespace SmartWaste_API.Services
             var emailSubject = "SmartWaste: No-Reply";
             var message = emailTemplate;
             message = message.Replace("{Token}",token);
+            message = message.Replace("{Email}", email);
             await _emailService.SendEmailAsync(model.Informations, model.Email, emailSubject, message, null);
         }
 
