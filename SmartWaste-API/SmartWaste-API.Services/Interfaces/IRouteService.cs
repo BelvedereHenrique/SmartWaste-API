@@ -12,8 +12,10 @@ namespace SmartWaste_API.Services.Interfaces
     {
         OperationResult<Guid> Recreate(Guid oldRouteID, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
         OperationResult<Guid> Create(Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
-        RouteContract Get(RouteFilterContract filter);
-        List<RouteContract> GetList(RouteFilterContract filter);
+        RouteDetailedContract GetDetailed(RouteFilterContract filter);
+        List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter);
         OperationResult Disable(Guid routeID);
+        List<RouteContract> GetOpenedRoutes();
+        List<RouteContract> GetUserCreatedRoutes();
     }
 }

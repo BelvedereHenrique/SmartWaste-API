@@ -39,7 +39,7 @@ namespace SmartWaste_API.Services
         {
             var result = new OperationResult<Guid>();
 
-            OperationResult<RouteContract> newRouteResult = _routeValidationService.CanCreate(assignedToID, pointIDs, expectedKilometers, expectedMinutes);
+            OperationResult<RouteDetailedContract> newRouteResult = _routeValidationService.CanCreate(assignedToID, pointIDs, expectedKilometers, expectedMinutes);
 
             result.Merge(newRouteResult);
 
@@ -53,29 +53,29 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public RouteContract Get(RouteFilterContract filter)
+        public RouteDetailedContract GetDetailed(RouteFilterContract filter)
         {
-            var filterResult = _routeValidationService.CheckFilter(filter);
+            var filterResult = _routeValidationService.GetFilterForGetDetailed(filter);
 
             if (!filterResult.Success)
                 throw new Exception(filterResult.GetMessage(true));
 
-            return _routeRepository.Get(filterResult.Result);
+            return _routeRepository.GetDetailed(filterResult.Result);
         }
 
-        public List<RouteContract> GetList(RouteFilterContract filter)
+        public List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter)
         {
-            var filterResult = _routeValidationService.CheckFilter(filter);
+            var filterResult = _routeValidationService.GetFilterForGetDetailed(filter);
 
             if (!filterResult.Success)
                 throw new Exception(filterResult.GetMessage(true));
 
-            return _routeRepository.GetList(filterResult.Result);
+            return _routeRepository.GetDetailedList(filterResult.Result);
         }
 
         public OperationResult Disable(Guid routeID)
         {
-            var route = Get(new RouteFilterContract()
+            var route = GetDetailed(new RouteFilterContract()
             {
                 ID = routeID
             });
@@ -96,7 +96,7 @@ namespace SmartWaste_API.Services
         {
             var result = new OperationResult<Guid>();
 
-            var route = Get(new RouteFilterContract()
+            var route = GetDetailed(new RouteFilterContract()
             {
                 ID = oldRouteID
             });
@@ -125,19 +125,42 @@ namespace SmartWaste_API.Services
             return result;
         }
         
-        private List<RouteHistoryContract> GetDisableHistories(RouteContract route)
+        private List<RouteHistoryContract> GetDisableHistories(RouteDetailedContract route)
         {
             var histories = new List<RouteHistoryContract>();
             histories.Add(new RouteHistoryContract()
             {
                 ID = Guid.NewGuid(),
-                PersonID = _user.User.Person.ID,
+                Person = new SmarteWaste_API.Contracts.Person.PersonContract() {
+                    ID = _user.User.Person.ID
+                },
                 Reason = "Route removed.",
                 RouteID = route.ID,
-                Status = RouteStatusEnum.Disabled
+                Status = RouteStatusEnum.Disabled,
+                Date = DateTime.Now
             });
 
             return histories;
+        }
+        
+        public List<RouteContract> GetOpenedRoutes()
+        {
+            var result = _routeValidationService.GetFilterForOpenedRoutes();
+
+            if (!result.Success)
+                throw new Exception(result.GetMessage(true));
+
+            return _routeRepository.GetOpenedRoutes(result.Result);
+        }
+
+        public List<RouteContract> GetUserCreatedRoutes()
+        {
+            var result = _routeValidationService.GetFilterForCreatedByRoutes();
+
+            if (!result.Success)
+                throw new Exception(result.GetMessage(true));
+
+            return _routeRepository.GetUserCreatedRoutes(result.Result);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace SmarteWaste_API.Contracts.Route
     {
         public Guid? ID { get; set; }
         public Guid? AssignedToID { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public bool? LoadUnassigned { get; set; }
+        public Guid? CreatedBy { get; set; }        
         public Guid? CompanyID { get; set; }
         public RouteStatusEnum? Status { get; set; }
+        public RouteStatusEnum? NotStatus { get; set; }
     }
 }

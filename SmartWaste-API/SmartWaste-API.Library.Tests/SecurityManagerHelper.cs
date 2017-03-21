@@ -28,6 +28,11 @@ namespace SmartWaste_API.Library.Tests
                 Login = Login
             };
 
+            roles.ForEach(r => identity.User.Roles.Add(new SmarteWaste_API.Contracts.Role.RoleContract()
+            {
+                Name = r
+            }));
+
             var securityManager = new Mock<ISecurityManager<IdentityContract>>();
             securityManager.Setup(x => x.User).Returns(identity);
 

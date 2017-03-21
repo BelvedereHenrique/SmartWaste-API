@@ -12,14 +12,15 @@ namespace SmartWaste_API.Business.ContractParser
         public static RouteHistoryContract ToContract(this Data.RouteHistory entitie)
         {
             if (entitie == null) return null;
-
+            
             return new RouteHistoryContract()
             {
                 ID = entitie.ID,
-                PersonID = entitie.PersonID,
+                Person = entitie.Person.ToContract(),
                 Reason = entitie.Reason,
                 RouteID = entitie.RouteID,
-                Status = (RouteStatusEnum)entitie.StatusID
+                Status = (RouteStatusEnum)entitie.StatusID,
+                Date = entitie.Date
             };
         }
 
@@ -34,10 +35,11 @@ namespace SmartWaste_API.Business.ContractParser
 
             return new Data.RouteHistory() {
                 ID = contract.ID,
-                PersonID = contract.PersonID,
+                PersonID = contract.Person.ID,
                 Reason = contract.Reason,
                 RouteID = contract.RouteID,
-                StatusID = (int)contract.Status                
+                StatusID = (int)contract.Status,
+                Date = contract.Date
             };
         }
     }

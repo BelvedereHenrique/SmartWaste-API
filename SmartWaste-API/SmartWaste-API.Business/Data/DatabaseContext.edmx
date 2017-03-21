@@ -347,6 +347,31 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not 
           <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_GetRoutes">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="CreatedOn" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="ExpectedKilometers" />
+            <PropertyRef Name="ExpectedMinutes" />
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="CreatedByID" />
+            <PropertyRef Name="CreatedByName" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="ClosedOn" Type="datetime" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="ExpectedKilometers" Type="decimal" Precision="7" Scale="3" Nullable="false" />
+          <Property Name="ExpectedMinutes" Type="decimal" Precision="7" Scale="3" Nullable="false" />
+          <Property Name="AssignedToID" Type="uniqueidentifier" />
+          <Property Name="CompanyID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AssignedToName" Type="varchar" MaxLength="200" />
+          <Property Name="CreatedByID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedByName" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <Association Name="fk_city_address">
           <End Role="City" Type="Self.City" Multiplicity="1" />
           <End Role="Address" Type="Self.Address" Multiplicity="*" />
@@ -875,6 +900,21 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not 
     [vw_GetPointsDetailed].[UserID] AS [UserID]
     FROM [dbo].[vw_GetPointsDetailed] AS [vw_GetPointsDetailed]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vw_GetRoutes" EntityType="Self.vw_GetRoutes" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_GetRoutes].[ID] AS [ID], 
+    [vw_GetRoutes].[CreatedOn] AS [CreatedOn], 
+    [vw_GetRoutes].[ClosedOn] AS [ClosedOn], 
+    [vw_GetRoutes].[StatusID] AS [StatusID], 
+    [vw_GetRoutes].[ExpectedKilometers] AS [ExpectedKilometers], 
+    [vw_GetRoutes].[ExpectedMinutes] AS [ExpectedMinutes], 
+    [vw_GetRoutes].[AssignedToID] AS [AssignedToID], 
+    [vw_GetRoutes].[CompanyID] AS [CompanyID], 
+    [vw_GetRoutes].[AssignedToName] AS [AssignedToName], 
+    [vw_GetRoutes].[CreatedByID] AS [CreatedByID], 
+    [vw_GetRoutes].[CreatedByName] AS [CreatedByName]
+    FROM [dbo].[vw_GetRoutes] AS [vw_GetRoutes]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_city_address" Association="Self.fk_city_address">
             <End Role="City" EntitySet="City" />
             <End Role="Address" EntitySet="Address" />
@@ -1217,6 +1257,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not 
             <End Role="User" EntitySet="Users" />
             <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
+          <EntitySet Name="vw_GetRoutes" EntityType="smartwaste.devModel.vw_GetRoutes" />
         </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -2088,6 +2129,29 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vw_GetRoutes">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="CreatedOn" />
+            <PropertyRef Name="StatusID" />
+            <PropertyRef Name="ExpectedKilometers" />
+            <PropertyRef Name="ExpectedMinutes" />
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="CreatedByID" />
+            <PropertyRef Name="CreatedByName" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosedOn" Type="DateTime" Precision="3" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="ExpectedKilometers" Type="Decimal" Nullable="false" Precision="7" Scale="3" />
+          <Property Name="ExpectedMinutes" Type="Decimal" Nullable="false" Precision="7" Scale="3" />
+          <Property Name="AssignedToID" Type="Guid" />
+          <Property Name="CompanyID" Type="Guid" Nullable="false" />
+          <Property Name="AssignedToName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedByID" Type="Guid" Nullable="false" />
+          <Property Name="CreatedByName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2434,6 +2498,23 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetPointsDetailed' does not 
                 <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
                 <ScalarProperty Name="PointRouteStatusID" ColumnName="PointRouteStatusID" />
                 <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_GetRoutes">
+            <EntityTypeMapping TypeName="smartwaste.devModel.vw_GetRoutes">
+              <MappingFragment StoreEntitySet="vw_GetRoutes">
+                <ScalarProperty Name="CreatedByName" ColumnName="CreatedByName" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="AssignedToName" ColumnName="AssignedToName" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="AssignedToID" ColumnName="AssignedToID" />
+                <ScalarProperty Name="ExpectedMinutes" ColumnName="ExpectedMinutes" />
+                <ScalarProperty Name="ExpectedKilometers" ColumnName="ExpectedKilometers" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

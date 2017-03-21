@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using SmarteWaste_API.Contracts.Route;
 using SmartWaste_API.Business.ContractParser;
 using SmarteWaste_API.Contracts.Point;
+using SmartWaste_API.Library.Security;
+using SmarteWaste_API.Contracts;
 
 namespace SmartWaste_API.Business
 {
@@ -14,19 +16,22 @@ namespace SmartWaste_API.Business
     {
         private readonly IRouteHistoryRepository _routeHistoryRepository;
         private readonly IPointRepository _pointRepository;
+        private readonly ISecurityManager<IdentityContract> _user;
 
         public RouteRepository(IRouteHistoryRepository routeHistoryRepository,
-                               IPointRepository pointRepository)
+                               IPointRepository pointRepository,
+                               ISecurityManager<IdentityContract> user)
         {
             _routeHistoryRepository = routeHistoryRepository;
             _pointRepository = pointRepository;
+            _user = user;
         }
 
-        public RouteContract Get(RouteFilterContract filter)
+        public RouteDetailedContract GetDetailed(RouteFilterContract filter)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                var route = GetFilterQuery(context, filter).FirstOrDefault().ToContract();
+                var route = GetFilterDetailedQuery(context, filter).FirstOrDefault().ToContract();
                 var pointIDs = route.Points.Select(x => x.ID).ToList();
                 route.Points = context.vw_GetPointsDetailed.Where(x => pointIDs.Contains(x.ID)).ToList().ToContracts();
 
@@ -34,11 +39,11 @@ namespace SmartWaste_API.Business
             }
         }
 
-        public List<RouteContract> GetList(RouteFilterContract filter)
+        public List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                var routes = GetFilterQuery(context, filter).ToList().ToContracts();
+                var routes = GetFilterDetailedQuery(context, filter).ToList().ToContracts();
 
                 var pointIDs = new List<Guid>();
                 routes.ForEach(r => pointIDs.AddRange(r.Points.Select(x => x.ID).ToList()));
@@ -51,34 +56,24 @@ namespace SmartWaste_API.Business
             }
         }
 
-        private IQueryable<Data.Route> GetFilterQuery(Data.SmartWasteDatabaseConnection context, RouteFilterContract filter)
+        private IQueryable<Data.Route> GetFilterDetailedQuery(Data.SmartWasteDatabaseConnection context, RouteFilterContract filter)
         {
             int? statusID = null;
 
             if (filter.Status.HasValue)
                 statusID = (int)filter.Status;
 
-            return context.Routes.Where(x =>
-                x.StatusID != (int)RouteStatusEnum.Disabled &&
+            return context.Routes.Where(x =>                
+                x.StatusID != (int)filter.NotStatus &&
+                x.CompanyID == filter.CompanyID &&
                 (filter.ID == null || filter.ID == x.ID) &&
                 (statusID == null || statusID == x.StatusID) &&
-                (filter.CreatedBy == null || filter.CreatedBy == x.CreatedBy) &&                
-                (   
-                    filter.LoadUnassigned == null ||
-                        (
-                            filter.AssignedToID == null || filter.AssignedToID == x.AssignedTo
-                        ) ||
-                        (
-                            filter.LoadUnassigned == true && x.AssignedTo == null
-                        ) ||
-                        (
-                            filter.LoadUnassigned == false && x.AssignedTo != null
-                        )                 
-                )
+                (filter.CreatedBy == null || filter.CreatedBy == x.CreatedBy) &&
+                (filter.AssignedToID == null || filter.AssignedToID == x.AssignedTo)
             ).AsQueryable();
         }
 
-        public void Create(RouteContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
+        public void Create(RouteDetailedContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
@@ -91,18 +86,18 @@ namespace SmartWaste_API.Business
                         EditPoints(context, points);
 
                         context.SaveChanges();
-                        transaction.Commit();                        
+                        transaction.Commit();
                     }
                     catch
                     {
-                        transaction.Rollback();                        
+                        transaction.Rollback();
                         throw;
-                    }                    
+                    }
                 }
             }
         }
-        
-        public void Edit(RouteContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
+
+        public void Edit(RouteDetailedContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
@@ -114,7 +109,7 @@ namespace SmartWaste_API.Business
             }
         }
 
-        public void Recreate(RouteContract oldRoute, RouteContract newRoute, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
+        public void Recreate(RouteDetailedContract oldRoute, RouteDetailedContract newRoute, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
@@ -127,14 +122,15 @@ namespace SmartWaste_API.Business
             }
         }
 
-        private void EditPoints(Data.SmartWasteDatabaseConnection context,  List<PointDetailedContract> points)
+        private void EditPoints(Data.SmartWasteDatabaseConnection context, List<PointDetailedContract> points)
         {
-            points.ForEach((point) => {
+            points.ForEach((point) =>
+            {
                 ((IPointInternalRepository)_pointRepository).Edit(context, point);
             });
         }
 
-        private void Edit(Data.SmartWasteDatabaseConnection context, RouteContract route)
+        private void Edit(Data.SmartWasteDatabaseConnection context, RouteDetailedContract route)
         {
             var entitie = context.Routes.Find(route.ID);
 
@@ -147,7 +143,7 @@ namespace SmartWaste_API.Business
                 entitie.AssignedTo = route.AssignedTo.ID;
 
             entitie.ClosedOn = route.ClosedOn;
-            entitie.StatusID = (int)route.Status;            
+            entitie.StatusID = (int)route.Status;
         }
 
         private void SaveHistories(Data.SmartWasteDatabaseConnection context, List<RouteHistoryContract> histories)
@@ -156,7 +152,7 @@ namespace SmartWaste_API.Business
                             ((IRouteHistoryInternalRepository)_routeHistoryRepository).Add(context, history));
         }
 
-        private void Create(Data.SmartWasteDatabaseConnection context, RouteContract route)
+        private void Create(Data.SmartWasteDatabaseConnection context, RouteDetailedContract route)
         {
             route.Points.ForEach((point) =>
             {
@@ -169,6 +165,35 @@ namespace SmartWaste_API.Business
             });
 
             context.Routes.Add(route.ToEntitie());
+        }
+
+        public List<RouteContract> GetOpenedRoutes(RouteFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return context.vw_GetRoutes.Where(x =>
+                   x.CompanyID == filter.CompanyID &&
+                   (
+                       x.AssignedToID == filter.AssignedToID ||
+                       x.AssignedToID == null
+                   ) &&
+                   x.StatusID == (int)filter.Status
+                ).OrderByDescending(x => x.CreatedOn).ToList().ToContracts();
+            }
+        }
+
+        public List<RouteContract> GetUserCreatedRoutes(RouteFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return context.vw_GetRoutes.Where(x =>
+                   x.CompanyID == filter.CompanyID &&
+                   (
+                       x.CreatedByID == filter.CreatedBy
+                   ) &&
+                   x.StatusID != (int)filter.Status
+                ).OrderBy(x => x.CreatedOn).ToList().ToContracts();
+            }
         }
     }
 }
