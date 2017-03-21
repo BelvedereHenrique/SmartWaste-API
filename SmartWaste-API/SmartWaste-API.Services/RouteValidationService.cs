@@ -41,9 +41,9 @@ namespace SmartWaste_API.Services
             _pointService = pointService;
         }
 
-        public OperationResult<RouteContract> CanCreate(Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes)
+        public OperationResult<RouteDetailedContract> CanCreate(Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes)
         {
-            var result = new OperationResult<RouteContract>();
+            var result = new OperationResult<RouteDetailedContract>();
 
             result.Merge(IsUserAuthorized());
             result.Merge(IsAssignedUserValid(assignedToID));
@@ -64,9 +64,9 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public OperationResult<RouteContract> CanRecreate(RouteContract oldRoute, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes)
+        public OperationResult<RouteDetailedContract> CanRecreate(RouteDetailedContract oldRoute, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes)
         {
-            var result = new OperationResult<RouteContract>();
+            var result = new OperationResult<RouteDetailedContract>();
 
             result.Merge(IsUserAuthorized());
             result.Merge(IsAssignedUserValid(assignedToID));
@@ -95,9 +95,9 @@ namespace SmartWaste_API.Services
 
         }
 
-        public OperationResult<RouteContract> CanDisable(RouteContract route)
+        public OperationResult<RouteDetailedContract> CanDisable(RouteDetailedContract route)
         {
-            var result = new OperationResult<RouteContract>();
+            var result = new OperationResult<RouteDetailedContract>();
 
             result.Merge(IsUserAuthorized());
             result.Merge(IsUsersCompanyTheSameOfTheRoute(route));
@@ -108,18 +108,19 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public RouteContract Disable(RouteContract route)
+        public RouteDetailedContract Disable(RouteDetailedContract route)
         {
             route.Status = RouteStatusEnum.Disabled;
 
-            route.Points.ForEach((point) => {
+            route.Points.ForEach((point) =>
+            {
                 point.PointRouteStatus = PointRouteStatusEnum.Free;
             });
 
             return route;
         }
 
-        public OperationResult IsRouteStatusAbleToDisable(RouteContract route)
+        public OperationResult IsRouteStatusAbleToDisable(RouteDetailedContract route)
         {
             var result = new OperationResult();
 
@@ -129,7 +130,7 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public OperationResult IsUsersCompanyTheSameOfTheRoute(RouteContract route)
+        public OperationResult IsUsersCompanyTheSameOfTheRoute(RouteDetailedContract route)
         {
             var result = new OperationResult();
 
@@ -191,12 +192,13 @@ namespace SmartWaste_API.Services
 
             return result;
         }
-        
+
         public OperationResult IsUserAuthorizedToGetRoutes()
         {
             var result = new OperationResult<RouteFilterContract>();
 
             if (!_user.User.IsAuthenticated ||
+                !_user.User.Person.CompanyID.HasValue ||
                 (
                     !_user.IsInRole(RolesName.COMPANY_ADMIN) &&
                     !_user.IsInRole(RolesName.COMPANY_ROUTE) &&
@@ -207,28 +209,61 @@ namespace SmartWaste_API.Services
 
             return result;
         }
-
-        public OperationResult<RouteFilterContract> CheckFilter(RouteFilterContract filter)
+        
+        public OperationResult<RouteFilterContract> GetFilterForGetDetailed(RouteFilterContract filter)
         {
             var result = new OperationResult<RouteFilterContract>(filter);
-            
+
             result.Merge(IsUserAuthorizedToGetRoutes());
 
-            if (result.Result.CompanyID.HasValue && result.Result.CompanyID.Value != _user.User.Person.CompanyID)
-                result.AddError(USER_NOT_AUTHORIZED);
+            if (!result.Success)
+                return result;
+            
+            result.Result.CompanyID = _user.User.Person.CompanyID;
+            result.Result.NotStatus = RouteStatusEnum.Disabled;
+            
+            return result;
+        }
 
-            if (!_user.IsInRole(RolesName.COMPANY_ROUTE))
-            {
-                result.Result.AssignedToID = _user.User.Person.ID;
-                result.Result.LoadUnassigned = true;
-            }
+        public OperationResult<RouteFilterContract> GetFilterForOpenedRoutes()
+        {
+            var result = new OperationResult<RouteFilterContract>();
+
+            result.Merge(IsUserAuthorizedToGetRoutes());
+
+            if (!result.Success)
+                return result;
+
+            result.Result = new RouteFilterContract();
+
+            result.Result.Status = RouteStatusEnum.Opened;
+            result.Result.AssignedToID = _user.User.Person.ID;
+            result.Result.CompanyID = _user.User.Person.CompanyID;
 
             return result;
         }
 
-        private RouteContract BuildNewRouteContract(Guid? assignedToID, List<PointDetailedContract> points, Decimal expectedKilometers, Decimal expectedMinutes)
+        public OperationResult<RouteFilterContract> GetFilterForCreatedByRoutes()
         {
-            var route = new RouteContract()
+            var result = new OperationResult<RouteFilterContract>();
+
+            result.Merge(IsUserAuthorizedToGetRoutes());
+
+            if (!result.Success)
+                return result;
+
+            result.Result = new RouteFilterContract();
+
+            result.Result.NotStatus = RouteStatusEnum.Disabled;
+            result.Result.CreatedBy = _user.User.Person.ID;
+            result.Result.CompanyID = _user.User.Person.CompanyID;
+
+            return result;
+        }
+
+        private RouteDetailedContract BuildNewRouteContract(Guid? assignedToID, List<PointDetailedContract> points, Decimal expectedKilometers, Decimal expectedMinutes)
+        {
+            var route = new RouteDetailedContract()
             {
                 ID = Guid.NewGuid(),
                 CreatedBy = new PersonContract()
@@ -259,10 +294,14 @@ namespace SmartWaste_API.Services
             route.Histories.Add(new RouteHistoryContract()
             {
                 ID = Guid.NewGuid(),
-                PersonID = _user.User.Person.ID,
+                Person = new PersonContract()
+                {
+                    ID = _user.User.Person.ID
+                },
                 Reason = ROUTE_CREATED_STATUS_REASON,
                 RouteID = route.ID,
-                Status = RouteStatusEnum.Opened
+                Status = RouteStatusEnum.Opened,
+                Date = DateTime.Now
             });
 
             return route;

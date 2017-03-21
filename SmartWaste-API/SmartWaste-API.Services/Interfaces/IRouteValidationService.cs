@@ -11,17 +11,19 @@ namespace SmartWaste_API.Services.Interfaces
 {
     public interface IRouteValidationService
     {
-        OperationResult<RouteContract> CanDisable(RouteContract route);
-        RouteContract Disable(RouteContract route);
-        OperationResult<RouteContract> CanRecreate(RouteContract oldRoute, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
-        OperationResult<RouteContract> CanCreate(Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
+        OperationResult<RouteDetailedContract> CanDisable(RouteDetailedContract route);
+        RouteDetailedContract Disable(RouteDetailedContract route);
+        OperationResult<RouteDetailedContract> CanRecreate(RouteDetailedContract oldRoute, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
+        OperationResult<RouteDetailedContract> CanCreate(Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes);
         OperationResult IsUserAuthorized();
         OperationResult IsAssignedUserValid(Guid? assignedToID);
         OperationResult IsUserAuthorizedToGetRoutes();
-        OperationResult<RouteFilterContract> CheckFilter(RouteFilterContract filter);
-        OperationResult IsUsersCompanyTheSameOfTheRoute(RouteContract route);        
+        OperationResult<RouteFilterContract> GetFilterForGetDetailed(RouteFilterContract filter);
+        OperationResult IsUsersCompanyTheSameOfTheRoute(RouteDetailedContract route);        
         OperationResult AreAllPointsFree(List<PointDetailedContract> points);
         OperationResult AreAllPointsFull(List<PointDetailedContract> points);
-        OperationResult IsRouteStatusAbleToDisable(RouteContract route);
+        OperationResult IsRouteStatusAbleToDisable(RouteDetailedContract route);
+        OperationResult<RouteFilterContract> GetFilterForOpenedRoutes();
+        OperationResult<RouteFilterContract> GetFilterForCreatedByRoutes();
     }
 }
