@@ -12,6 +12,13 @@ namespace SmartWaste_API.Business
 {
     public class PointRepository : IPointRepository, IPointInternalRepository
     {
+        private readonly IPointHistoryRepository _pointHistoryRepository;
+
+        public PointRepository(IPointHistoryRepository pointHistoryRepository)
+        {
+            _pointHistoryRepository = pointHistoryRepository;
+        }
+
         public List<PointDetailedContract> GetDetailedList(PointFilterContract filter)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
@@ -80,12 +87,12 @@ namespace SmartWaste_API.Business
                 pointRouteStatusID = (int)filter.PointRouteStatus.Value;
 
             return context.vw_GetPoints.Where(x =>
-                            (                
+                            (
                                 (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
                                 (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
                             ) &&
                             (
-                                (                                
+                                (
                                     (filter.AlwaysIDs.Contains(x.ID))
                                 )
                                     ||
@@ -104,17 +111,17 @@ namespace SmartWaste_API.Business
                         ).AsQueryable();
         }
 
-        public void Edit(PointContract point)
+        public void Edit(PointContract point, List<PointHistoryContract> histories)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                ((IPointInternalRepository)this).Edit(context, point);
+                ((IPointInternalRepository)this).Edit(context, point, histories);
 
                 context.SaveChanges();
             }
         }
 
-        void IPointInternalRepository.Edit(SmartWasteDatabaseConnection context, PointContract point)
+        void IPointInternalRepository.Edit(SmartWasteDatabaseConnection context, PointContract point, List<PointHistoryContract> histories)
         {
             var entitie = context.Points.Find(point.ID);
 
@@ -123,6 +130,22 @@ namespace SmartWaste_API.Business
             entitie.AddressID = point.AddressID;
             entitie.DeviceID = point.DeviceID;
             entitie.PointRouteStatusID = (int)point.PointRouteStatus;
+
+            if (histories != null)
+                histories.ForEach((history) =>
+                    ((IPointHistoryInternalRepository)_pointHistoryRepository).Add(context, history)
+                );
+        }
+
+        public PointDetailedContract GetDetailed(PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return context.vw_GetPointsDetailed.Where(x =>
+                    (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                    (filter.PersonID == null || filter.PersonID == x.PersonID)
+                ).FirstOrDefault().ToContract();
+            }
         }
     }
 }

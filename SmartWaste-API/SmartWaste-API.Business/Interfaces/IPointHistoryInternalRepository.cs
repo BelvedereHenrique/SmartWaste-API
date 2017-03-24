@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SmartWaste_API.Business.Interfaces
 {
-    internal interface IPointInternalRepository
+    internal interface IPointHistoryInternalRepository
     {
-        void Edit(Data.SmartWasteDatabaseConnection context, PointContract point, List<PointHistoryContract> histories);
+        void Add(Data.SmartWasteDatabaseConnection context, PointHistoryContract history);
     }
 }

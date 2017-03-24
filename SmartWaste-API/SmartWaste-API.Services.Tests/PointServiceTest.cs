@@ -8,6 +8,8 @@ using SmarteWaste_API.Contracts.Point;
 using System.Collections.Generic;
 using SmartWaste_API.Business.Interfaces;
 using SmartWaste_API.Services.Security;
+using SmartWaste_API.Library.Tests;
+using System.Linq;
 
 namespace SmartWaste_API.Services.Tests
 {
@@ -110,6 +112,145 @@ namespace SmartWaste_API.Services.Tests
                 filter.Status == null &&
                 filter.PersonID == identity.Person.ID
             )), Times.Once);
+        }
+
+        [TestMethod]
+        public void SetAsFullSuccessTest()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(false);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.USER
+            });
+
+            var point = new PointDetailedContract() {
+                ID = Guid.NewGuid(),
+                Status = PointStatusEnum.Empty,
+                PointRouteStatus = PointRouteStatusEnum.Free,
+                Type = PointTypeEnum.User
+            };
+
+            var pointRepository = GetPointRepository();
+            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>())).Returns(point);
+            pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()))
+                .Callback((PointContract editedPoint, List<PointHistoryContract> histories) => {
+                    Assert.AreEqual(histories.Count, 1);
+                    Assert.AreEqual(histories.First().Date.Date, DateTime.Now.Date);
+                    Assert.AreEqual(histories.First().Person.ID, person.ID);
+                    Assert.AreEqual(histories.First().PointID, point.ID);
+                    Assert.AreEqual(histories.First().Status, PointStatusEnum.Full);
+                    Assert.IsFalse(String.IsNullOrEmpty(histories.First().Reason));
+
+                    Assert.AreEqual(editedPoint.Status, PointStatusEnum.Full);
+                    Assert.AreEqual(editedPoint.PointRouteStatus, PointRouteStatusEnum.Free);
+                    Assert.AreEqual(editedPoint.Type, PointTypeEnum.User);
+                });
+
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var result = pointService.SetAsFull();
+
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(result.Messages.Count, 1);
+
+            pointRepository.Verify(x => x.GetDetailed(It.Is((PointFilterContract filter) =>
+                filter.PersonID == person.ID
+            )), Times.Once);
+        }
+
+        [TestMethod]
+        public void SetAsFullWhenUserIsCompanyTest()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.COMPANY_USER
+            });
+            
+            var pointRepository = GetPointRepository();
+            pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
+
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var result = pointService.SetAsFull();
+
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(result.Messages.Count, 1);
+            Assert.IsFalse(String.IsNullOrWhiteSpace(result.Messages.First().Message));
+
+            pointRepository.Verify(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()), 
+                Times.Never);
+        }
+
+        [TestMethod]
+        public void SetAsFullWhenUserDoesntHavePointsTest()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(false);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.USER
+            });
+
+            var pointRepository = GetPointRepository();
+            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>()));
+            pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
+
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var result = pointService.SetAsFull();
+
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(result.Messages.Count, 1);
+            Assert.IsFalse(String.IsNullOrWhiteSpace(result.Messages.First().Message));
+
+            pointRepository.Verify(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()),
+                Times.Never);
+        }
+
+        [TestMethod]
+        public void SetAsFullWhenPointIsAlreadyFullTest()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(false);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.USER
+            });
+
+            var point = new PointDetailedContract(){
+                Status = PointStatusEnum.Full
+            };
+
+            var pointRepository = GetPointRepository();
+            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>())).Returns(point);
+            pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
+
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var result = pointService.SetAsFull();
+
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(result.Messages.Count, 1);
+            Assert.IsFalse(String.IsNullOrWhiteSpace(result.Messages.First().Message));
+
+            pointRepository.Verify(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()),
+                Times.Never);
+        }
+
+        [TestMethod]
+        public void GetDetailed()
+        {
+            var filter = new PointFilterContract();
+            var point = new PointDetailedContract();
+
+            var pointRepository = GetPointRepository();
+            pointRepository.Setup(x => x.GetDetailed(filter)).Returns(point);
+
+            var service = (IPointService)new PointService(pointRepository.Object, null);
+            var result = service.GetDetailed(filter);
+
+            Assert.AreEqual(result, point);
+            pointRepository.Verify(x => x.GetDetailed(filter), Times.Once);
+        }
+
+        private Mock<IPointRepository> GetPointRepository()
+        {
+            return new Mock<IPointRepository>();
         }
     }
 }

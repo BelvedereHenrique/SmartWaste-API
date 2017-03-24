@@ -1,6 +1,9 @@
 ﻿using SmarteWaste_API.Contracts.Address;
 using SmartWaste_API.Services.Interfaces;
 using System.Collections.Generic;
+using System;
+using SmartWaste_API.Library.Security;
+using SmarteWaste_API.Contracts;
 
 namespace SmartWaste_API.Services
 {
@@ -9,12 +12,17 @@ namespace SmartWaste_API.Services
         private readonly ICountryService _countryService;
         private readonly IStateService _stateService;
         private readonly ICityService _cityService;
+        private readonly ISecurityManager<IdentityContract> _user;
 
-        public AddressService(ICountryService _cService, IStateService _sService, ICityService _ciService)
+        public AddressService(ICountryService countryService, 
+                              IStateService stateService, 
+                              ICityService cityService,
+                              ISecurityManager<IdentityContract> user)
         {
-            _countryService = _cService;
-            _stateService = _sService;
-            _cityService = _ciService;
+            this._countryService = countryService;
+            this._stateService = stateService;
+            this._cityService = cityService;
+            this._user = user;
         }
 
         public List<CountryContract> GetCountryList()

@@ -30,6 +30,7 @@ namespace SmartWaste_API.Tests.Models
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
             Assert.IsFalse(model.ShowRoutesMenu);
+            Assert.IsTrue(model.CanSetTrashcanAsFull);
         }
 
         [TestMethod]
@@ -51,6 +52,7 @@ namespace SmartWaste_API.Tests.Models
             Assert.IsTrue(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
             Assert.IsTrue(model.ShowRoutesMenu);
+            Assert.IsFalse(model.CanSetTrashcanAsFull);
         }
 
         [TestMethod]
@@ -72,6 +74,7 @@ namespace SmartWaste_API.Tests.Models
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsTrue(model.CanSaveRoutes);
             Assert.IsTrue(model.ShowRoutesMenu);
+            Assert.IsFalse(model.CanSetTrashcanAsFull);
         }
     }
 }

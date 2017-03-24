@@ -9,8 +9,9 @@ namespace SmartWaste_API.Business.Interfaces
 {
     public interface IPointRepository
     {
-        void Edit(PointContract point);
+        void Edit(PointContract point, List<PointHistoryContract> histories);
         List<PointContract> GetList(PointFilterContract filter);
         List<PointDetailedContract> GetDetailedList(PointFilterContract filter);
+        PointDetailedContract GetDetailed(PointFilterContract filter);
     }
 }

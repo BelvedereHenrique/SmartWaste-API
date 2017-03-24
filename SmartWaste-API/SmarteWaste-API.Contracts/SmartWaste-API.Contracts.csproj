@@ -61,6 +61,7 @@
     <Compile Include="Point\PointCoordinatorContract.cs" />
     <Compile Include="Point\PointDetailedContract.cs" />
     <Compile Include="Point\PointFilterContract.cs" />
+    <Compile Include="Point\PointHistoryContract.cs" />
     <Compile Include="Point\PointRouteStatusEnum.cs" />
     <Compile Include="Point\PointStatusEnum.cs" />
     <Compile Include="Point\PointTypeEnum.cs" />

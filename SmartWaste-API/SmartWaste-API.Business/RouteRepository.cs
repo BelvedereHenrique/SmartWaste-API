@@ -126,7 +126,7 @@ namespace SmartWaste_API.Business
         {
             points.ForEach((point) =>
             {
-                ((IPointInternalRepository)_pointRepository).Edit(context, point);
+                ((IPointInternalRepository)_pointRepository).Edit(context, point, null);
             });
         }
 

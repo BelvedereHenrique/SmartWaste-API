@@ -8,15 +8,17 @@ using System.Web;
 
 namespace SmartWaste_API.Models
 {
-    public class SecurityModel 
+    public class SecurityModel
     {
         public string Name { get; set; }
         public string CompanyName { get; set; }
         [JsonIgnore]
         public List<string> Roles { get; set; }
-
+        [JsonIgnore]
+        public IdentityContract Identity { get; set; }
         public SecurityModel(IdentityContract identity)
         {
+            this.Identity = identity;
             this.Name = identity.Person.Name;
             this.CompanyName = identity.Person.Company != null ? identity.Person.Company.Name : string.Empty;
             this.Roles = identity.Roles;
@@ -43,6 +45,14 @@ namespace SmartWaste_API.Models
             get
             {
                 return this.Roles.Any(x => x == RolesName.COMPANY_USER);
+            }
+        }
+
+        public bool CanSetTrashcanAsFull
+        {
+            get
+            {
+                return this.Identity.Person.CompanyID == null;
             }
         }
     }

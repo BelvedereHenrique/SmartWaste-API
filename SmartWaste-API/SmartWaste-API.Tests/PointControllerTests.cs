@@ -12,6 +12,8 @@ using SmartWaste_API.Library.Security;
 using SmarteWaste_API.Contracts;
 using SmartWaste_API.Library.Tests;
 using SmarteWaste_API.Contracts.Person;
+using SmartWaste_API.Contracts.Tests;
+using SmarteWaste_API.Contracts.OperationResult;
 
 namespace SmartWaste_API.Tests
 {
@@ -129,6 +131,41 @@ namespace SmartWaste_API.Tests
 
             personService.Verify(x => x.GetList(It.IsAny<PersonFilterContract>()), Times.Once);
             personService.Verify(x => x.GetList(It.Is((PersonFilterContract filter) => filter.CompanyID == person.CompanyID)), Times.Once);
+        }
+
+        [TestMethod]
+        public void SetAsFullSuccessTest()
+        {
+            var operationResult = OperationResultHelper.GetSuccess(3);
+
+            var pointService = GetPointService();
+            pointService.Setup(x => x.SetAsFull()).Returns(operationResult);
+
+            var controller = new PointController(pointService.Object, null, null);
+            var result = (controller.SetAsFull() as OkNegotiatedContentResult<JsonModel<OperationResult>>).Content;
+
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(result.Messages.Count, 0);
+            Assert.IsTrue(result.Result.Success);
+        }
+
+        [TestMethod]
+        public void SetAsFullFailTest()
+        {
+            var pointService = GetPointService();
+            pointService.Setup(x => x.SetAsFull()).Throws(new Exception());
+
+            var controller = new PointController(pointService.Object, null, null);
+            var result = (controller.SetAsFull() as OkNegotiatedContentResult<JsonModel<bool>>).Content;
+
+            Assert.IsFalse(result.Success);
+            Assert.IsFalse(result.Result);
+            Assert.AreEqual(result.Messages.Count, 1);
+        }
+
+        private Mock<IPointService> GetPointService()
+        {
+            return new Mock<IPointService>();
         }
 
         private Mock<IPersonService> GetPersonService()

@@ -55,7 +55,7 @@ namespace SmartWaste_API.Services.Tests
         
         internal IAddressService GetAddressService(ICountryService _countryService, IStateService _stateService, ICityService _cityService)
         {
-            return (IAddressService)new AddressService(_countryService, _stateService, _cityService);
+            return (IAddressService)new AddressService(_countryService, _stateService, _cityService, null);
         }
     }                              
 }                                  

@@ -1,4 +1,5 @@
 ﻿using SmarteWaste_API.Contracts;
+using SmarteWaste_API.Contracts.OperationResult;
 using SmarteWaste_API.Contracts.Person;
 using SmarteWaste_API.Contracts.Point;
 using SmartWaste_API.Library.Security;
@@ -67,6 +68,22 @@ namespace SmartWaste_API.Controllers
                 return Ok(new JsonModel<List<PersonContract>>(_personService.GetList(new PersonFilterContract() {
                     CompanyID = _user.User.Person.CompanyID
                 })));
+            }
+            catch (Exception ex)
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError(ex);
+                return Ok(error);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IHttpActionResult SetAsFull()
+        {
+            try
+            {
+                return Ok(new JsonModel<OperationResult>(_pointService.SetAsFull()));
             }
             catch (Exception ex)
             {
