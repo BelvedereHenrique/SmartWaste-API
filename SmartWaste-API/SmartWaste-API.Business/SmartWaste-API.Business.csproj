@@ -180,10 +180,12 @@
     <Compile Include="Data\vw_GetRoutes.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="DeviceRepository.cs" />
     <Compile Include="EmailTemplateRepository.cs" />
     <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
+    <Compile Include="Interfaces\IDeviceRepository.cs" />
     <Compile Include="Interfaces\IEmailSenderRepository.cs" />
     <Compile Include="Interfaces\IIdentificationRepository.cs" />
     <Compile Include="Interfaces\IEmailTemplateRepository.cs" />

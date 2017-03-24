@@ -1,9 +1,4 @@
-﻿using SmarteWaste_API.Contracts.Address;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace SmarteWaste_API.Contracts.Point
 {

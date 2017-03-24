@@ -46,7 +46,10 @@
     <Compile Include="AddressService.cs" />
     <Compile Include="CityService.cs" />
     <Compile Include="CountryService.cs" />
+    <Compile Include="DeviceService.cs" />
     <Compile Include="EmailTemplateService.cs" />
+    <Compile Include="Interfaces\IDeviceHistoryService.cs" />
+    <Compile Include="Interfaces\IDeviceService.cs" />
     <Compile Include="Interfaces\IEmailTemplateService.cs" />
     <Compile Include="Interfaces\IParameterService.cs" />
     <Compile Include="Interfaces\IPointHistoryService.cs" />

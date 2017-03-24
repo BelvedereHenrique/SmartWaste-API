@@ -20,6 +20,7 @@ namespace SmarteWaste_API.Contracts.Point
         public PointCoordinatorContract Northwest { get; set; }
         public PointCoordinatorContract Southeast { get; set; }
         public Guid? PersonID { get; set; }
+        public Guid? DeviceID { get; set; }
         public PointStatusEnum? Status { get; set; }
         public PointTypeEnum? Type { get; set; }
         public PointRouteStatusEnum? PointRouteStatus { get; set; }

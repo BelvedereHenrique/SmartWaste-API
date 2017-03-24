@@ -70,6 +70,10 @@ namespace SmartWaste_API.Services
             return result;
         }
 
+        public void Edit(PointContract point) {
+            _pointRepository.Edit(point);
+        }
+
         private PointFilterContract CheckFilter(PointFilterContract filter)
         {
             if (!_user.User.IsAuthenticated)

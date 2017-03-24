@@ -14,5 +14,6 @@ namespace SmartWaste_API.Services.Interfaces
         List<PointDetailedContract> GetDetailedList(PointFilterContract filter);
         PointDetailedContract GetDetailed(PointFilterContract filter);
         OperationResult SetAsFull();
+        void Edit(PointContract point);
     }
 }

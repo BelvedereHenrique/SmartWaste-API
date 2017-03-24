@@ -103,6 +103,7 @@ namespace SmartWaste_API.Business
                                     (filter.PersonID == null || filter.PersonID == x.PersonID) &&
                                     (statusID == null || statusID == x.StatusID) &&
                                     (typeID == null || typeID == x.TypeID) &&
+                                    (filter.DeviceID == null || x.DeviceID == filter.DeviceID)&&
                                     (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                                     (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                                     (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID)
