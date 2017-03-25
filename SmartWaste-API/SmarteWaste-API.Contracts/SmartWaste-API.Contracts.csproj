@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\AccountEnterpriseContract.cs" />
+    <Compile Include="Account\EmployeeCompanyRequestContract.cs" />
     <Compile Include="Address\AddressContract.cs" />
     <Compile Include="Address\CityContract.cs" />
     <Compile Include="Address\CountryContract.cs" />

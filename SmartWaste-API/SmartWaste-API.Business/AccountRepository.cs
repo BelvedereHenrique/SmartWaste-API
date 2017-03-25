@@ -153,5 +153,67 @@ namespace SmartWaste_API.Business
                 return enterpriseReturn;
             }
         }
+
+        public EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var result = new EmployeeCompanyRequestContract();
+                var request = context.EmployeeCompanyRequests.FirstOrDefault(x => x.PersonID == employeeID && x.ClosedOn == null);
+                if(request != null)
+                {
+                    result.ID = request.ID;
+                    result.CreatedON = request.CreatedOn;
+                    result.CreatedBy = new PersonContract()
+                    {
+                        ID = request.Person.ID,
+                        Name = request.Person.Name,
+                        Email = request.Person.Email
+                    };
+                    result.Email = request.Email;
+                    result.Token = request.Link;
+                    result.Person = new PersonContract()
+                    {
+                        ID = request.Person1.ID,
+                        Name = request.Person1.Name
+                    };
+                }
+                return result;
+            }
+        }
+        public string SaveEnterpriseToken(string email, Guid sender)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                CloseOpenedEnterpriseToken(email);
+                var user = context.People.First(x=>x.Email == email);
+                var token = Guid.NewGuid().ToString().Substring(0, 10);
+                context.EmployeeCompanyRequests.Add(new Data.EmployeeCompanyRequest()
+                {
+                    ID = Guid.NewGuid(),
+                    ClosedOn = null,
+                    CreatedByID = sender,
+                    CreatedOn = DateTime.Now,
+                    Email = email,
+                    Link = token,
+                    PersonID = user.ID
+                });
+                context.SaveChanges();
+                return token;
+            }   
+        }
+
+        private void CloseOpenedEnterpriseToken(string email)
+        {
+            using (var c = new Data.SmartWasteDatabaseConnection())
+            {
+                var request = c.EmployeeCompanyRequests.FirstOrDefault(x => x.Email == email && x.ClosedOn == null);
+                if (request != null)
+                {
+                    request.ClosedOn = DateTime.Now;
+                    c.SaveChanges();
+                }
+            }
+        }
     }
 }
