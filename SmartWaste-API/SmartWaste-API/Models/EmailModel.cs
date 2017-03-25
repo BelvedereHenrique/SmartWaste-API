@@ -9,4 +9,9 @@ namespace SmartWaste_API.Models
     {
         public string email { get; set; }
     }
+    public class EnterpriseRequestTokenModel
+    {
+        public string email { get; set; }
+        public bool check { get; set; }
+    }
 }

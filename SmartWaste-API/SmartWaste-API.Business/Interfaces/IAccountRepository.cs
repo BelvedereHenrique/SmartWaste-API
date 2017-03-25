@@ -10,5 +10,7 @@ namespace SmartWaste_API.Business.Interfaces
         bool CheckEnterprise(AccountEnterpriseContract enterprise);
         void AddPersonal(PersonalSubscriptionFormContract data);
         AccountEnterpriseContract GetUserEnterprise(Guid userID);
+        EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID);
+        string SaveEnterpriseToken(string email, Guid sender);
     }
 }

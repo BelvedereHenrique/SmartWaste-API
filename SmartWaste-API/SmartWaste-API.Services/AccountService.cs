@@ -202,5 +202,43 @@ namespace SmartWaste_API.Services
         {
             return _user.User.IsAuthenticated;
         }
+
+        private void CheckEmployeeEnterpriseToken(Guid personID)
+        {
+            var requests = _accountRepository.GetEmployeeRequest(personID);
+            if (requests != null && requests.ID != null) throw new ArgumentException("There is a pending request for this employee");
+        }
+
+        public async Task SendEmployeeEnterpriseTokenEmail(string email, bool verify)
+        {
+
+            var user = _userService.Get(new SmarteWaste_API.Contracts.User.UserFilterContract() { Login = email });
+            if (user == null || user.ID == null) throw new ArgumentException("This employee does not exists");
+            var person = _personService.Get(new PersonFilterContract() { Email = email });
+            if (person.CompanyID != null) throw new ArgumentException("This employee is already associated with a company");
+
+            if (verify) CheckEmployeeEnterpriseToken(person.ID);
+
+            var token = _accountRepository.SaveEnterpriseToken(email, _user.User.Person.ID);
+            
+            var model = new EmailContract()
+            {
+                Email = email,
+                Informations = _parameterService.GetEmailSenderInformations(),
+                UserName = _user.User.Person.Name
+            };
+
+            var emailTemplate = _emailTemplateService.GetEmailTemplate("sendenterprisetoken");
+            var emailSubject = "SmartWaste: No-Reply";
+            var message = emailTemplate;
+            message = message.Replace("{Email}", email);
+            message = message.Replace("{Token}",token);
+            await _emailService.SendEmailAsync(model.Informations, model.Email, emailSubject, message, null);
+        }
+
+        public EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID)
+        {
+            return _accountRepository.GetEmployeeRequest(employeeID);
+        }
     }
 }
