@@ -203,9 +203,9 @@ namespace SmartWaste_API.Services
             return _user.User.IsAuthenticated;
         }
 
-        private void CheckEmployeeEnterpriseToken(Guid personID)
+        private void CheckEmployeeEnterpriseToken(string email)
         {
-            var requests = _accountRepository.GetEmployeeRequest(personID);
+            var requests = _accountRepository.GetEmployeeRequest(email);
             if (requests != null && requests.ID != null) throw new ArgumentException("There is a pending request for this employee");
         }
 
@@ -217,7 +217,7 @@ namespace SmartWaste_API.Services
             var person = _personService.Get(new PersonFilterContract() { Email = email });
             if (person.CompanyID != null) throw new ArgumentException("This employee is already associated with a company");
 
-            if (verify) CheckEmployeeEnterpriseToken(person.ID);
+            if (verify) CheckEmployeeEnterpriseToken(email);
 
             var token = _accountRepository.SaveEnterpriseToken(email, _user.User.Person.ID);
             
@@ -236,9 +236,25 @@ namespace SmartWaste_API.Services
             await _emailService.SendEmailAsync(model.Informations, model.Email, emailSubject, message, null);
         }
 
-        public EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID)
+        public void SetEnterprisePermission(string email, string password, string token)
         {
-            return _accountRepository.GetEmployeeRequest(employeeID);
+            var request = _accountRepository.GetEmployeeRequest(email);
+            if (request!= null && request.ID != null)
+            {
+                if (request.Token.ToLower().Trim() != token.ToLower().Trim()) throw new ArgumentException("Incorrect token!");
+                var user = _userService.Get(new SmarteWaste_API.Contracts.User.UserFilterContract() { Login = email });
+                if (Library.MD5Helper.Create(password) != user.Password) throw new ArgumentException("Incorrect password!");
+                var roles = new List<Guid>();
+                roles.Add(Guid.Parse(RolesID.COMPANY_USER_ID));
+                roles.Add(Guid.Parse(RolesID.COMPANY_ROUTE_ID));
+                _userService.SetUserRoles(user.ID, roles);
+                _accountRepository.SetCompanyID(request.PersonID, request.CompanyID);
+                _accountRepository.CloseOpenedEnterpriseToken(email);
+            }
+            else
+            {
+                throw new ArgumentException("There is no request for this email");
+            }
         }
     }
 }

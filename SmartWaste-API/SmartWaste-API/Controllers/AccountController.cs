@@ -171,19 +171,6 @@ namespace SmartWaste_API.Controllers
                 return Ok(new JsonModel<bool>(ex));
             }
         }
-        [HttpPost]
-        public async Task<IHttpActionResult> SendEmployeeEnterpriseToken(Models.EnterpriseRequestTokenModel email)
-        {
-            try
-            {
-                await _accountService.SendEmployeeEnterpriseTokenEmail(email.email, email.check);
-                return Ok(new JsonModel<bool>(true));
-            }
-            catch (Exception ex)
-            {
-                return Ok(new JsonModel<bool>(ex));
-            }
-        }
 
         [HttpPost]
         public IHttpActionResult ChangePassword(PasswordContract password)
@@ -198,6 +185,35 @@ namespace SmartWaste_API.Controllers
                 return Ok(new JsonModel<bool>(ex));
             }
         }
-    }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IHttpActionResult> SendEmployeeEnterpriseToken(Models.EnterpriseRequestTokenModel email)
+        {
+            try
+            {
+                await _accountService.SendEmployeeEnterpriseTokenEmail(email.email, email.check);
+                return Ok(new JsonModel<bool>(true));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult SetEnterprisePermission(Models.EnterprisePermissionModel model)
+        {
+            try
+            {
+                _accountService.SetEnterprisePermission(model.email, model.password, model.token);
+                return Ok(new JsonModel<bool>(true));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new JsonModel<bool>(ex));
+            }
+        }
+    }
 }

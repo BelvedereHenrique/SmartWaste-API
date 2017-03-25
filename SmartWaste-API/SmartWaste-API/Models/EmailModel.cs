@@ -14,4 +14,11 @@ namespace SmartWaste_API.Models
         public string email { get; set; }
         public bool check { get; set; }
     }
+
+    public class EnterprisePermissionModel
+    {
+        public string email { get; set; }
+        public string password { get; set; }
+        public string  token { get; set; }
+    }
 }

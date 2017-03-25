@@ -16,6 +16,6 @@ namespace SmartWaste_API.Services.Interfaces
         bool CheckEmailAvailability(string email);
         bool ValidatePersonalForm(PersonalSubscriptionFormContract data);
         Task SendEmployeeEnterpriseTokenEmail(string email, bool verify);
-        EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID);
+        void SetEnterprisePermission(string email, string password, string token);
     }
 }
