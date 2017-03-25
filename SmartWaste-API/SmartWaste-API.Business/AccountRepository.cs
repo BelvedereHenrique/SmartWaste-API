@@ -154,12 +154,12 @@ namespace SmartWaste_API.Business
             }
         }
 
-        public EmployeeCompanyRequestContract GetEmployeeRequest(Guid employeeID)
+        public EmployeeCompanyRequestContract GetEmployeeRequest(string email)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
                 var result = new EmployeeCompanyRequestContract();
-                var request = context.EmployeeCompanyRequests.FirstOrDefault(x => x.PersonID == employeeID && x.ClosedOn == null);
+                var request = context.EmployeeCompanyRequests.FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()) && x.ClosedOn == null);
                 if(request != null)
                 {
                     result.ID = request.ID;
@@ -172,11 +172,8 @@ namespace SmartWaste_API.Business
                     };
                     result.Email = request.Email;
                     result.Token = request.Link;
-                    result.Person = new PersonContract()
-                    {
-                        ID = request.Person1.ID,
-                        Name = request.Person1.Name
-                    };
+                    result.CompanyID = request.CompanyID;
+                    result.PersonID = request.PersonID.Value;
                 }
                 return result;
             }
@@ -196,14 +193,15 @@ namespace SmartWaste_API.Business
                     CreatedOn = DateTime.Now,
                     Email = email,
                     Link = token,
-                    PersonID = user.ID
+                    PersonID = user.ID,
+                    CompanyID = context.People.Where(x => x.ID == sender).First().CompanyID.Value
                 });
                 context.SaveChanges();
                 return token;
             }   
         }
 
-        private void CloseOpenedEnterpriseToken(string email)
+        public void CloseOpenedEnterpriseToken(string email)
         {
             using (var c = new Data.SmartWasteDatabaseConnection())
             {
@@ -215,5 +213,15 @@ namespace SmartWaste_API.Business
                 }
             }
         }
+        public void SetCompanyID(Guid personID ,Guid companyID)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var person = context.People.First(x => x.ID == personID);
+                person.CompanyID = companyID;
+                context.SaveChanges();
+            }
+        }
+
     }
 }

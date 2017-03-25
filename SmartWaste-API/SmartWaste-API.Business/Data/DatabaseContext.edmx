@@ -103,6 +103,7 @@
           <Property Name="CreatedByID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PersonID" Type="uniqueidentifier" />
           <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CompanyID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="Identification">
           <Key>
@@ -393,6 +394,18 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
             </Principal>
             <Dependent Role="City">
               <PropertyRef Name="StateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="EmployeeCompanyRequest" Type="Self.EmployeeCompanyRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmployeeCompanyRequest">
+              <PropertyRef Name="CompanyID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -923,6 +936,10 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
             <End Role="State" EntitySet="State" />
             <End Role="City" EntitySet="City" />
           </AssociationSet>
+          <AssociationSet Name="fk_company" Association="Self.fk_company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequest" />
+          </AssociationSet>
           <AssociationSet Name="FK_CompanyAddress_Address" Association="Self.FK_CompanyAddress_Address">
             <End Role="Address" EntitySet="Address" />
             <End Role="CompanyAddress" EntitySet="CompanyAddress" />
@@ -1258,6 +1275,10 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
             <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
           <EntitySet Name="vw_GetRoutes" EntityType="smartwaste.devModel.vw_GetRoutes" />
+          <AssociationSet Name="fk_company" Association="smartwaste.devModel.fk_company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="EmployeeCompanyRequest" EntitySet="EmployeeCompanyRequests" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -1296,6 +1317,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
           <NavigationProperty Name="CompanyAddresses" Relationship="smartwaste.devModel.FK_CompanyAddress_Company" FromRole="Company" ToRole="CompanyAddress" />
           <NavigationProperty Name="People" Relationship="smartwaste.devModel.FK_Person_Company" FromRole="Company" ToRole="Person" />
           <NavigationProperty Name="Routes" Relationship="smartwaste.devModel.FK_Route_Company" FromRole="Company" ToRole="Route" />
+          <NavigationProperty Name="EmployeeCompanyRequests" Relationship="smartwaste.devModel.fk_company" FromRole="Company" ToRole="EmployeeCompanyRequest" />
         </EntityType>
         <EntityType Name="CompanyAddress">
           <Key>
@@ -1381,6 +1403,8 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Person" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person" FromRole="EmployeeCompanyRequest" ToRole="Person" />
           <NavigationProperty Name="Person1" Relationship="smartwaste.devModel.FK_EmployeeCompanyRequest_Person1" FromRole="EmployeeCompanyRequest" ToRole="Person" />
+          <Property Name="CompanyID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="smartwaste.devModel.fk_company" FromRole="EmployeeCompanyRequest" ToRole="Company" />
         </EntityType>
         <EntityType Name="Identification">
           <Key>
@@ -2152,6 +2176,18 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
           <Property Name="CreatedByID" Type="Guid" Nullable="false" />
           <Property Name="CreatedByName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
+        <Association Name="fk_company">
+          <End Type="smartwaste.devModel.Company" Role="Company" Multiplicity="1" />
+          <End Type="smartwaste.devModel.EmployeeCompanyRequest" Role="EmployeeCompanyRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmployeeCompanyRequest">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2258,6 +2294,7 @@ warning 6002: The table/view 'smartwaste.dev.dbo.vw_GetRoutes' does not have a p
           <EntitySetMapping Name="EmployeeCompanyRequests">
             <EntityTypeMapping TypeName="smartwaste.devModel.EmployeeCompanyRequest">
               <MappingFragment StoreEntitySet="EmployeeCompanyRequest">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />

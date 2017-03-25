@@ -13,7 +13,8 @@ namespace SmarteWaste_API.Contracts.Account
         public DateTime? CreatedON { get; set; }
         public DateTime? ClosedON { get; set; }
         public Person.PersonContract CreatedBy { get; set; }
-        public Person.PersonContract Person { get; set; }
+        public Guid PersonID { get; set; }
         public string Email { get; set; }
+        public Guid CompanyID { get; set; }
     }
 }

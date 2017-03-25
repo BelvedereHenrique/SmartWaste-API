@@ -75,6 +75,7 @@
         <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Route" />
         <AssociationConnector Association="smartwaste.devModel.FK_RoutePoint_Route" />
         <EntityTypeShape EntityType="smartwaste.devModel.vw_GetRoutes" Width="1.5" PointX="12.375" PointY="0.75" />
+        <AssociationConnector Association="smartwaste.devModel.fk_company" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
