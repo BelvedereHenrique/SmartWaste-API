@@ -12,6 +12,18 @@ namespace SmartWaste_API.Business
 {
     public class PointHistoryRepository : IPointHistoryRepository, IPointHistoryInternalRepository
     {
+        public List<PointHistoryContract> GetList(PointHistoryFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return context.PointHistories.Include("Person").Where(x =>
+                    (filter.PointID == null || filter.PointID == x.PointID) &&
+                    (filter.PersonID == null || filter.PersonID == x.PersonID) &&
+                    (filter.CompanyID == null || filter.CompanyID == x.Person.CompanyID)
+                ).ToList().ToContracts();
+            }
+        }
+
         public void Add(PointHistoryContract history)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())

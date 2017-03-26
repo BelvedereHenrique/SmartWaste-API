@@ -22,14 +22,17 @@ namespace SmartWaste_API.Tests.Models
 
             var model = new SecurityModel(identity.Object.User);
 
+            Assert.AreEqual(model.PersonID, person.ID);
             Assert.AreEqual(model.Name, person.Name);
             Assert.AreEqual(model.CompanyName, String.Empty);
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsFalse(model.CanSeeMapLegendColors);
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
             Assert.IsFalse(model.ShowRoutesMenu);
+            Assert.IsFalse(model.CanSeeAllPointDetails);
             Assert.IsTrue(model.CanSetTrashcanAsFull);
         }
 
@@ -44,15 +47,18 @@ namespace SmartWaste_API.Tests.Models
 
             var model = new SecurityModel(identity.Object.User);
 
+            Assert.AreEqual(model.PersonID, person.ID);
             Assert.AreEqual(model.Name, person.Name);
             Assert.AreEqual(model.CompanyName, String.Empty);
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsTrue(model.CanSeeMapLegendColors);
             Assert.IsTrue(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
             Assert.IsTrue(model.ShowRoutesMenu);
             Assert.IsFalse(model.CanSetTrashcanAsFull);
+            Assert.IsTrue(model.CanSeeAllPointDetails);
         }
 
         [TestMethod]
@@ -66,15 +72,18 @@ namespace SmartWaste_API.Tests.Models
 
             var model = new SecurityModel(identity.Object.User);
 
+            Assert.AreEqual(model.PersonID, person.ID);
             Assert.AreEqual(model.Name, person.Name);
             Assert.AreEqual(model.CompanyName, String.Empty);
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsFalse(model.CanSeeMapLegendColors);
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsTrue(model.CanSaveRoutes);
             Assert.IsTrue(model.ShowRoutesMenu);
             Assert.IsFalse(model.CanSetTrashcanAsFull);
+            Assert.IsFalse(model.CanSeeAllPointDetails);
         }
     }
 }

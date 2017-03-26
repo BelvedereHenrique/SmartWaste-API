@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartWaste_API.Business.Interfaces
+namespace SmartWaste_API.Services.Interfaces
 {
-    public interface IPointHistoryRepository
+    public interface IPointHistoryService
     {
         List<PointHistoryContract> GetList(PointHistoryFilterContract filter);
-        void Add(PointHistoryContract history);
     }
 }

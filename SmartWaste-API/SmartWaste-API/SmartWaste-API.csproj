@@ -161,6 +161,7 @@
     </Compile>
     <Compile Include="Models\EmailModel.cs" />
     <Compile Include="Models\JsonModel.cs" />
+    <Compile Include="Models\PointDetailedModel.cs" />
     <Compile Include="Models\RouteAddModel.cs" />
     <Compile Include="Models\RouteDisableModel.cs" />
     <Compile Include="Models\SecurityModel.cs" />

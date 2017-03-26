@@ -16,7 +16,24 @@ namespace SmartWaste_API.Library.Tests
         private static Guid UserID = Guid.NewGuid();
         private static Guid PersonID = Guid.NewGuid();
         private static string Login = Guid.NewGuid().ToString();
-        
+
+        public static Mock<ISecurityManager<IdentityContract>> GetUnauthenticatedIdentity()
+        {
+            var identity = new IdentityContract()
+            {
+                IsAuthenticated = false,
+                Person = null,
+                User = null,
+                AuthenticationType = string.Empty,
+                Login = string.Empty
+            };
+            
+            var securityManager = new Mock<ISecurityManager<IdentityContract>>();
+            securityManager.Setup(x => x.User).Returns(identity);
+            
+            return securityManager;
+        }
+
         public static Mock<ISecurityManager<IdentityContract>> GetAuthenticatedIdentity(PersonContract person, UserContract user, List<string> roles)
         {
             var identity = new IdentityContract()

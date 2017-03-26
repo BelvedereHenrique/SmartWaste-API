@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PointServiceTest.cs" />
     <Compile Include="StateServiceTests.cs" />
+    <Compile Include="PointHistoryServiceTests.cs" />
     <Compile Include="UserServiceTests.cs" />
     <Compile Include="RouteServiceTests.cs" />
     <Compile Include="RouteValidationServiceTests.cs" />

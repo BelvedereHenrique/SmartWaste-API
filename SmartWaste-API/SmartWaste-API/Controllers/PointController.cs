@@ -19,14 +19,17 @@ namespace SmartWaste_API.Controllers
         private readonly IPointService _pointService;
         private readonly IPersonService _personService;
         private readonly ISecurityManager<IdentityContract> _user;
+        private readonly IPointHistoryService _pointHistoryService;
 
-        public PointController(IPointService pointService, 
+        public PointController(IPointService pointService,
                                IPersonService personService,
-                               ISecurityManager<IdentityContract> user)
+                               ISecurityManager<IdentityContract> user,
+                               IPointHistoryService pointHistoryService)
         {
             _pointService = pointService;
             _personService = personService;
             _user = user;
+            _pointHistoryService = pointHistoryService;
         }
 
         [HttpPost]
@@ -41,7 +44,7 @@ namespace SmartWaste_API.Controllers
                 var error = new JsonModel<bool>(false);
                 error.AddError("There was a error to retrieve the points.");
                 return Ok(error);
-            }            
+            }
         }
 
         [HttpPost]
@@ -60,12 +63,39 @@ namespace SmartWaste_API.Controllers
         }
 
         [HttpPost]
+        public IHttpActionResult GetDetailed(PointFilterContract filter)
+        {
+            try
+            {
+                var point = _pointService.GetDetailed(filter);
+                if (point == null)
+                    throw new NullReferenceException("Point not found.");
+
+                var histories = _pointHistoryService.GetList(new PointHistoryFilterContract()
+                {
+                    PointID = point.ID
+                });
+
+                var model = new PointDetailedHistoriesModel(point, histories);
+
+                return Ok(new JsonModel<PointDetailedHistoriesModel>(model));
+            }
+            catch
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError("There was a error to retrieve the point.");
+                return Ok(error);
+            }
+        }
+
+        [HttpPost]
         [Authorize]
         public IHttpActionResult GetPeopleFromCompany()
         {
             try
             {
-                return Ok(new JsonModel<List<PersonContract>>(_personService.GetList(new PersonFilterContract() {
+                return Ok(new JsonModel<List<PersonContract>>(_personService.GetList(new PersonFilterContract()
+                {
                     CompanyID = _user.User.Person.CompanyID
                 })));
             }
