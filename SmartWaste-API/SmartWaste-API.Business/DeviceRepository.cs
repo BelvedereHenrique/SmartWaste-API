@@ -3,6 +3,7 @@ using System;
 using SmarteWaste_API.Contracts.Device;
 using System.Linq;
 using SmartWaste_API.Business.Data;
+using SmartWaste_API.Business.ContractParser;
 
 namespace SmartWaste_API.Business
 {
@@ -56,6 +57,15 @@ namespace SmartWaste_API.Business
                     Status = (DeviceStatusEnum)device.StatusID,
                     Type = (DeviceTypeEnum)device.TypeID
                 };
+            }
+        }
+
+        public DeviceContract GetDeviceByPointID(Guid ID)
+        {
+            using (var context = new SmartWasteDatabaseConnection())
+            {
+                var point = context.Points.FirstOrDefault(x=>x.ID == ID);
+                return context.Devices.FirstOrDefault(x=>x.ID == point.DeviceID).ToContract();
             }
         }
     }

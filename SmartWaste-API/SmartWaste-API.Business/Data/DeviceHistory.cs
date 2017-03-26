@@ -12,32 +12,17 @@
 namespace SmartWaste_API.Business.Data
 {
 
-using System;
-    using System.Collections.Generic;
-    
-public partial class DeviceHistory
-{
+    public partial class DeviceHistory
+    {
 
-    public System.Guid ID { get; set; }
-
-    public System.Guid DeviceID { get; set; }
-
-    public System.DateTime Date { get; set; }
-
-    public int StatusID { get; set; }
-
-    public string Reason { get; set; }
-
-    public System.Guid PersonID { get; set; }
-
-
-
-    public virtual Device Device { get; set; }
-
-    public virtual DeviceStatu DeviceStatu { get; set; }
-
-    public virtual Person Person { get; set; }
-
-}
-
+        public System.Guid ID { get; set; }
+        public System.Guid DeviceID { get; set; }
+        public System.DateTime Date { get; set; }
+        public int StatusID { get; set; }
+        public string Reason { get; set; }
+        public System.Guid PersonID { get; set; }
+        public virtual Device Device { get; set; }
+        public virtual DeviceStatu DeviceStatu { get; set; }
+        public virtual Person Person { get; set; }
+    }
 }

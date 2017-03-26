@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using SmartWaste_API.Library.Security;
 using SmarteWaste_API.Contracts;
+using SmartWaste_API.Business.Interfaces;
 
 namespace SmartWaste_API.Services
 {
@@ -12,17 +13,21 @@ namespace SmartWaste_API.Services
         private readonly ICountryService _countryService;
         private readonly IStateService _stateService;
         private readonly ICityService _cityService;
-        private readonly ISecurityManager<IdentityContract> _user;
+        private readonly IAccountService _accountService;
+        private readonly IAddressRepository _addressRepository;
 
         public AddressService(ICountryService countryService, 
                               IStateService stateService, 
                               ICityService cityService,
-                              ISecurityManager<IdentityContract> user)
+                              IAccountService accountService,
+                              IAddressRepository repository
+                              )
         {
             this._countryService = countryService;
             this._stateService = stateService;
             this._cityService = cityService;
-            this._user = user;
+            _accountService = accountService;
+            _addressRepository = repository;
         }
 
         public List<CountryContract> GetCountryList()
@@ -38,6 +43,16 @@ namespace SmartWaste_API.Services
         public List<CityContract> GetCityList(int stateID)
         {
             return _cityService.GetList(stateID);
+        }
+
+        public AddressContract GetAddress(Guid address)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(AddressContract address)
+        {
+            _addressRepository.Add(address);
         }
     }
 }

@@ -4,6 +4,7 @@ using SmarteWaste_API.Contracts.Account;
 using System.Linq;
 using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Library;
+using SmartWaste_API.Business.Data;
 
 namespace SmartWaste_API.Business
 {
@@ -52,11 +53,15 @@ namespace SmartWaste_API.Business
                             AddressID = addressID,
                             CompanyID = enterpriseID
                         });
+
+                        //Prepares a point for the new enterprise
+                        AddAccountPoint(context, addressID);
+
                         context.SaveChanges();
                         transaction.Commit();
                         return enterpriseID;
                     }
-                    
+
                     catch (Exception)
                     {
                         transaction.Rollback();
@@ -125,6 +130,10 @@ namespace SmartWaste_API.Business
                         context.Identifications.Add(identification);
                         context.Addresses.Add(address);
                         context.PersonAddresses.Add(personAddress);
+
+                        //Prepares a point for the new user.
+                        AddAccountPoint(context,address.ID);
+
                         context.SaveChanges();
                         transaction.Commit();
                     }
@@ -137,7 +146,6 @@ namespace SmartWaste_API.Business
             }
 
         }
-
         public AccountEnterpriseContract GetUserEnterprise(Guid userID)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
@@ -223,5 +231,18 @@ namespace SmartWaste_API.Business
             }
         }
 
+        private void AddAccountPoint(SmartWasteDatabaseConnection context, Guid addressID)
+        {
+            var point = new Point()
+            {
+                AddressID = addressID,
+                ID = Guid.NewGuid(),
+                TypeID = 1,
+                StatusID = 1,
+                PointRouteStatusID = 1
+            };
+            context.Points.Add(point);
+
+        }
     }
 }

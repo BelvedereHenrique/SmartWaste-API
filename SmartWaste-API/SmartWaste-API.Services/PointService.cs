@@ -1,15 +1,14 @@
 ﻿using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SmarteWaste_API.Contracts.Point;
 using SmartWaste_API.Business.Interfaces;
 using SmartWaste_API.Library.Security;
 using SmarteWaste_API.Contracts;
 using SmartWaste_API.Services.Security;
 using SmarteWaste_API.Contracts.OperationResult;
+using SmarteWaste_API.Contracts.Address;
+using SmarteWaste_API.Contracts.Person;
 
 namespace SmartWaste_API.Services
 {
@@ -17,6 +16,7 @@ namespace SmartWaste_API.Services
     {
         private readonly IPointRepository _pointRepository;
         private readonly ISecurityManager<IdentityContract> _user;
+        private readonly IAddressService _addressService;
 
         public PointService(IPointRepository pointRepository, ISecurityManager<IdentityContract> user)
         {
@@ -70,8 +70,9 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public void Edit(PointContract point) {
-            _pointRepository.Edit(point);
+        public void Edit(PointContract point)
+        {
+            _pointRepository.Edit(point,null);
         }
 
         private PointFilterContract CheckFilter(PointFilterContract filter)
@@ -128,6 +129,34 @@ namespace SmartWaste_API.Services
                 Reason = "Point setted as full.",
                 Status = PointStatusEnum.Full
             };
+        }
+        public PointContract GetPointByDeviceID(Guid deviceID)
+        {
+            return _pointRepository.GetPointByDeviceID(deviceID);
+        }
+
+        public void RegisterPoint(AddressContract address)
+        {
+            var personID = _user.User.Person.CompanyID;
+
+            if (personID == null)
+                throw new ArgumentException("The specified user is not a company.");
+
+            var pointContract = new PointContract()
+            {
+                AddressID = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
+                Status = PointStatusEnum.Empty,
+                Type = PointTypeEnum.CompanyTrashCan,
+                PointRouteStatus = PointRouteStatusEnum.Free
+            };
+
+            address.ID = pointContract.AddressID;
+
+            _addressService.Add(address);
+
+            _pointRepository.AddCompanyPoint(pointContract,personID.Value);
+
         }
     }
 }

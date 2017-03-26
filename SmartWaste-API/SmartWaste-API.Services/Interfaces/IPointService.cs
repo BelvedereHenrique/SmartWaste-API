@@ -1,10 +1,9 @@
 ﻿using SmarteWaste_API.Contracts.OperationResult;
+﻿using SmarteWaste_API.Contracts.Address;
+using SmarteWaste_API.Contracts.Person;
 using SmarteWaste_API.Contracts.Point;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartWaste_API.Services.Interfaces
 {
@@ -15,5 +14,7 @@ namespace SmartWaste_API.Services.Interfaces
         PointDetailedContract GetDetailed(PointFilterContract filter);
         OperationResult SetAsFull();
         void Edit(PointContract point);
+        PointContract GetPointByDeviceID(Guid deviceID);
+        void RegisterPoint(AddressContract address);
     }
 }

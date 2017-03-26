@@ -16,6 +16,7 @@ namespace SmartWaste_API.Controllers
             _deviceService = deviceService;
         }
 
+        [HttpGet]
         public IHttpActionResult Activate(string deviceID)
         {
             try
@@ -27,13 +28,15 @@ namespace SmartWaste_API.Controllers
 
                 return Ok(new JsonModel<bool>(true));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 var error = new JsonModel<bool>(false);
-                error.AddError("There was an error to activate the device.");
+                error.AddError("There was an error to activate the device: " + e.Message);
                 return Ok(error);
             }
         }
+
+        [HttpGet]
         public IHttpActionResult Deactivate(string deviceID)
         {
             try
@@ -51,6 +54,8 @@ namespace SmartWaste_API.Controllers
                 return Ok(error);
             }
         }
+
+        [HttpGet]
         public IHttpActionResult Get(string deviceID)
         {
             try
@@ -69,12 +74,13 @@ namespace SmartWaste_API.Controllers
                 return Ok(error);
             }
         }
-        
+
         /// <summary>
-        /// This method will be called by hardware devices, such as Arduino's and DashButton's.
+        /// This method will be called by hardware devices.
         /// </summary>
         /// <param name="deviceID"></param>
         /// <returns></returns>
+        [HttpGet]
         public IHttpActionResult SetReady(string deviceID)
         {
             try

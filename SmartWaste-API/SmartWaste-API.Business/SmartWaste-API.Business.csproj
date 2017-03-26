@@ -53,9 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
+    <Compile Include="AddressRepository.cs" />
     <Compile Include="CityRepository.cs" />
     <Compile Include="ContractParser\CityContractParser.cs" />
     <Compile Include="ContractParser\CountryContractParser.cs" />
+    <Compile Include="ContractParser\DeviceContractParser.cs" />
+    <Compile Include="ContractParser\DeviceHistoryContractParser.cs" />
     <Compile Include="ContractParser\PersonContractParser.cs" />
     <Compile Include="ContractParser\PointContractParser.cs" />
     <Compile Include="ContractParser\PointDetailedContractParser.cs" />
@@ -180,11 +183,14 @@
     <Compile Include="Data\vw_GetRoutes.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="DeviceHistoryRepository.cs" />
     <Compile Include="DeviceRepository.cs" />
     <Compile Include="EmailTemplateRepository.cs" />
     <Compile Include="Interfaces\IAccountRepository.cs" />
+    <Compile Include="Interfaces\IAddressRepository.cs" />
     <Compile Include="Interfaces\ICityRepository.cs" />
     <Compile Include="Interfaces\ICountryRepository.cs" />
+    <Compile Include="Interfaces\IDeviceHistoryRepository.cs" />
     <Compile Include="Interfaces\IDeviceRepository.cs" />
     <Compile Include="Interfaces\IEmailSenderRepository.cs" />
     <Compile Include="Interfaces\IIdentificationRepository.cs" />

@@ -1,5 +1,6 @@
 ﻿using SmarteWaste_API.Contracts;
 using SmarteWaste_API.Contracts.OperationResult;
+using SmarteWaste_API.Contracts.Address;
 using SmarteWaste_API.Contracts.Person;
 using SmarteWaste_API.Contracts.Point;
 using SmartWaste_API.Library.Security;
@@ -7,9 +8,6 @@ using SmartWaste_API.Models;
 using SmartWaste_API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace SmartWaste_API.Controllers
@@ -20,6 +18,7 @@ namespace SmartWaste_API.Controllers
         private readonly IPersonService _personService;
         private readonly ISecurityManager<IdentityContract> _user;
         private readonly IPointHistoryService _pointHistoryService;
+
 
         public PointController(IPointService pointService,
                                IPersonService personService,
@@ -114,6 +113,20 @@ namespace SmartWaste_API.Controllers
             try
             {
                 return Ok(new JsonModel<OperationResult>(_pointService.SetAsFull()));
+            }
+            catch (Exception ex)
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError(ex);
+                return Ok(error);
+            }
+        }
+        public IHttpActionResult RegisterPoint(AddressContract address)
+        {
+            try
+            {
+                _pointService.RegisterPoint(address);
+                return Ok(new JsonModel<bool>(true));
             }
             catch (Exception ex)
             {

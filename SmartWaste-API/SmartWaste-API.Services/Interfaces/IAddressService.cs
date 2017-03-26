@@ -12,5 +12,7 @@ namespace SmartWaste_API.Services.Interfaces
         List<CountryContract> GetCountryList();
         List<StateContract> GetStateList(int countryID);
         List<CityContract> GetCityList(int stateID);
+        AddressContract GetAddress(Guid address);
+        void Add(AddressContract address);
     }
 }

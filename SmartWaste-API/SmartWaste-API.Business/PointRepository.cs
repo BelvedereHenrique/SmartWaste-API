@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SmarteWaste_API.Contracts.Point;
 using SmartWaste_API.Business.ContractParser;
 using SmartWaste_API.Business.Data;
+using SmarteWaste_API.Contracts.Person;
 
 namespace SmartWaste_API.Business
 {
@@ -27,7 +26,7 @@ namespace SmartWaste_API.Business
             }
         }
 
-        public IQueryable<Data.vw_GetPointsDetailed> GetPointsDetailedQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
+        public IQueryable<vw_GetPointsDetailed> GetPointsDetailedQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
         {
             int? statusID = null, typeID = null, pointRouteStatusID = null;
 
@@ -73,7 +72,7 @@ namespace SmartWaste_API.Business
             }
         }
 
-        public IQueryable<Data.vw_GetPoints> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
+        public IQueryable<vw_GetPoints> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
         {
             int? statusID = null, typeID = null, pointRouteStatusID = null;
 
@@ -103,7 +102,7 @@ namespace SmartWaste_API.Business
                                     (filter.PersonID == null || filter.PersonID == x.PersonID) &&
                                     (statusID == null || statusID == x.StatusID) &&
                                     (typeID == null || typeID == x.TypeID) &&
-                                    (filter.DeviceID == null || x.DeviceID == filter.DeviceID)&&
+                                    (filter.DeviceID == null || x.DeviceID == filter.DeviceID) &&
                                     (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                                     (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                                     (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID)
@@ -146,6 +145,54 @@ namespace SmartWaste_API.Business
                     (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                     (filter.PersonID == null || filter.PersonID == x.PersonID)
                 ).FirstOrDefault().ToContract();
+            }
+        }
+
+        public PointContract GetPointByDeviceID(Guid deviceID)
+        {
+            using (var context = new SmartWasteDatabaseConnection())
+            {
+                return context.vw_GetPoints.FirstOrDefault(x => x.DeviceID == deviceID).ToContract();
+            }
+        }
+
+        public void AddCompanyPoint(PointContract contract, Guid? companyID)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var point = new Point()
+                        {
+                            ID = Guid.NewGuid(),
+                            AddressID = contract.AddressID,
+                            StatusID = (int)contract.Status,
+                            DeviceID = contract.DeviceID,
+                            TypeID = (int)contract.Type,
+                            PointRouteStatusID = (int)contract.PointRouteStatus
+                        };
+
+
+                        var companyAddress = new CompanyAddress()
+                        {
+                            AddressID = contract.AddressID,
+                            CompanyID = companyID.Value,
+                            ID = Guid.NewGuid()
+                        };
+
+                        context.CompanyAddresses.Add(companyAddress);
+
+                        context.Points.Add(point);
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
             }
         }
     }

@@ -48,7 +48,7 @@
     <Compile Include="Address\CountryContract.cs" />
     <Compile Include="Address\StateContract.cs" />
     <Compile Include="Device\DeviceContract.cs" />
-    <Compile Include="Device\DeviceHistory.cs" />
+    <Compile Include="Device\DeviceHistoryContract.cs" />
     <Compile Include="Device\DeviceStatusEnum.cs" />
     <Compile Include="Device\DeviceTypeEnum.cs" />
     <Compile Include="Identification\IdentificationContract.cs" />

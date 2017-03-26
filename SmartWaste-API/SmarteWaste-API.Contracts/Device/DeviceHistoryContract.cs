@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace SmarteWaste_API.Contracts.Device
 {
     [DataContract]
-    public class DeviceHistory
+    public class DeviceHistoryContract
     {
         [DataMember]
         public Guid ID { get; set; }

@@ -10,5 +10,6 @@ namespace SmartWaste_API.Business.Interfaces
         void Activate(Guid ID);
         void Deactivate(Guid ID);
         void Create(DeviceContract devices);
+        DeviceContract GetDeviceByPointID(Guid ID);
     }
 }

@@ -5,7 +5,6 @@ using SmartWaste_API.Business.Interfaces;
 using SmartWaste_API.Library.Security;
 using SmarteWaste_API.Contracts;
 using SmarteWaste_API.Contracts.Person;
-using SmartWaste_API.Business;
 using System.Net.Mail;
 using SmartWaste_API.Services.Security;
 using System.Collections.Generic;
@@ -198,6 +197,7 @@ namespace SmartWaste_API.Services
 
             return false;
         }
+
         private bool IsAuthenticatedUser()
         {
             return _user.User.IsAuthenticated;

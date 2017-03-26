@@ -16,7 +16,7 @@ namespace SmartWaste_API.Services.Tests
             var countryService = new Mock<ICountryService>();
             countryService.Setup(x => x.GetList()).Returns(countryList);
 
-            var service = GetAddressService(countryService.Object, null, null);
+            var service = GetAddressService(countryService.Object, null, null,null,null);
             var result = service.GetCountryList();
 
             Assert.AreEqual(result, countryList);
@@ -31,7 +31,7 @@ namespace SmartWaste_API.Services.Tests
             var stateService = new Mock<IStateService>();
             stateService.Setup(x => x.GetList(countryID)).Returns(stateList);
 
-            var service = GetAddressService(null, stateService.Object, null);
+            var service = GetAddressService(null, stateService.Object, null,null,null);
             var result = service.GetStateList(countryID);
 
             Assert.AreEqual(result, stateList);
@@ -46,16 +46,16 @@ namespace SmartWaste_API.Services.Tests
             var cityService = new Mock<ICityService>();
             cityService.Setup(x => x.GetList(stateID)).Returns(cityList);
 
-            var service = GetAddressService(null, null, cityService.Object);
+            var service = GetAddressService(null, null, cityService.Object,null,null);
             var result = service.GetCityList(stateID);
 
             Assert.AreEqual(result, cityList);
             cityService.Verify(x => x.GetList(stateID), Times.Exactly(1));
         }
         
-        internal IAddressService GetAddressService(ICountryService _countryService, IStateService _stateService, ICityService _cityService)
+        internal IAddressService GetAddressService(ICountryService _countryService, IStateService _stateService, ICityService _cityService, Business.Interfaces.IAddressRepository _addressRepository, IAccountService _accountService)
         {
-            return (IAddressService)new AddressService(_countryService, _stateService, _cityService, null);
+            return (IAddressService)new AddressService(_countryService, _stateService, _cityService, _accountService, _addressRepository);
         }
     }                              
 }                                  
