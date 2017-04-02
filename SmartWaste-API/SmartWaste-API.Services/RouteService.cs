@@ -16,7 +16,7 @@ namespace SmartWaste_API.Services
 {
     public class RouteService : IRouteService
     {
-        private readonly ISecurityManager<IdentityContract> _user;        
+        private readonly ISecurityManager<IdentityContract> _user;
         private readonly IRouteRepository _routeRepository;
         private readonly IRouteValidationService _routeValidationService;
 
@@ -26,7 +26,7 @@ namespace SmartWaste_API.Services
             RolesName.COMPANY_USER
         };
 
-        public RouteService(ISecurityManager<IdentityContract> user,                            
+        public RouteService(ISecurityManager<IdentityContract> user,
                             IRouteRepository routeRepository,
                             IRouteValidationService routeValidationService)
         {
@@ -46,7 +46,7 @@ namespace SmartWaste_API.Services
             if (!result.Success)
                 return result;
 
-            _routeRepository.Create(newRouteResult.Result, newRouteResult.Result.Histories, newRouteResult.Result.Points);
+            _routeRepository.Create(newRouteResult.Result, newRouteResult.Result.Histories, newRouteResult.Result.RoutePoints.Select(x => x.Point).ToList());
 
             result.Result = newRouteResult.Result.ID;
 
@@ -60,7 +60,12 @@ namespace SmartWaste_API.Services
             if (!filterResult.Success)
                 throw new Exception(filterResult.GetMessage(true));
 
-            return _routeRepository.GetDetailed(filterResult.Result);
+            var route = _routeRepository.GetDetailed(filterResult.Result);
+
+            if (route != null && route.Histories != null)
+                route.Histories = route.Histories.OrderByDescending(x => x.Date).ToList();
+
+            return route;
         }
 
         public List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter)
@@ -84,14 +89,14 @@ namespace SmartWaste_API.Services
 
             if (!result.Success)
                 return result;
-                        
+
             var histories = GetDisableHistories(result.Result);
 
-            _routeRepository.Edit(result.Result, histories, result.Result.Points);
+            _routeRepository.Edit(result.Result, histories, null, result.Result.RoutePoints.Select(x => x.Point).ToList(), null);
 
             return result;
         }
-        
+
         public OperationResult<Guid> Recreate(Guid oldRouteID, Guid? assignedToID, List<Guid> pointIDs, Decimal expectedKilometers, Decimal expectedMinutes)
         {
             var result = new OperationResult<Guid>();
@@ -112,26 +117,28 @@ namespace SmartWaste_API.Services
             var histories = GetDisableHistories(oldRoute);
             histories.AddRange(canRecreateResult.Result.Histories);
 
-            var oldPointsToUpdate = oldRoute.Points.Where((point) => {
-                return canRecreateResult.Result.Points.All((newPoint) => newPoint.ID != point.ID);
+            var oldPointsToUpdate = oldRoute.RoutePoints.Where((point) =>
+            {
+                return canRecreateResult.Result.RoutePoints.All((newPoint) => newPoint.Point.ID != point.Point.ID);
             }).ToList();
 
-            oldPointsToUpdate.AddRange(canRecreateResult.Result.Points);
+            oldPointsToUpdate.AddRange(canRecreateResult.Result.RoutePoints);
 
-            _routeRepository.Recreate(oldRoute, canRecreateResult.Result, histories, oldPointsToUpdate);
+            _routeRepository.Recreate(oldRoute, canRecreateResult.Result, histories, oldPointsToUpdate.Select(x => x.Point).ToList());
 
             result.Result = canRecreateResult.Result.ID;
 
             return result;
         }
-        
+
         private List<RouteHistoryContract> GetDisableHistories(RouteDetailedContract route)
         {
             var histories = new List<RouteHistoryContract>();
             histories.Add(new RouteHistoryContract()
             {
                 ID = Guid.NewGuid(),
-                Person = new SmarteWaste_API.Contracts.Person.PersonContract() {
+                Person = new SmarteWaste_API.Contracts.Person.PersonContract()
+                {
                     ID = _user.User.Person.ID
                 },
                 Reason = "Route removed.",
@@ -142,25 +149,153 @@ namespace SmartWaste_API.Services
 
             return histories;
         }
-        
-        public List<RouteContract> GetOpenedRoutes()
+
+        public List<RouteContract> GetList(RouteStatusEnum? status)
         {
-            var result = _routeValidationService.GetFilterForOpenedRoutes();
+            var result = new OperationResult<RouteFilterContract>();
+
+            var isAdminUser = _user.IsInRole(RolesName.COMPANY_ADMIN) || _user.IsInRole(RolesName.COMPANY_ROUTE);
+
+            if (isAdminUser)
+                result = _routeValidationService.GetFilterForCompanyRouteAndAdmin(status);
+            else
+                result = _routeValidationService.GetFilterForCompanyUser(status);
 
             if (!result.Success)
                 throw new Exception(result.GetMessage(true));
 
-            return _routeRepository.GetOpenedRoutes(result.Result);
+            if (isAdminUser)
+                return _routeRepository.GetCompanyAdminRoutes(result.Result);
+            else
+                return _routeRepository.GetCompanyUserRoutes(result.Result);
         }
 
-        public List<RouteContract> GetUserCreatedRoutes()
+        public OperationResult<RouteDetailedContract> StartNavigation(Guid routeID)
         {
-            var result = _routeValidationService.GetFilterForCreatedByRoutes();
+            var result = new OperationResult<RouteDetailedContract>();
+
+            var route = GetDetailed(new RouteFilterContract() { ID = routeID });
+
+            result.Merge(_routeValidationService.CanNavigate(route));
 
             if (!result.Success)
-                throw new Exception(result.GetMessage(true));
+                return result;
 
-            return _routeRepository.GetUserCreatedRoutes(result.Result);
+            var histories = new List<RouteHistoryContract>();
+
+            histories.Add(new RouteHistoryContract()
+            {
+                ID = Guid.NewGuid(),
+                Date = DateTime.Now,
+                Person = _user.User.Person,
+                RouteID = route.ID,
+                Reason = "Navigation started.",
+                Status = route.Status
+            });
+
+            if (!route.NavigationStartedOn.HasValue)
+                route.NavigationStartedOn = DateTime.Now;
+
+            if (route.AssignedTo == null || route.AssignedTo.ID == Guid.Empty)
+            {
+                route.AssignedTo = _user.User.Person;
+
+                histories.Add(new RouteHistoryContract()
+                {
+                    ID = Guid.NewGuid(),
+                    Date = DateTime.Now,
+                    Person = _user.User.Person,
+                    RouteID = route.ID,
+                    Reason = String.Format("{0} assigned to the route.", _user.User.Person.Name),
+                    Status = route.Status
+                });
+            }
+
+            _routeRepository.Edit(route, histories, null, null, null);
+
+            result.Result = GetDetailed(new RouteFilterContract() { ID = routeID });
+            return result;
+        }
+
+        public OperationResult CollectPoint(Guid routeID, Guid pointID, bool collected, string reason)
+        {
+            var result = new OperationResult();
+
+            var route = GetDetailed(new RouteFilterContract() { ID = routeID });
+
+            result.Merge(_routeValidationService.CanNavigate(route));
+
+            if (!result.Success)
+                return result;
+
+            var routePoint = route.RoutePoints.Where(x => x.Point.ID == pointID).FirstOrDefault();
+
+            result.Merge(_routeValidationService.CanCollectPoint(routePoint));
+
+            if (!result.Success)
+                return result;
+
+            var pointHistories = new List<PointHistoryContract>();
+            routePoint.Point.PointRouteStatus = PointRouteStatusEnum.Free;
+
+            routePoint.IsCollected = collected;
+            routePoint.CollectedBy = _user.User.Person.ID;
+            routePoint.CollectedOn = DateTime.Now;
+
+            if (collected)
+            {
+                routePoint.Point.Status = PointStatusEnum.Empty;
+                pointHistories.Add(new PointHistoryContract()
+                {
+                    Date = DateTime.Now,
+                    ID = Guid.NewGuid(),
+                    Person = _user.User.Person,
+                    PointID = routePoint.Point.ID,
+                    Reason = "Point collected.",
+                    Status = routePoint.Point.Status
+                });
+            }
+            else
+            {
+                routePoint.Reason = reason;
+
+                pointHistories.Add(new PointHistoryContract()
+                {
+                    Date = DateTime.Now,
+                    ID = Guid.NewGuid(),
+                    Person = _user.User.Person,
+                    PointID = routePoint.Point.ID,
+                    Reason = String.Format("Tried to collect point. Reason: {0}.", reason),
+                    Status = routePoint.Point.Status
+                });
+            }
+
+            var routeHistory = new List<RouteHistoryContract>();
+
+            if (route.RoutePoints.Where(x => x.ID != routePoint.ID).All(x => x.IsCollected != null))
+            {
+                route.Status = RouteStatusEnum.Closed;
+                route.ClosedOn = DateTime.Now;
+                route.NavigationFinishedOn = DateTime.Now;
+
+                routeHistory.Add(new RouteHistoryContract()
+                {
+                    ID = Guid.NewGuid(),
+                    Date = DateTime.Now,
+                    Person = _user.User.Person,
+                    RouteID = route.ID,
+                    Reason = "Finished navigation and route closed.",
+                    Status = route.Status
+                });
+            }
+
+            _routeRepository.Edit(route,
+                                  routeHistory,
+                                  route.RoutePoints,
+                                  new List<PointDetailedContract>() { routePoint.Point },
+                                  pointHistories);
+
+            return result;
         }
     }
 }

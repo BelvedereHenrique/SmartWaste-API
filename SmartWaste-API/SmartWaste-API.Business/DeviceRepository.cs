@@ -68,5 +68,43 @@ namespace SmartWaste_API.Business
                 return context.Devices.FirstOrDefault(x=>x.ID == point.DeviceID).ToContract();
             }
         }
+
+        public void Edit(DeviceContract device)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                var entitie = context.Devices.Find(device.ID);
+
+                if (entitie == null)
+                    throw new ArgumentException("Device does not exist.");
+
+                entitie.StatusID = (int)device.Status;
+                entitie.TypeID = (int)device.Type;
+                entitie.BatteryVoltage = device.BatteryVoltage;
+
+                context.SaveChanges();
+            }
+        }
+
+        public DeviceContract Get(DeviceFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                int? statusID = null, typeID = null;
+
+                if (filter.Status.HasValue)
+                    statusID = (int)filter.Status;
+
+                if (filter.Type.HasValue)
+                    typeID = (int)filter.Type;
+
+                return context.Devices.Where(x =>
+                    (filter.ID == null || filter.ID == x.ID) &&
+                    (filter.InternalID == null || filter.InternalID == x.InternalID) &&
+                    (statusID == null || statusID == x.StatusID) &&
+                    (typeID == null || typeID == x.TypeID)
+                ).FirstOrDefault().ToContract();
+            }
+        }
     }
 }

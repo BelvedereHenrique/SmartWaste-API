@@ -17,5 +17,8 @@ namespace SmarteWaste_API.Contracts.Device
 
         [DataMember]
         public string InternalID { get; set; }
+
+        [DataMember]
+        public int? BatteryVoltage { get; set; }
     }
 }

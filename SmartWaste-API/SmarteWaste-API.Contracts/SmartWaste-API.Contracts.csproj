@@ -47,8 +47,10 @@
     <Compile Include="Address\CityContract.cs" />
     <Compile Include="Address\CountryContract.cs" />
     <Compile Include="Address\StateContract.cs" />
+	<Compile Include="Device\DeviceHistoryContract.cs" />
     <Compile Include="Device\DeviceContract.cs" />
-    <Compile Include="Device\DeviceHistoryContract.cs" />
+    <Compile Include="Device\DeviceEventContract.cs" />
+    <Compile Include="Device\DeviceFilterContract.cs" />
     <Compile Include="Device\DeviceStatusEnum.cs" />
     <Compile Include="Device\DeviceTypeEnum.cs" />
     <Compile Include="Identification\IdentificationContract.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Route\RouteDetailedContract.cs" />
     <Compile Include="Route\RouteFilterContract.cs" />
     <Compile Include="Route\RouteHistoryContract.cs" />
+    <Compile Include="Route\RoutePointContract.cs" />
     <Compile Include="Route\RouteStatusEnum.cs" />
     <Compile Include="User\UserContract.cs" />
     <Compile Include="User\UserFilterContract.cs" />

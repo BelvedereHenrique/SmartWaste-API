@@ -17,16 +17,241 @@ namespace SmartWaste_API.Business
         {
             _pointHistoryRepository = pointHistoryRepository;
         }
-
-        public List<PointDetailedContract> GetDetailedList(PointFilterContract filter)
+        
+        public List<PointDetailedContract> GetUserDetailedList(Guid personID, PointFilterContract filter)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                return GetPointsDetailedQuery(context, filter).ToList().ToContracts();
+                return GetUserDetailedQuery(context, personID, filter).ToList().ToContracts();
             }
         }
 
-        public IQueryable<vw_GetPointsDetailed> GetPointsDetailedQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
+        public PointDetailedContract GetUserDetailed(Guid personID, PointFilterContract filter)
+        {
+            using (var context = new SmartWasteDatabaseConnection())
+            {
+                return GetUserDetailedQuery(context, personID, filter).FirstOrDefault().ToContract();
+            }
+        }
+
+        private IQueryable<Data.vw_PointsDetailed2> GetUserDetailedQuery(Data.SmartWasteDatabaseConnection context, Guid personID, PointFilterContract filter)
+        {
+            if (personID == null || personID == Guid.Empty)
+                throw new ArgumentNullException("PersonID");
+
+            int? statusID = null, typeID = null, pointRouteStatusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            if (filter.Type.HasValue)
+                typeID = (int)filter.Type.Value;
+
+            if (filter.PointRouteStatus.HasValue)
+                pointRouteStatusID = (int)filter.PointRouteStatus.Value;
+
+            return context.vw_PointsDetailed2.Where(x =>
+                // NOTE: Security and required filter.
+                (x.PersonID == filter.PersonID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
+
+                (statusID == null || statusID == x.StatusID) &&
+                (typeID == null || typeID == x.TypeID) &&
+                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
+                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+            );            
+        }
+
+        public PointContract GetUserPoint(Guid personID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetUserQuery(context, personID, filter).FirstOrDefault().ToContract();
+            }
+        }
+
+        public List<PointContract> GetUserList(Guid personID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetUserQuery(context, personID, filter).ToList().ToContracts();
+            }
+        }
+
+        private IQueryable<Data.vw_Points2> GetUserQuery(Data.SmartWasteDatabaseConnection context, Guid personID, PointFilterContract filter)
+        {
+            if (personID == null || personID == Guid.Empty)
+                throw new ArgumentNullException("PersonID");
+
+            int? statusID = null, typeID = null, pointRouteStatusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            if (filter.Type.HasValue)
+                typeID = (int)filter.Type.Value;
+
+            if (filter.PointRouteStatus.HasValue)
+                pointRouteStatusID = (int)filter.PointRouteStatus.Value;
+
+            return context.vw_Points2.Where(x =>
+                // NOTE: Security and required filter.
+                (x.PersonID == filter.PersonID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
+
+                (statusID == null || statusID == x.StatusID) &&
+                (typeID == null || typeID == x.TypeID) &&
+                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
+                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+            );
+        }
+
+        private IQueryable<Data.vw_Points2> GetCompanyQuery(Data.SmartWasteDatabaseConnection context, Guid companyID, PointFilterContract filter)
+        {
+            if (companyID == null || companyID == Guid.Empty)
+                throw new ArgumentNullException("CompanyID");
+
+            int? statusID = null, typeID = null, pointRouteStatusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            if (filter.Type.HasValue)
+                typeID = (int)filter.Type.Value;
+
+            if (filter.PointRouteStatus.HasValue)
+                pointRouteStatusID = (int)filter.PointRouteStatus.Value;
+
+            return context.vw_Points2.Where(x =>
+                // NOTE: Security and required filters.
+                (x.CompanyID == null || x.CompanyID == companyID) &&
+                (x.AssignedCompanyID == null || x.AssignedCompanyID == companyID) &&
+
+
+                (statusID == null || statusID == x.StatusID) &&
+                (typeID == null || typeID == x.TypeID) &&
+                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
+                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+            );
+        }
+
+        public PointContract GetCompanyPoint(Guid companyID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetCompanyQuery(context, companyID, filter).FirstOrDefault().ToContract();
+            }
+        }
+
+        public List<PointContract> GetCompanyList(Guid companyID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetCompanyQuery(context, companyID, filter).ToList().ToContracts();
+            }
+        }
+
+        private IQueryable<Data.vw_PointsDetailed2> GetCompanyDetailedQuery(Data.SmartWasteDatabaseConnection context, Guid companyID, PointFilterContract filter)
+        {
+            if (companyID == null || companyID == Guid.Empty)
+                throw new ArgumentNullException("CompanyID");
+
+            int? statusID = null, typeID = null, pointRouteStatusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            if (filter.Type.HasValue)
+                typeID = (int)filter.Type.Value;
+
+            if (filter.PointRouteStatus.HasValue)
+                pointRouteStatusID = (int)filter.PointRouteStatus.Value;
+
+            return context.vw_PointsDetailed2.Where(x =>
+                // NOTE: Security and required filters.
+                (x.CompanyID == null || x.CompanyID == companyID) &&
+                (x.AssignedCompanyID == null || x.AssignedCompanyID == companyID) &&
+
+
+                (statusID == null || statusID == x.StatusID) &&
+                (typeID == null || typeID == x.TypeID) &&
+                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
+                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+            );
+        }
+
+        public PointDetailedContract GetCompanyDetailed(Guid companyID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetCompanyDetailedQuery(context, companyID, filter).FirstOrDefault().ToContract();
+            }
+        }
+
+        public List<PointDetailedContract> GetCompanyDetailedList(Guid companyID, PointFilterContract filter)
+        {
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetCompanyDetailedQuery(context, companyID, filter).ToList().ToContracts();
+            }
+        }
+
+        private IQueryable<Data.vw_Points2> GetPublicDetailedQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
+        {
+            int? statusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            return context.vw_Points2.Where(x =>
+                // NOTE: Security and required filters.
+                x.TypeID == (int)PointTypeEnum.CompanyTrashCan &&
+
+                (statusID == null || statusID == x.StatusID) &&
+                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+            );
+        }
+
+        public PointContract GetPublicPoint(PointFilterContract filter)
+        {
+            int? statusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;
+
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetPublicDetailedQuery(context, filter).FirstOrDefault().ToContract();
+            }
+        }
+
+        public List<PointContract> GetPublicList(PointFilterContract filter)
+        {
+            int? statusID = null;
+
+            if (filter.Status.HasValue)
+                statusID = (int)filter.Status.Value;            
+
+            using (var context = new Data.SmartWasteDatabaseConnection())
+            {
+                return GetPublicDetailedQuery(context, filter).ToList().ToContracts();
+            }
+        }
+        
+        public IQueryable<Data.vw_Points2> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
         {
             int? statusID = null, typeID = null, pointRouteStatusID = null;
 
@@ -39,74 +264,23 @@ namespace SmartWaste_API.Business
             if (filter.PointRouteStatus.HasValue)
                 pointRouteStatusID = (int)filter.PointRouteStatus.Value;
 
-            return context.vw_GetPointsDetailed.Where(x =>
+            return context.vw_Points2.Where(x =>
                             (
-                                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
-                                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
-                            ) &&
-                            (
-                                (
-                                    (filter.AlwaysIDs.Contains(x.ID))
-                                )
-                                    ||
-                                (
-
-                                    (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                                    (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
-                                    (filter.PersonID == null || filter.PersonID == x.PersonID) &&
-                                    (statusID == null || statusID == x.StatusID) &&
-                                    (typeID == null || typeID == x.TypeID) &&
-                                    (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
-                                    (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
-                                    (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID)
-                                )
+                                (filter.AlwaysIDs.Contains(x.ID))
                             )
-            ).AsQueryable();
-        }
-
-        public List<PointContract> GetList(PointFilterContract filter)
-        {
-            using (var context = new Data.SmartWasteDatabaseConnection())
-            {
-                return GetPointsQuery(context, filter).ToList().ToContracts();
-            }
-        }
-
-        public IQueryable<vw_GetPoints> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
-        {
-            int? statusID = null, typeID = null, pointRouteStatusID = null;
-
-            if (filter.Status.HasValue)
-                statusID = (int)filter.Status.Value;
-
-            if (filter.Type.HasValue)
-                typeID = (int)filter.Type.Value;
-
-            if (filter.PointRouteStatus.HasValue)
-                pointRouteStatusID = (int)filter.PointRouteStatus.Value;
-
-            return context.vw_GetPoints.Where(x =>
+                                ||
                             (
-                                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
-                                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
-                            ) &&
-                            (
-                                (
-                                    (filter.AlwaysIDs.Contains(x.ID))
-                                )
-                                    ||
-                                (
-
-                                    (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                                    (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
-                                    (filter.PersonID == null || filter.PersonID == x.PersonID) &&
-                                    (statusID == null || statusID == x.StatusID) &&
-                                    (typeID == null || typeID == x.TypeID) &&
-                                    (filter.DeviceID == null || x.DeviceID == filter.DeviceID) &&
-                                    (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
-                                    (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
-                                    (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID)
-                                )
+                                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
+                                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                                (filter.PersonID == null || filter.PersonID == x.PersonID) &&
+                                (statusID == null || statusID == x.StatusID) &&
+                                (typeID == null || typeID == x.TypeID) &&
+                                (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
+                                (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
+                                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
+                                (filter.CompanyID == null || filter.AssignedCompanyID == x.AssignedCompanyID) &&
+                                (filter.AssignedCompanyID == null || filter.AssignedCompanyID == x.AssignedCompanyID) &&
+                                (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID)
                             )
                         ).AsQueryable();
         }
@@ -137,13 +311,12 @@ namespace SmartWaste_API.Business
                 );
         }
 
-        public PointDetailedContract GetDetailed(PointFilterContract filter)
+        public PointDetailedContract GetDetailed(Guid deviceID)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                return context.vw_GetPointsDetailed.Where(x =>
-                    (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
-                    (filter.PersonID == null || filter.PersonID == x.PersonID)
+                return context.vw_PointsDetailed2.Where(x =>                    
+                    x.DeviceID == deviceID                     
                 ).FirstOrDefault().ToContract();
             }
         }

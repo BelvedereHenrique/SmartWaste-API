@@ -103,66 +103,32 @@ namespace SmartWaste_API.Tests
             var routeContracts = GetRoutes();
             
             var routeService = GetRouteService();
-            routeService.Setup(x => x.GetOpenedRoutes()).Returns(routeContracts);
+            routeService.Setup(x => x.GetList(RouteStatusEnum.Closed)).Returns(routeContracts);
 
             var controller = new RouteController(routeService.Object);
-            var jsonModel = controller.GetOpenedRoutes() as OkNegotiatedContentResult<JsonModel<List<RouteContract>>>;
+            var jsonModel = controller.GetList(new RouteGetListModel() { Status = RouteStatusEnum.Closed }) as OkNegotiatedContentResult<JsonModel<List<RouteContract>>>;
 
             Assert.IsTrue(jsonModel.Content.Success);
             Assert.AreEqual(jsonModel.Content.Messages.Count, 0);
             Assert.AreEqual(jsonModel.Content.Result, routeContracts);
 
-            routeService.Verify(x => x.GetOpenedRoutes(), Times.Once);
+            routeService.Verify(x => x.GetList(RouteStatusEnum.Closed), Times.Once);
         }
 
         [TestMethod]
         public void GetOpenedRoutesFailTest()
         {
             var routeService = GetRouteService();
-            routeService.Setup(x => x.GetOpenedRoutes()).Throws(new Exception());
+            routeService.Setup(x => x.GetList(RouteStatusEnum.Opened)).Throws(new Exception());
 
             var controller = new RouteController(routeService.Object);
-            var jsonModel = controller.GetOpenedRoutes() as OkNegotiatedContentResult<JsonModel<bool>>;
+            var jsonModel = controller.GetList(new RouteGetListModel() { Status = RouteStatusEnum.Opened }) as OkNegotiatedContentResult<JsonModel<bool>>;
 
             Assert.IsFalse(jsonModel.Content.Success);
             Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
             Assert.AreEqual(jsonModel.Content.Result, false);
 
-            routeService.Verify(x => x.GetOpenedRoutes(), Times.Once);
-        }
-
-        [TestMethod]
-        public void GetUserCreatedRoutesSuccefullTest()
-        {
-            var routeContracts = GetRoutes();
-
-            var routeService = GetRouteService();
-            routeService.Setup(x => x.GetUserCreatedRoutes()).Returns(routeContracts);
-
-            var controller = new RouteController(routeService.Object);
-            var jsonModel = controller.GetUserCreatedRoutes() as OkNegotiatedContentResult<JsonModel<List<RouteContract>>>;
-
-            Assert.IsTrue(jsonModel.Content.Success);
-            Assert.AreEqual(jsonModel.Content.Messages.Count, 0);
-            Assert.AreEqual(jsonModel.Content.Result, routeContracts);
-
-            routeService.Verify(x => x.GetUserCreatedRoutes(), Times.Once);
-        }
-
-        [TestMethod]
-        public void GetUserCreatedRoutesFailTest()
-        {
-            var routeService = GetRouteService();
-            routeService.Setup(x => x.GetUserCreatedRoutes()).Throws(new Exception());
-
-            var controller = new RouteController(routeService.Object);
-            var jsonModel = controller.GetUserCreatedRoutes() as OkNegotiatedContentResult<JsonModel<bool>>;
-
-            Assert.IsFalse(jsonModel.Content.Success);
-            Assert.AreEqual(jsonModel.Content.Messages.Count, 1);
-            Assert.AreEqual(jsonModel.Content.Result, false);
-
-            routeService.Verify(x => x.GetUserCreatedRoutes(), Times.Once);
+            routeService.Verify(x => x.GetList(RouteStatusEnum.Opened), Times.Once);
         }
 
         [TestMethod]

@@ -66,6 +66,7 @@
     <Compile Include="ContractParser\RoleContractParser.cs" />
     <Compile Include="ContractParser\RouteContractParser.cs" />
     <Compile Include="ContractParser\RouteHistoryContractParser.cs" />
+    <Compile Include="ContractParser\RoutePointContractParser.cs" />
     <Compile Include="ContractParser\StateContractParser.cs" />
     <Compile Include="ContractParser\UserContractParser.cs" />
     <Compile Include="CountryRepository.cs" />
@@ -183,6 +184,16 @@
     <Compile Include="Data\vw_GetRoutes.cs">
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\vw_Points2.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\vw_PointsDetailed2.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\vw_RoutePointsDetailed.cs">
+      <DependentUpon>DatabaseContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DeviceRepository.cs" />
     <Compile Include="DeviceHistoryRepository.cs" />
     <Compile Include="DeviceRepository.cs" />
     <Compile Include="EmailTemplateRepository.cs" />

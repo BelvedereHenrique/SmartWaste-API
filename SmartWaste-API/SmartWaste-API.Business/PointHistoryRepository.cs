@@ -20,7 +20,7 @@ namespace SmartWaste_API.Business
                     (filter.PointID == null || filter.PointID == x.PointID) &&
                     (filter.PersonID == null || filter.PersonID == x.PersonID) &&
                     (filter.CompanyID == null || filter.CompanyID == x.Person.CompanyID)
-                ).ToList().ToContracts();
+                ).OrderByDescending(x => x.Date).ToList().ToContracts();
             }
         }
 

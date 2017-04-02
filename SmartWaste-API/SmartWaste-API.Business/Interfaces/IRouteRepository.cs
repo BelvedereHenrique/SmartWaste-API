@@ -14,8 +14,8 @@ namespace SmartWaste_API.Business.Interfaces
         void Create(RouteDetailedContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points);
         RouteDetailedContract GetDetailed(RouteFilterContract filter);
         List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter);        
-        void Edit(RouteDetailedContract route, List<RouteHistoryContract> histories, List<PointDetailedContract> points);
-        List<RouteContract> GetOpenedRoutes(RouteFilterContract filter);
-        List<RouteContract> GetUserCreatedRoutes(RouteFilterContract filter);
+        void Edit(RouteDetailedContract route, List<RouteHistoryContract> histories, List<RoutePointContract> routePoints, List<PointDetailedContract> points, List<PointHistoryContract> pointHistories);
+        List<RouteContract> GetCompanyUserRoutes(RouteFilterContract filter);
+        List<RouteContract> GetCompanyAdminRoutes(RouteFilterContract filter);
     }
 }

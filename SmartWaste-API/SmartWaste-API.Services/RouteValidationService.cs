@@ -76,7 +76,7 @@ namespace SmartWaste_API.Services
                 IDs = pointIDs
             });
 
-            points.Where(point => oldRoute.Points.Any(oldPoint => oldPoint.ID == point.ID)).ToList().ForEach((point) =>
+            points.Where(point => oldRoute.RoutePoints.Any(oldPoint => oldPoint.Point.ID == point.ID)).ToList().ForEach((point) =>
             {
                 point.PointRouteStatus = PointRouteStatusEnum.Free;
             });
@@ -112,7 +112,7 @@ namespace SmartWaste_API.Services
         {
             route.Status = RouteStatusEnum.Disabled;
 
-            route.Points.ForEach((point) =>
+            route.RoutePoints.Where(x => x.IsCollected == null).Select(x => x.Point).ToList().ForEach((point) =>
             {
                 point.PointRouteStatus = PointRouteStatusEnum.Free;
             });
@@ -225,7 +225,7 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        public OperationResult<RouteFilterContract> GetFilterForOpenedRoutes()
+        public OperationResult<RouteFilterContract> GetFilterForCompanyUser(RouteStatusEnum? status)
         {
             var result = new OperationResult<RouteFilterContract>();
 
@@ -236,14 +236,15 @@ namespace SmartWaste_API.Services
 
             result.Result = new RouteFilterContract();
 
-            result.Result.Status = RouteStatusEnum.Opened;
+            result.Result.Status = status;
+            result.Result.NotStatus = RouteStatusEnum.Disabled;
             result.Result.AssignedToID = _user.User.Person.ID;
             result.Result.CompanyID = _user.User.Person.CompanyID;
 
             return result;
         }
 
-        public OperationResult<RouteFilterContract> GetFilterForCreatedByRoutes()
+        public OperationResult<RouteFilterContract> GetFilterForCompanyRouteAndAdmin(RouteStatusEnum? status)
         {
             var result = new OperationResult<RouteFilterContract>();
 
@@ -255,8 +256,55 @@ namespace SmartWaste_API.Services
             result.Result = new RouteFilterContract();
 
             result.Result.NotStatus = RouteStatusEnum.Disabled;
-            result.Result.CreatedBy = _user.User.Person.ID;
+            result.Result.Status = status;            
             result.Result.CompanyID = _user.User.Person.CompanyID;
+
+            return result;
+        }
+
+        public OperationResult CanNavigate(RouteDetailedContract route)
+        {
+            var result = new OperationResult();
+
+            if (route == null)
+                result.AddError("Route not found.");
+
+            if (!result.Success)
+                return result;
+
+            if (!_user.IsInRole(RolesName.COMPANY_USER))
+                result.AddError("User is not authorized to navigate routes.");
+
+            if (route.AssignedTo != null && route.AssignedTo.ID != _user.User.Person.ID)
+                result.AddError("User is not authorized to navigate this route.");
+
+            if (route.CompanyID != _user.User.Person.CompanyID)
+                result.AddError("User is not authorized to navigate this route.");
+
+            if (route.Status != RouteStatusEnum.Opened)
+                result.AddError("This route is not opened to be navigated.");
+
+            return result;
+        }
+
+        public OperationResult CanCollectPoint(RoutePointContract routePoint)
+        {
+            var result = new OperationResult();
+
+            if (routePoint == null)
+                result.AddError("Point not found.");
+
+            if (!result.Success)
+                return result;
+            
+            if (routePoint.Point.Status != PointStatusEnum.Full)
+                result.AddError("Point is not full to be collected.");
+
+            if (routePoint.Point.PointRouteStatus != PointRouteStatusEnum.InARoute)
+                result.AddError("Point is not in the route.");
+
+            if (routePoint.IsCollected != null)
+                result.AddError("Point is already collected.");
 
             return result;
         }
@@ -272,19 +320,28 @@ namespace SmartWaste_API.Services
                 },
                 CreatedOn = DateTime.Now,
                 Status = RouteStatusEnum.Opened,
-                Points = points,
+                RoutePoints = points.Select(point => {
+                    point.PointRouteStatus = PointRouteStatusEnum.InARoute;
+
+                    return new RoutePointContract()
+                    {
+                        ID = Guid.NewGuid(),
+                        CollectedBy = null,
+                        CollectedOn = null,
+                        IsCollected = null,
+                        Point = point,
+                        Reason = null
+                    };
+                }).ToList(),
                 ClosedOn = null,
                 AssignedTo = null,
                 CompanyID = _user.User.Person.CompanyID.Value,
                 ExpectedKilometers = expectedKilometers,
-                ExpectedMinutes = expectedMinutes
+                ExpectedMinutes = expectedMinutes,
+                NavigationFinishedOn = null,
+                NavigationStartedOn = null
             };
-
-            route.Points.ForEach((point) =>
-            {
-                point.PointRouteStatus = PointRouteStatusEnum.InARoute;
-            });
-
+            
             if (assignedToID.HasValue)
                 route.AssignedTo = new PersonContract()
                 {

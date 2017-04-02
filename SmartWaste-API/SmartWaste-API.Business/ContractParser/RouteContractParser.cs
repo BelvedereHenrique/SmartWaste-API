@@ -19,12 +19,23 @@ namespace SmartWaste_API.Business.ContractParser
                 CreatedBy = entitie.Person1.ToContract(),
                 CreatedOn = entitie.CreatedOn,
                 Histories = entitie.RouteHistories.ToList().ToContracts(),
-                Points = entitie.RoutePoints.Select(x => new SmarteWaste_API.Contracts.Point.PointDetailedContract() { ID = x.PointID }).ToList(),
+                RoutePoints = entitie.RoutePoints.Select(x => new RoutePointContract() {
+                    ID = x.ID,
+                    CollectedOn = x.CollectedOn,
+                    IsCollected = x.IsCollected,
+                    Point = new SmarteWaste_API.Contracts.Point.PointDetailedContract() {
+                        ID = x.ID
+                    },
+                    Reason = x.Reason,
+                    CollectedBy = x.CollectedBy,
+                }).ToList(),
                 ID = entitie.ID,                
                 Status = (RouteStatusEnum) entitie.StatusID,
                 CompanyID = entitie.CompanyID,
                 ExpectedKilometers = entitie.ExpectedKilometers,
-                ExpectedMinutes = entitie.ExpectedMinutes
+                ExpectedMinutes = entitie.ExpectedMinutes,
+                NavigationStartedOn = entitie.NavigationStartedOn,
+                NavigationFinishedOn = entitie.NavigationFinishedOn                
             };
         }
 
@@ -45,7 +56,9 @@ namespace SmartWaste_API.Business.ContractParser
                 CreatedOn = contract.CreatedOn,
                 CompanyID = contract.CompanyID,
                 ExpectedKilometers = contract.ExpectedKilometers,
-                ExpectedMinutes = contract.ExpectedMinutes
+                ExpectedMinutes = contract.ExpectedMinutes,
+                NavigationStartedOn = contract.NavigationStartedOn,
+                NavigationFinishedOn = contract.NavigationFinishedOn
             };
 
             if (contract.AssignedTo != null)
@@ -74,7 +87,9 @@ namespace SmartWaste_API.Business.ContractParser
                 Status = (RouteStatusEnum)entitie.StatusID,
                 CompanyID = entitie.CompanyID,
                 ExpectedKilometers = entitie.ExpectedKilometers,
-                ExpectedMinutes = entitie.ExpectedMinutes
+                ExpectedMinutes = entitie.ExpectedMinutes,
+                NavigationStartedOn = entitie.NavigationStartedOn,
+                NavigationFinishedOn = entitie.NavigationFinishedOn
             };
 
             if (entitie.AssignedToID.HasValue)

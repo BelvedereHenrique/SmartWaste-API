@@ -104,5 +104,15 @@ namespace SmartWaste_API.Services
 
             _pointService.Edit(point);
         }
+
+        public void Edit(DeviceContract device)
+        {
+            _deviceRepository.Edit(device);
+        }
+
+        public DeviceContract Get(DeviceFilterContract filter)
+        {
+            return _deviceRepository.Get(filter);
+        }
     }
 }

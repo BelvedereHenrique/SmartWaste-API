@@ -54,27 +54,11 @@ namespace SmartWaste_API.Controllers
 
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetOpenedRoutes()
+        public IHttpActionResult GetList(RouteGetListModel model)
         {
             try
             {
-                return Ok(new JsonModel<List<RouteContract>>(_routeService.GetOpenedRoutes()));
-            }
-            catch
-            {
-                var error = new JsonModel<bool>(false);
-                error.AddError("There was a error to get the routes.");
-                return Ok(error);
-            }
-        }
-
-        [Authorize]
-        [HttpPost]
-        public IHttpActionResult GetUserCreatedRoutes()
-        {
-            try
-            {
-                return Ok(new JsonModel<List<RouteContract>>(_routeService.GetUserCreatedRoutes()));
+                return Ok(new JsonModel<List<RouteContract>>(_routeService.GetList(model.Status)));
             }
             catch
             {
@@ -129,6 +113,38 @@ namespace SmartWaste_API.Controllers
             {
                 var error = new JsonModel<bool>(false);
                 error.AddError("There was a error to create the route.");
+                return Ok(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult StartNavigation(RouteNavigationModel route)
+        {
+            try
+            {
+                return Ok(new JsonModel<OperationResult<RouteDetailedContract>>(_routeService.StartNavigation(route.RouteID)));
+            }
+            catch
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError("There was a error to navigate the route.");
+                return Ok(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult CollectPoint(RouteNavigationCollectPointModel data)
+        {
+            try
+            {
+                return Ok(new JsonModel<OperationResult>(_routeService.CollectPoint(data.RouteID, data.PointID, data.Collected, data.Reason)));
+            }
+            catch
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError("There was a error to collect the point.");
                 return Ok(error);
             }
         }

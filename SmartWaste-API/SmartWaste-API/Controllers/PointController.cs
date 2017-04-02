@@ -1,4 +1,5 @@
 ﻿using SmarteWaste_API.Contracts;
+using SmarteWaste_API.Contracts.Device;
 using SmarteWaste_API.Contracts.OperationResult;
 using SmarteWaste_API.Contracts.Address;
 using SmarteWaste_API.Contracts.Person;
@@ -119,6 +120,28 @@ namespace SmartWaste_API.Controllers
                 var error = new JsonModel<bool>(false);
                 error.AddError(ex);
                 return Ok(error);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult SetAsFullWithDevice(DeviceEventModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new ArgumentNullException();
+
+                var result = _pointService.SetAsFull(new DeviceEventContract() {
+                    SerialNumber = model.SerialNumber,
+                    BatteryVoltage = model.BatteryVoltage,
+                    ClickType = model.ClickType
+                });
+
+                return Ok(result.Success ? 1 : 0);
+            }
+            catch
+            {
+                return Ok(0);
             }
         }
         public IHttpActionResult RegisterPoint(AddressContract address)

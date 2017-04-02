@@ -15,7 +15,8 @@ namespace SmartWaste_API.Services.Interfaces
         RouteDetailedContract GetDetailed(RouteFilterContract filter);
         List<RouteDetailedContract> GetDetailedList(RouteFilterContract filter);
         OperationResult Disable(Guid routeID);
-        List<RouteContract> GetOpenedRoutes();
-        List<RouteContract> GetUserCreatedRoutes();
+        List<RouteContract> GetList(RouteStatusEnum? status);        
+        OperationResult<RouteDetailedContract> StartNavigation(Guid routeID);
+        OperationResult CollectPoint(Guid routeID, Guid pointID, bool collected, string reason);
     }
 }

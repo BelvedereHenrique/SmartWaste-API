@@ -17,5 +17,7 @@ namespace SmarteWaste_API.Contracts.Route
         public Guid CompanyID { get; set; }
         public Decimal ExpectedKilometers { get; set; }
         public Decimal ExpectedMinutes { get; set; }
+        public DateTime? NavigationFinishedOn { get; set; }
+        public DateTime? NavigationStartedOn { get; set; }
     }
 }

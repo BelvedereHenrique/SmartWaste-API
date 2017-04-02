@@ -33,7 +33,7 @@ namespace SmartWaste_API.Services.Tests
                 .Returns(operationResult);
 
             var routeRepository = GetRouteRepository();
-            routeRepository.Setup(x => x.Create(operationResult.Result, operationResult.Result.Histories, operationResult.Result.Points));
+            routeRepository.Setup(x => x.Create(operationResult.Result, operationResult.Result.Histories, operationResult.Result.RoutePoints.Select(p => p.Point).ToList()));
 
             var routeService = (IRouteService)new RouteService(securityManager.Object, routeRepository.Object, routeValidationService.Object);
 
@@ -44,7 +44,7 @@ namespace SmartWaste_API.Services.Tests
             Assert.AreEqual(result.Result, route.ID);
 
             routeValidationService.Verify(x => x.CanCreate(route.AssignedTo.ID, pointIDs, route.ExpectedKilometers, route.ExpectedMinutes), Times.Once);
-            routeRepository.Verify(x => x.Create(operationResult.Result, operationResult.Result.Histories, operationResult.Result.Points), Times.Once);
+            routeRepository.Verify(x => x.Create(operationResult.Result, operationResult.Result.Histories, It.IsAny<List<PointDetailedContract>>()), Times.Once);
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace SmartWaste_API.Services.Tests
                 .Returns(operationResult);
 
             var routeRepository = GetRouteRepository();
-            routeRepository.Setup(x => x.Create(operationResult.Result, operationResult.Result.Histories, operationResult.Result.Points));
+            routeRepository.Setup(x => x.Create(operationResult.Result, operationResult.Result.Histories, operationResult.Result.RoutePoints.Select(p => p.Point).ToList()));
 
             var routeService = (IRouteService)new RouteService(securityManager.Object, routeRepository.Object, routeValidationService.Object);
 
@@ -183,7 +183,7 @@ namespace SmartWaste_API.Services.Tests
             routeValidationService.Setup(x => x.GetFilterForGetDetailed(It.IsAny<RouteFilterContract>())).Returns(OperationResultHelper.GetSuccess<RouteFilterContract>(checkFilterResult, 0));
 
             var routeRepository = GetRouteRepository();
-            routeRepository.Setup(x => x.Edit(disableResult.Result, It.IsAny<List<RouteHistoryContract>>(), disableResult.Result.Points));
+            routeRepository.Setup(x => x.Edit(disableResult.Result, It.IsAny<List<RouteHistoryContract>>(), disableResult.Result.RoutePoints, It.IsAny<List<PointDetailedContract>>(), It.IsAny<List<PointHistoryContract>>()));
             routeRepository.Setup(x => x.GetDetailed(It.IsAny<RouteFilterContract>())).Returns(route);
 
             var routeService = (IRouteService)new RouteService(securityManager.Object, routeRepository.Object, routeValidationService.Object);
@@ -195,7 +195,11 @@ namespace SmartWaste_API.Services.Tests
             routeRepository.Verify(x => x.Edit(disableResult.Result, It.Is((List<RouteHistoryContract> histories) => 
                 histories.Count == 1 &&
                 ValidateDisableHistory(histories.First(), routeResult.ID, person.ID)
-                ), disableResult.Result.Points), Times.Once);
+                ), 
+                null,
+                It.IsAny<List<PointDetailedContract>>(),
+                null
+                ), Times.Once);
 
             routeValidationService.Verify(x => x.CanDisable(route), Times.Once);
             routeValidationService.Verify(x => x.GetFilterForGetDetailed(It.Is((RouteFilterContract filter) => 
@@ -232,7 +236,7 @@ namespace SmartWaste_API.Services.Tests
             Assert.IsFalse(serviceResult.Success);
             Assert.AreEqual(serviceResult.Messages.Count, totalErrorMessages);
 
-            routeRepository.Verify(x => x.Edit(It.IsAny<RouteDetailedContract>(), It.IsAny<List<RouteHistoryContract>>(), It.IsAny<List<PointDetailedContract>>()), Times.Never);
+            routeRepository.Verify(x => x.Edit(It.IsAny<RouteDetailedContract>(), It.IsAny<List<RouteHistoryContract>>(), It.IsAny<List<RoutePointContract>>(), It.IsAny<List<PointDetailedContract>>(), It.IsAny<List<PointHistoryContract>>()), Times.Never);
         }
 
         [TestMethod]
@@ -253,9 +257,13 @@ namespace SmartWaste_API.Services.Tests
 
             var oldRoute = GetRouteDetailedContract();
             var oldRouteDisableResult = GetRouteDetailedContract();
-            oldRouteDisableResult.Points = new List<PointDetailedContract>() {
-                sharedPoint,
-                new PointDetailedContract() { ID = Guid.NewGuid() }
+            oldRouteDisableResult.RoutePoints = new List<RoutePointContract>() {
+                new RoutePointContract() {
+                    Point = sharedPoint
+                },
+                new RoutePointContract() {
+                    Point = new PointDetailedContract() { ID = Guid.NewGuid() }
+                }                
             };
 
             var route = GetRouteDetailedContract();
@@ -265,9 +273,13 @@ namespace SmartWaste_API.Services.Tests
             recreatedRoute.Histories = new List<RouteHistoryContract>() {
                 new RouteHistoryContract()
             };
-            recreatedRoute.Points = new List<PointDetailedContract>() {
-                sharedPoint,
-                new PointDetailedContract() { ID = Guid.NewGuid() }
+            recreatedRoute.RoutePoints = new List<RoutePointContract>() {
+                new RoutePointContract() {
+                    Point = sharedPoint
+                },
+                new RoutePointContract() {
+                    Point = new PointDetailedContract() { ID = Guid.NewGuid() }
+                }
             };
 
             var checkFilterResult = new RouteFilterContract();
@@ -296,8 +308,8 @@ namespace SmartWaste_API.Services.Tests
                 ValidateDisableHistory(histories.Where(h => h.Status == RouteStatusEnum.Disabled).Single(), oldRouteDisableResult.ID, person.ID)
             ), It.Is((List<PointDetailedContract> points) =>
                 points.Count == 3 &&
-                points.Count(p => p.ID == oldRouteDisableResult.Points.Last().ID) == 1 &&
-                points.Count(p => p.ID == recreatedRoute.Points.Last().ID) == 1 &&
+                points.Count(p => p.ID == oldRouteDisableResult.RoutePoints.Last().Point.ID) == 1 &&
+                points.Count(p => p.ID == recreatedRoute.RoutePoints.Last().Point.ID) == 1 &&
                 points.Count(p => p.ID == sharedPoint.ID) == 1
             )), Times.Once);
         }
@@ -331,75 +343,61 @@ namespace SmartWaste_API.Services.Tests
         }
 
         [TestMethod]
-        public void GetOpenedRoutesSuccefullTest()
+        public void GetListForCompanyRouteUserFailTest()
         {
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.COMPANY_ROUTE
+            });
+
             var routes = GetRouteContracts();
 
             var filter = new RouteFilterContract();
+            var status = RouteStatusEnum.Opened;
             var filterResult = OperationResultHelper.GetSuccess<RouteFilterContract>(filter, 3);
             
             var routeValidationService = GetRouteValidationService();
-            routeValidationService.Setup(x => x.GetFilterForOpenedRoutes()).Returns(filterResult);
+            routeValidationService.Setup(x => x.GetFilterForCompanyRouteAndAdmin(status)).Returns(filterResult);
 
             var routeRepository = GetRouteRepository();
-            routeRepository.Setup(x => x.GetOpenedRoutes(filter)).Returns(routes);
+            routeRepository.Setup(x => x.GetCompanyAdminRoutes(filter)).Returns(routes);
 
-            var routeService = (IRouteService)new RouteService(null, routeRepository.Object, routeValidationService.Object);
-            var result = routeService.GetOpenedRoutes();
+            var routeService = (IRouteService)new RouteService(identity.Object, routeRepository.Object, routeValidationService.Object);
+            var result = routeService.GetList(status);
 
             Assert.AreEqual(result, routes);
-            routeValidationService.Verify(x => x.GetFilterForOpenedRoutes(), Times.Once);
-            routeRepository.Verify(x => x.GetOpenedRoutes(filter), Times.Once);
+            routeValidationService.Verify(x => x.GetFilterForCompanyRouteAndAdmin(status), Times.Once);
+            routeRepository.Verify(x => x.GetCompanyAdminRoutes(filter), Times.Once);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void GetOpenedRoutesFailTest()
+        public void GetListForCompanyUserFailTest()
         {
-            var filter = new RouteFilterContract();
-            var filterResult = OperationResultHelper.GetFail<RouteFilterContract>(filter, 3);
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.COMPANY_USER
+            });
 
-            var routeValidationService = GetRouteValidationService();
-            routeValidationService.Setup(x => x.GetFilterForOpenedRoutes()).Returns(filterResult);
-            
-            var routeService = (IRouteService)new RouteService(null, null, routeValidationService.Object);
-            var result = routeService.GetOpenedRoutes();
-        }
-
-        [TestMethod]
-        public void GetUserCreatedRoutesSuccefullTest()
-        {
             var routes = GetRouteContracts();
 
             var filter = new RouteFilterContract();
+            var status = RouteStatusEnum.Opened;
             var filterResult = OperationResultHelper.GetSuccess<RouteFilterContract>(filter, 3);
 
             var routeValidationService = GetRouteValidationService();
-            routeValidationService.Setup(x => x.GetFilterForCreatedByRoutes()).Returns(filterResult);
+            routeValidationService.Setup(x => x.GetFilterForCompanyUser(status)).Returns(filterResult);
 
             var routeRepository = GetRouteRepository();
-            routeRepository.Setup(x => x.GetUserCreatedRoutes(filter)).Returns(routes);
+            routeRepository.Setup(x => x.GetCompanyUserRoutes(filter)).Returns(routes);
 
-            var routeService = (IRouteService)new RouteService(null, routeRepository.Object, routeValidationService.Object);
-            var result = routeService.GetUserCreatedRoutes();
+            var routeService = (IRouteService)new RouteService(identity.Object, routeRepository.Object, routeValidationService.Object);
+            var result = routeService.GetList(status);
 
             Assert.AreEqual(result, routes);
-            routeValidationService.Verify(x => x.GetFilterForCreatedByRoutes(), Times.Once);
-            routeRepository.Verify(x => x.GetUserCreatedRoutes(filter), Times.Once);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void GetUserCreatedRoutesFailTest()
-        {
-            var filter = new RouteFilterContract();
-            var filterResult = OperationResultHelper.GetFail<RouteFilterContract>(filter, 3);
-
-            var routeValidationService = GetRouteValidationService();
-            routeValidationService.Setup(x => x.GetFilterForCreatedByRoutes()).Returns(filterResult);
-
-            var routeService = (IRouteService)new RouteService(null, null, routeValidationService.Object);
-            var result = routeService.GetUserCreatedRoutes();
+            routeValidationService.Verify(x => x.GetFilterForCompanyUser(status), Times.Once);
+            routeRepository.Verify(x => x.GetCompanyUserRoutes(filter), Times.Once);
         }
 
         private bool ValidateDisableHistory(RouteHistoryContract history, Guid routeID, Guid personID)
@@ -429,7 +427,7 @@ namespace SmartWaste_API.Services.Tests
                 ExpectedMinutes = 0.5M,
                 Histories = new List<RouteHistoryContract>() { },
                 ID = Guid.NewGuid(),
-                Points = new List<SmarteWaste_API.Contracts.Point.PointDetailedContract>() { },
+                RoutePoints = new List<RoutePointContract>() { },
                 Status = RouteStatusEnum.Opened
             };
         }

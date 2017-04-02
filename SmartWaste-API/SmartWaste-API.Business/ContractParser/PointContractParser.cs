@@ -9,7 +9,7 @@ namespace SmartWaste_API.Business.ContractParser
 {
     public static class PointContractParser
     {
-        public static PointContract ToContract(this Data.vw_GetPoints entitie)
+        public static PointContract ToContract(this Data.vw_Points2 entitie)
         {
             if (entitie == null) return null;
 
@@ -22,13 +22,14 @@ namespace SmartWaste_API.Business.ContractParser
                 Longitude = entitie.Longitude,
                 DeviceID = entitie.DeviceID,
                 PersonID = entitie.PersonID,
-                UserID = entitie.UserID,
+                CompanyID = entitie.CompanyID,
+                AssignedCompanyID = entitie.AssignedCompanyID,
                 PointRouteStatus = (PointRouteStatusEnum)entitie.PointRouteStatusID,
                 AddressID = entitie.AddressID
             };
         }
 
-        public static List<PointContract> ToContracts(this List<Data.vw_GetPoints> entities)
+        public static List<PointContract> ToContracts(this List<Data.vw_Points2> entities)
         {
             return entities.Select(x => x.ToContract()).ToList();
         }

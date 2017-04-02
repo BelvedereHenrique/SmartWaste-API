@@ -173,12 +173,16 @@ namespace SmartWaste_API.Services.Tests
             var route = new RouteDetailedContract()
             {
                 Status = RouteStatusEnum.Opened,
-                Points = new List<SmarteWaste_API.Contracts.Point.PointDetailedContract>() {
-                    new SmarteWaste_API.Contracts.Point.PointDetailedContract() {
-                        PointRouteStatus = SmarteWaste_API.Contracts.Point.PointRouteStatusEnum.InARoute
+                RoutePoints = new List<RoutePointContract>() {
+                    new RoutePointContract() {
+                        Point = new SmarteWaste_API.Contracts.Point.PointDetailedContract() {
+                            PointRouteStatus = SmarteWaste_API.Contracts.Point.PointRouteStatusEnum.InARoute
+                        }
                     },
-                    new SmarteWaste_API.Contracts.Point.PointDetailedContract() {
-                        PointRouteStatus = SmarteWaste_API.Contracts.Point.PointRouteStatusEnum.InARoute
+                    new RoutePointContract() {
+                        Point = new SmarteWaste_API.Contracts.Point.PointDetailedContract() {
+                            PointRouteStatus = SmarteWaste_API.Contracts.Point.PointRouteStatusEnum.InARoute
+                        }
                     }
                 }
             };
@@ -188,7 +192,7 @@ namespace SmartWaste_API.Services.Tests
             var disabledRoute = routeValidationService.Disable(route);
 
             Assert.AreEqual(disabledRoute.Status, RouteStatusEnum.Disabled);
-            Assert.IsTrue(disabledRoute.Points.All(p => p.PointRouteStatus == SmarteWaste_API.Contracts.Point.PointRouteStatusEnum.Free));
+            Assert.IsTrue(disabledRoute.RoutePoints.All(p => p.Point.PointRouteStatus == PointRouteStatusEnum.Free));
         }
 
         [TestMethod]
@@ -409,13 +413,15 @@ namespace SmartWaste_API.Services.Tests
             Assert.AreEqual(result.Messages.Count, 0);
 
             Assert.AreEqual(result.Result.Status, RouteStatusEnum.Opened);
-            Assert.IsTrue(result.Result.Points.All(x => x.Status == PointStatusEnum.Full));
-            Assert.IsTrue(result.Result.Points.All(x => x.PointRouteStatus == PointRouteStatusEnum.InARoute));
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.Point.Status == PointStatusEnum.Full));
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.Point.PointRouteStatus == PointRouteStatusEnum.InARoute));
             Assert.AreEqual(result.Result.ExpectedKilometers, expectedKilometers);
             Assert.AreEqual(result.Result.ExpectedMinutes, expectedMinutes);
             Assert.AreEqual(result.Result.CreatedOn.Date, DateTime.Now.Date);
-            Assert.AreEqual(result.Result.Points, points);
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.IsCollected == null && x.CollectedOn == null && x.CollectedBy == null && x.Reason == null && x.ID != null && x.ID != Guid.Empty));
             Assert.IsNull(result.Result.ClosedOn);
+            Assert.IsNull(result.Result.NavigationFinishedOn);
+            Assert.IsNull(result.Result.NavigationFinishedOn);
             Assert.AreEqual(result.Result.AssignedTo.ID, assignedPerson.ID);
             Assert.AreEqual(result.Result.CompanyID, person.CompanyID);
             Assert.AreEqual(result.Result.CreatedBy.ID, person.ID);
@@ -538,12 +544,14 @@ namespace SmartWaste_API.Services.Tests
             });
             
             var oldRoute = new RouteDetailedContract() {
-                Points = new List<PointDetailedContract>() {
-                    new PointDetailedContract()
-                    {
-                        ID = sharedPointID,
-                        PointRouteStatus = PointRouteStatusEnum.InARoute,
-                        Status = PointStatusEnum.Full
+                RoutePoints = new List<RoutePointContract>() {
+                    new RoutePointContract() {
+                        Point = new PointDetailedContract()
+                        {
+                            ID = sharedPointID,
+                            PointRouteStatus = PointRouteStatusEnum.InARoute,
+                            Status = PointStatusEnum.Full
+                        }
                     }
                 },
                 Status = RouteStatusEnum.Opened,
@@ -564,13 +572,15 @@ namespace SmartWaste_API.Services.Tests
             Assert.AreEqual(result.Messages.Count, 0);
 
             Assert.AreEqual(result.Result.Status, RouteStatusEnum.Opened);
-            Assert.IsTrue(result.Result.Points.All(x => x.Status == PointStatusEnum.Full));
-            Assert.IsTrue(result.Result.Points.All(x => x.PointRouteStatus == PointRouteStatusEnum.InARoute));
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.Point.Status == PointStatusEnum.Full));
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.Point.PointRouteStatus == PointRouteStatusEnum.InARoute));
             Assert.AreEqual(result.Result.ExpectedKilometers, expectedKilometers);
             Assert.AreEqual(result.Result.ExpectedMinutes, expectedMinutes);
             Assert.AreEqual(result.Result.CreatedOn.Date, DateTime.Now.Date);
-            Assert.AreEqual(result.Result.Points, points);
+            Assert.IsTrue(result.Result.RoutePoints.All(x => x.IsCollected == null && x.CollectedOn == null && x.CollectedBy == null && x.Reason == null && x.ID != null && x.ID != Guid.Empty));
             Assert.IsNull(result.Result.ClosedOn);
+            Assert.IsNull(result.Result.NavigationFinishedOn);
+            Assert.IsNull(result.Result.NavigationFinishedOn);
             Assert.AreEqual(result.Result.AssignedTo.ID, assignedPerson.ID);
             Assert.AreEqual(result.Result.CompanyID, person.CompanyID);
             Assert.AreEqual(result.Result.CreatedBy.ID, person.ID);
@@ -635,12 +645,14 @@ namespace SmartWaste_API.Services.Tests
 
             var oldRoute = new RouteDetailedContract()
             {
-                Points = new List<PointDetailedContract>() {
-                    new PointDetailedContract()
-                    {
-                        ID = sharedPointID,
-                        PointRouteStatus = PointRouteStatusEnum.InARoute,
-                        Status = PointStatusEnum.Full
+                RoutePoints = new List<RoutePointContract>() {
+                    new RoutePointContract() {
+                        Point = new PointDetailedContract()
+                        {
+                            ID = sharedPointID,
+                            PointRouteStatus = PointRouteStatusEnum.InARoute,
+                            Status = PointStatusEnum.Full
+                        }
                     }
                 },
                 Status = RouteStatusEnum.Opened,
@@ -715,12 +727,14 @@ namespace SmartWaste_API.Services.Tests
 
             var oldRoute = new RouteDetailedContract()
             {
-                Points = new List<PointDetailedContract>() {
-                    new PointDetailedContract()
-                    {
-                        ID = sharedPointID,
-                        PointRouteStatus = PointRouteStatusEnum.InARoute,
-                        Status = PointStatusEnum.Full
+                RoutePoints = new List<RoutePointContract>() {
+                    new RoutePointContract() {
+                        Point = new PointDetailedContract()
+                        {
+                            ID = sharedPointID,
+                            PointRouteStatus = PointRouteStatusEnum.InARoute,
+                            Status = PointStatusEnum.Full
+                        }
                     }
                 },
                 Status = RouteStatusEnum.Closed,
@@ -766,13 +780,14 @@ namespace SmartWaste_API.Services.Tests
             });
 
             var routeValidationService = (IRouteValidationService)new RouteValidationService(null,null, identity.Object, null);
-            var result = routeValidationService.GetFilterForOpenedRoutes();
+            var result = routeValidationService.GetFilterForCompanyUser(RouteStatusEnum.Closed);
 
             Assert.IsTrue(result.Success);
             Assert.AreEqual(result.Messages.Count, 0);
             Assert.AreEqual(result.Result.CompanyID, person.CompanyID);
             Assert.AreEqual(result.Result.AssignedToID, person.ID);
-            Assert.AreEqual(result.Result.Status, RouteStatusEnum.Opened);            
+            Assert.AreEqual(result.Result.Status, RouteStatusEnum.Closed);
+            Assert.AreEqual(result.Result.NotStatus, RouteStatusEnum.Disabled);
         }
 
         [TestMethod]
@@ -785,7 +800,7 @@ namespace SmartWaste_API.Services.Tests
             });
 
             var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, identity.Object, null);
-            var result = routeValidationService.GetFilterForOpenedRoutes();
+            var result = routeValidationService.GetFilterForCompanyUser(RouteStatusEnum.Opened);
 
             Assert.IsFalse(result.Success);
             Assert.AreEqual(result.Messages.Count, 1);
@@ -802,12 +817,12 @@ namespace SmartWaste_API.Services.Tests
             });
 
             var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, identity.Object, null);
-            var result = routeValidationService.GetFilterForCreatedByRoutes();
+            var result = routeValidationService.GetFilterForCompanyRouteAndAdmin(RouteStatusEnum.Opened);
 
             Assert.IsTrue(result.Success);
             Assert.AreEqual(result.Messages.Count, 0);
             Assert.AreEqual(result.Result.CompanyID, person.CompanyID);
-            Assert.AreEqual(result.Result.CreatedBy, person.ID);
+            Assert.AreEqual(result.Result.Status, RouteStatusEnum.Opened);
             Assert.AreEqual(result.Result.NotStatus, RouteStatusEnum.Disabled);
         }
 
@@ -819,7 +834,7 @@ namespace SmartWaste_API.Services.Tests
             var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>());
 
             var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, identity.Object, null);
-            var result = routeValidationService.GetFilterForCreatedByRoutes();
+            var result = routeValidationService.GetFilterForCompanyRouteAndAdmin(RouteStatusEnum.Closed);
 
             Assert.IsFalse(result.Success);
             Assert.AreEqual(result.Messages.Count, 1);

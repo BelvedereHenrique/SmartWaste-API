@@ -27,19 +27,15 @@ namespace SmartWaste_API.Services.Tests
             securityManager.Setup(x => x.User).Returns(new IdentityContract() { IsAuthenticated = false });
 
             var pointService = new Mock<IPointRepository>();
-            pointService.Setup(x => x.GetList(It.IsAny<PointFilterContract>())).Returns(points);
+            pointService.Setup(x => x.GetPublicList(It.IsAny<PointFilterContract>())).Returns(points);
 
-            var service = (IPointService)new PointService(pointService.Object, securityManager.Object);
+            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null);
 
             var result = service.GetList(new PointFilterContract());
 
             Assert.AreEqual(result, points);
 
-            pointService.Verify(x => x.GetList(It.Is((PointFilterContract filter) =>
-                filter.Type == PointTypeEnum.CompanyTrashCan &&
-                filter.Status == null &&
-                filter.PersonID == null                
-            )), Times.Once);
+            pointService.Verify(x => x.GetPublicList(It.IsAny<PointFilterContract>()), Times.Once);
         }
 
         [TestMethod]
@@ -63,55 +59,15 @@ namespace SmartWaste_API.Services.Tests
             securityManager.Setup(x => x.IsInRole(RolesName.USER)).Returns(true);
 
             var pointService = new Mock<IPointRepository>();
-            pointService.Setup(x => x.GetList(It.IsAny<PointFilterContract>())).Returns(points);
+            pointService.Setup(x => x.GetUserList(identity.Person.ID, It.IsAny<PointFilterContract>())).Returns(points);
 
-            var service = (IPointService)new PointService(pointService.Object, securityManager.Object);
-
-            var result = service.GetList(new PointFilterContract());
-
-            Assert.AreEqual(result, points);
-
-            pointService.Verify(x => x.GetList(It.Is((PointFilterContract filter) =>
-                filter.Type == null &&
-                filter.Status == null &&
-                filter.PersonID == identity.Person.ID
-            )), Times.Once);
-        }
-
-        [TestMethod]
-        public void GetListWhenLatitudeAndLongitudeAreNull()
-        {
-            var points = new List<PointContract>() {
-                new PointContract()
-            };
-
-            var identity = new IdentityContract()
-            {
-                IsAuthenticated = true,
-                Person = new SmarteWaste_API.Contracts.Person.PersonContract()
-                {
-                    ID = Guid.NewGuid()
-                }
-            };
-
-            var securityManager = new Mock<ISecurityManager<IdentityContract>>();
-            securityManager.Setup(x => x.User).Returns(identity);
-            securityManager.Setup(x => x.IsInRole(RolesName.USER)).Returns(true);
-
-            var pointService = new Mock<IPointRepository>();
-            pointService.Setup(x => x.GetList(It.IsAny<PointFilterContract>())).Returns(points);
-
-            var service = (IPointService)new PointService(pointService.Object, securityManager.Object);
+            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null);
 
             var result = service.GetList(new PointFilterContract());
 
             Assert.AreEqual(result, points);
 
-            pointService.Verify(x => x.GetList(It.Is((PointFilterContract filter) =>
-                filter.Type == null &&
-                filter.Status == null &&
-                filter.PersonID == identity.Person.ID
-            )), Times.Once);
+            pointService.Verify(x => x.GetUserList(identity.Person.ID, It.IsAny<PointFilterContract>()), Times.Once);
         }
 
         [TestMethod]
@@ -131,7 +87,7 @@ namespace SmartWaste_API.Services.Tests
             };
 
             var pointRepository = GetPointRepository();
-            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>())).Returns(point);
+            pointRepository.Setup(x => x.GetUserDetailed(person.ID, It.IsAny<PointFilterContract>())).Returns(point);
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()))
                 .Callback((PointContract editedPoint, List<PointHistoryContract> histories) => {
                     Assert.AreEqual(histories.Count, 1);
@@ -146,13 +102,13 @@ namespace SmartWaste_API.Services.Tests
                     Assert.AreEqual(editedPoint.Type, PointTypeEnum.User);
                 });
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
             var result = pointService.SetAsFull();
 
             Assert.IsTrue(result.Success);
             Assert.AreEqual(result.Messages.Count, 1);
 
-            pointRepository.Verify(x => x.GetDetailed(It.Is((PointFilterContract filter) =>
+            pointRepository.Verify(x => x.GetUserDetailed(person.ID, It.Is((PointFilterContract filter) =>
                 filter.PersonID == person.ID
             )), Times.Once);
         }
@@ -169,7 +125,7 @@ namespace SmartWaste_API.Services.Tests
             var pointRepository = GetPointRepository();
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);
@@ -190,10 +146,10 @@ namespace SmartWaste_API.Services.Tests
             });
 
             var pointRepository = GetPointRepository();
-            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>()));
+            pointRepository.Setup(x => x.GetUserDetailed(person.ID, It.IsAny<PointFilterContract>()));
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);
@@ -218,10 +174,10 @@ namespace SmartWaste_API.Services.Tests
             };
 
             var pointRepository = GetPointRepository();
-            pointRepository.Setup(x => x.GetDetailed(It.IsAny<PointFilterContract>())).Returns(point);
+            pointRepository.Setup(x => x.GetUserDetailed(person.ID, It.IsAny<PointFilterContract>())).Returns(point);
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);
@@ -230,23 +186,7 @@ namespace SmartWaste_API.Services.Tests
 
             pointRepository.Verify(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()),
                 Times.Never);
-        }
-
-        [TestMethod]
-        public void GetDetailed()
-        {
-            var filter = new PointFilterContract();
-            var point = new PointDetailedContract();
-
-            var pointRepository = GetPointRepository();
-            pointRepository.Setup(x => x.GetDetailed(filter)).Returns(point);
-
-            var service = (IPointService)new PointService(pointRepository.Object, null);
-            var result = service.GetDetailed(filter);
-
-            Assert.AreEqual(result, point);
-            pointRepository.Verify(x => x.GetDetailed(filter), Times.Once);
-        }
+        }        
 
         private Mock<IPointRepository> GetPointRepository()
         {

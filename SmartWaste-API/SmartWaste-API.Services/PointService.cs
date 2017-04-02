@@ -9,36 +9,56 @@ using SmartWaste_API.Services.Security;
 using SmarteWaste_API.Contracts.OperationResult;
 using SmarteWaste_API.Contracts.Address;
 using SmarteWaste_API.Contracts.Person;
+using SmarteWaste_API.Contracts.Device;
 
 namespace SmartWaste_API.Services
 {
     public class PointService : IPointService
     {
         private readonly IPointRepository _pointRepository;
+        private readonly IDeviceService _deviceService;
         private readonly ISecurityManager<IdentityContract> _user;
         private readonly IAddressService _addressService;
 
-        public PointService(IPointRepository pointRepository, ISecurityManager<IdentityContract> user)
+        public PointService(IPointRepository pointRepository,
+                            ISecurityManager<IdentityContract> user,
+                            IDeviceService deviceService)
         {
             _pointRepository = pointRepository;
+            _deviceService = deviceService;
             _user = user;
         }
 
         public PointDetailedContract GetDetailed(PointFilterContract filter)
         {
-            return _pointRepository.GetDetailed(filter);
+            if (!_user.User.IsAuthenticated)
+                throw new UnauthorizedAccessException();
+            else if (_user.User.Person.CompanyID.HasValue)
+                return _pointRepository.GetCompanyDetailed(_user.User.Person.CompanyID.Value, filter);
+            else
+                return _pointRepository.GetUserDetailed(_user.User.Person.ID, filter);
         }
 
         public List<PointDetailedContract> GetDetailedList(PointFilterContract filter)
         {
-            return _pointRepository.GetDetailedList(filter);
+            if (!_user.User.IsAuthenticated)
+                throw new UnauthorizedAccessException();
+            else if (_user.User.Person.CompanyID.HasValue)
+                return _pointRepository.GetCompanyDetailedList(_user.User.Person.CompanyID.Value, filter);
+            else
+                return _pointRepository.GetUserDetailedList(_user.User.Person.ID, filter);
         }
 
         public List<PointContract> GetList(PointFilterContract filter)
         {
-            return _pointRepository.GetList(CheckFilter(filter));
+            if (!_user.User.IsAuthenticated)
+                return _pointRepository.GetPublicList(filter);
+            else if (_user.User.Person.CompanyID.HasValue)
+                return _pointRepository.GetCompanyList(_user.User.Person.CompanyID.Value, filter);
+            else
+                return _pointRepository.GetUserList(_user.User.Person.ID, filter);
         }
-        
+
         public OperationResult SetAsFull()
         {
             var result = new OperationResult();
@@ -51,21 +71,56 @@ namespace SmartWaste_API.Services
                 PersonID = _user.User.Person.ID
             });
 
+            return SetAsFull(point);
+        }
+
+        private OperationResult SetAsFull(PointDetailedContract point)
+        {
+            var result = new OperationResult();
+
             result.Merge(PointIsntNull(point));
             if (!result.Success) return result;
 
-            result.Merge(PointIsFull(point));            
+            result.Merge(PointIsFull(point));
             if (!result.Success) return result;
 
             point.Status = PointStatusEnum.Full;
 
             var histories = new List<PointHistoryContract>() {
-                GetHistoryForFullPoint(point)
+                GetHistoryForFullPoint(point, _user.User.IsAuthenticated ? _user.User.Person.ID : point.PersonID.Value)
             };
 
             _pointRepository.Edit(point, histories);
 
             result.AddWarning("Your trashcan was setted as full, now, wait for a truck to collect it.");
+
+            return result;
+        }
+
+        public OperationResult SetAsFull(DeviceEventContract deviceEvent)
+        {
+            var result = new OperationResult();
+
+            var device = _deviceService.Get(new DeviceFilterContract()
+            {
+                InternalID = deviceEvent.SerialNumber
+            });
+
+            if (device == null)
+                result.AddError("Device does not exist.");
+
+            if (device != null && device.Status == DeviceStatusEnum.Deactivated)
+                result.AddError("Device is deactivated.");
+
+            if (!result.Success)
+                return result;
+
+            var point = _pointRepository.GetDetailed(device.ID);
+
+            result = SetAsFull(point);
+
+            device.BatteryVoltage = int.Parse(deviceEvent.BatteryVoltage.ToLower().Replace("vw", string.Empty));
+            _deviceService.Edit(device);
 
             return result;
         }
@@ -115,7 +170,7 @@ namespace SmartWaste_API.Services
             return result;
         }
 
-        private PointHistoryContract GetHistoryForFullPoint(PointDetailedContract point)
+        private PointHistoryContract GetHistoryForFullPoint(PointDetailedContract point, Guid personID)
         {
             return new PointHistoryContract()
             {
@@ -123,7 +178,7 @@ namespace SmartWaste_API.Services
                 Date = DateTime.Now,
                 Person = new SmarteWaste_API.Contracts.Person.PersonContract()
                 {
-                    ID = _user.User.Person.ID
+                    ID = personID
                 },
                 PointID = point.ID,
                 Reason = "Point setted as full.",

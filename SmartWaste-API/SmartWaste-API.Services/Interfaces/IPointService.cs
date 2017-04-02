@@ -1,4 +1,5 @@
-﻿using SmarteWaste_API.Contracts.OperationResult;
+﻿using SmarteWaste_API.Contracts.Device;
+using SmarteWaste_API.Contracts.OperationResult;
 ﻿using SmarteWaste_API.Contracts.Address;
 using SmarteWaste_API.Contracts.Person;
 using SmarteWaste_API.Contracts.Point;
@@ -16,5 +17,6 @@ namespace SmartWaste_API.Services.Interfaces
         void Edit(PointContract point);
         PointContract GetPointByDeviceID(Guid deviceID);
         void RegisterPoint(AddressContract address);
+        OperationResult SetAsFull(DeviceEventContract device);
     }
 }

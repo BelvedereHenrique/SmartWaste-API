@@ -28,5 +28,7 @@ namespace SmarteWaste_API.Contracts.Point
         public List<Guid> AlwaysIDs { get; set; }
         public List<Guid> IDs { get; set; }
         public List<Guid> NotIDs { get; set; }
+        public Guid? CompanyID { get; set; }
+        public Guid? AssignedCompanyID { get; set; }
     }
 }

@@ -160,11 +160,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DashbuttonEventModel.cs" />
     <Compile Include="Models\EmailModel.cs" />
     <Compile Include="Models\JsonModel.cs" />
     <Compile Include="Models\PointDetailedModel.cs" />
     <Compile Include="Models\RouteAddModel.cs" />
     <Compile Include="Models\RouteDisableModel.cs" />
+    <Compile Include="Models\RouteGetListModel.cs" />
+    <Compile Include="Models\RouteNavigationCollectPointModel.cs" />
+    <Compile Include="Models\RouteNavigationModel.cs" />
     <Compile Include="Models\SecurityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SimpleAuthorizationServerProvider.cs" />

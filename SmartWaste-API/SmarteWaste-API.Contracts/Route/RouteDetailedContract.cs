@@ -9,11 +9,11 @@ namespace SmarteWaste_API.Contracts.Route
     public class RouteDetailedContract : RouteContract
     {
         public RouteDetailedContract() {
-            this.Points = new List<Point.PointDetailedContract>();
+            this.RoutePoints = new List<RoutePointContract>();
             this.Histories = new List<RouteHistoryContract>();
         }
                 
-        public List<Point.PointDetailedContract> Points { get; set; }
+        public List<RoutePointContract> RoutePoints { get; set; }
         public List<RouteHistoryContract> Histories { get; set; }        
     }
 }

@@ -30,8 +30,7 @@ namespace SmartWaste_API.Models
             this.StateID = point.StateID;
             this.StateName = point.StateName;
             this.Status = point.Status;
-            this.Type = point.Type;
-            this.UserID = point.UserID;
+            this.Type = point.Type;            
             this.ZipCode = point.ZipCode;
 
             this.Histories = histories;

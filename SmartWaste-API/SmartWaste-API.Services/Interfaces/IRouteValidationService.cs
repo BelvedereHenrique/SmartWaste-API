@@ -23,7 +23,9 @@ namespace SmartWaste_API.Services.Interfaces
         OperationResult AreAllPointsFree(List<PointDetailedContract> points);
         OperationResult AreAllPointsFull(List<PointDetailedContract> points);
         OperationResult IsRouteStatusAbleToDisable(RouteDetailedContract route);
-        OperationResult<RouteFilterContract> GetFilterForOpenedRoutes();
-        OperationResult<RouteFilterContract> GetFilterForCreatedByRoutes();
+        OperationResult<RouteFilterContract> GetFilterForCompanyUser(RouteStatusEnum? status);
+        OperationResult<RouteFilterContract> GetFilterForCompanyRouteAndAdmin(RouteStatusEnum? status);
+        OperationResult CanNavigate(RouteDetailedContract route);
+        OperationResult CanCollectPoint(RoutePointContract routePoint);
     }
 }

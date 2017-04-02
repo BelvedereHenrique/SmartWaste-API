@@ -12,7 +12,8 @@ namespace SmarteWaste_API.Contracts.Point
         public Guid AddressID { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
-        public System.Guid PersonID { get; set; }
-        public System.Guid UserID { get; set; }
+        public Guid? PersonID { get; set; }        
+        public Guid? CompanyID { get; set; }
+        public Guid? AssignedCompanyID { get; set; }
     }
 }
