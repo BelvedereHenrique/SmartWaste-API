@@ -1,10 +1,8 @@
 ﻿using SmarteWaste_API.Contracts.Address;
 using SmartWaste_API.Services.Interfaces;
 using System.Collections.Generic;
-using System;
-using SmartWaste_API.Library.Security;
-using SmarteWaste_API.Contracts;
 using SmartWaste_API.Business.Interfaces;
+using System;
 
 namespace SmartWaste_API.Services
 {

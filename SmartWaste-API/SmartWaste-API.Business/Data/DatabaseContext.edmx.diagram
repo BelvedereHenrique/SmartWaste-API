@@ -4,48 +4,58 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e722a37b598d4a16b8ee9fc08cde854b" Name="Diagram1" ZoomLevel="108">
-        <EntityTypeShape EntityType="smartwaste.devModel.Address" Width="1.5" PointX="0.75" PointY="10" />
-        <EntityTypeShape EntityType="smartwaste.devModel.City" Width="1.5" PointX="1.5" PointY="6.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Company" Width="1.5" PointX="0.75" PointY="14.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.CompanyAddress" Width="1.5" PointX="3" PointY="14.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Country" Width="1.5" PointX="1.5" PointY="0.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Device" Width="1.5" PointX="3.75" PointY="21.875" />
-        <EntityTypeShape EntityType="smartwaste.devModel.DeviceHistory" Width="1.5" PointX="11.25" PointY="14.25" />
-        <EntityTypeShape EntityType="smartwaste.devModel.DeviceStatu" Width="1.5" PointX="1.5" PointY="21.125" />
-        <EntityTypeShape EntityType="smartwaste.devModel.DeviceType" Width="1.5" PointX="1.5" PointY="23.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.EmployeeCompanyRequest" Width="1.5" PointX="8.25" PointY="20.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Identification" Width="1.5" PointX="8.25" PointY="14.5" />
-        <EntityTypeShape EntityType="smartwaste.devModel.IdentificationType" Width="1.5" PointX="6" PointY="10.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Parameter" Width="1.5" PointX="3.75" PointY="2.375" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Person" Width="1.5" PointX="6" PointY="13.5" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PersonAddress" Width="1.5" PointX="8.25" PointY="17.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PersonType" Width="1.5" PointX="3.75" PointY="12.25" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Point" Width="1.5" PointX="6" PointY="24.125" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PointHistory" Width="1.5" PointX="8.25" PointY="10.25" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PointStatu" Width="1.5" PointX="3.75" PointY="28.375" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PointType" Width="1.5" PointX="3.75" PointY="26" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Role" Width="1.5" PointX="3.75" PointY="9" />
-        <EntityTypeShape EntityType="smartwaste.devModel.RouteHistory" Width="1.5" PointX="13.5" PointY="7.5" />
-        <EntityTypeShape EntityType="smartwaste.devModel.RoutePoint" Width="1.5" PointX="13.5" PointY="10.625" />
-        <EntityTypeShape EntityType="smartwaste.devModel.RouteStatu" Width="1.5" PointX="9" PointY="6.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.State" Width="1.5" PointX="1.5" PointY="3.5" />
-        <EntityTypeShape EntityType="smartwaste.devModel.User" Width="1.5" PointX="3.75" PointY="17.5" />
-        <EntityTypeShape EntityType="smartwaste.devModel.UserRole" Width="1.5" PointX="6" PointY="18.875" />
+      <Diagram DiagramId="e722a37b598d4a16b8ee9fc08cde854b" Name="Diagram1" ZoomLevel="80">
+        <EntityTypeShape EntityType="smartwaste.devModel.Address" Width="1.5" PointX="3.75" PointY="5.75" />
+        <EntityTypeShape EntityType="smartwaste.devModel.City" Width="1.5" PointX="1.5" PointY="6.375" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Company" Width="1.5" PointX="0.75" PointY="13.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.CompanyAddress" Width="1.5" PointX="6" PointY="13.375" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Country" Width="1.5" PointX="1.5" PointY="21.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Device" Width="1.5" PointX="0.75" PointY="30.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.DeviceHistory" Width="1.5" PointX="3.75" PointY="33" />
+        <EntityTypeShape EntityType="smartwaste.devModel.DeviceStatu" Width="1.5" PointX="1.5" PointY="34.625" />
+        <EntityTypeShape EntityType="smartwaste.devModel.DeviceType" Width="1.5" PointX="1.5" PointY="37.125" />
+        <EntityTypeShape EntityType="smartwaste.devModel.EmailTemplate" Width="1.5" PointX="3.75" PointY="2.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.EmployeeCompanyRequest" Width="1.5" PointX="8.25" PointY="12.75" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Identification" Width="1.5" PointX="8.25" PointY="9.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.IdentificationType" Width="1.5" PointX="6" PointY="7.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Parameter" Width="1.5" PointX="5.75" PointY="2.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Person" Width="1.5" PointX="3" PointY="12.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PersonAddress" Width="1.5" PointX="5.25" PointY="10.375" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PersonType" Width="1.5" PointX="0.75" PointY="9.875" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Point" Width="1.5" PointX="3" PointY="28.625" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PointHistory" Width="1.5" PointX="5.25" PointY="17" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PointRouteStatu" Width="1.5" PointX="0.75" PointY="39.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PointStatu" Width="1.5" PointX="0.75" PointY="27" />
+        <EntityTypeShape EntityType="smartwaste.devModel.PointType" Width="1.5" PointX="0.75" PointY="24.75" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Role" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="smartwaste.devModel.Route" Width="1.5" PointX="8.25" PointY="17.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.RouteHistory" Width="1.5" PointX="10.5" PointY="15.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.RoutePoint" Width="1.5" PointX="10.5" PointY="19" />
+        <EntityTypeShape EntityType="smartwaste.devModel.RouteStatu" Width="1.5" PointX="6" PointY="21.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.State" Width="1.5" PointX="1.5" PointY="3.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.User" Width="1.5" PointX="0.75" PointY="17.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.UserRole" Width="1.5" PointX="3" PointY="17.5" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetPoints" Width="1.5" PointX="7.75" PointY="2.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetPointsDetailed" Width="1.5" PointX="9.75" PointY="2.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetRoutes" Width="1.5" PointX="10.75" PointY="9.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_Points2" Width="1.5" PointX="11.75" PointY="2.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_PointsDetailed2" Width="1.5" PointX="12.75" PointY="6.25" />
+        <EntityTypeShape EntityType="smartwaste.devModel.vw_RoutePointsDetailed" Width="1.5" PointX="12.75" PointY="13.25" />
         <AssociationConnector Association="smartwaste.devModel.fk_city_address" />
         <AssociationConnector Association="smartwaste.devModel.FK_CompanyAddress_Address" />
         <AssociationConnector Association="smartwaste.devModel.FK_PersonAddress_Address" />
         <AssociationConnector Association="smartwaste.devModel.FK_Point_Address" />
         <AssociationConnector Association="smartwaste.devModel.fk_city_state" />
+        <AssociationConnector Association="smartwaste.devModel.fk_company" />
         <AssociationConnector Association="smartwaste.devModel.FK_CompanyAddress_Company" />
         <AssociationConnector Association="smartwaste.devModel.FK_Person_Company" />
+        <AssociationConnector Association="smartwaste.devModel.FK_Route_Company" />
         <AssociationConnector Association="smartwaste.devModel.fk_state_country" />
         <AssociationConnector Association="smartwaste.devModel.FK_Device_DeviceType" />
         <AssociationConnector Association="smartwaste.devModel.FK_Device_Status" />
         <AssociationConnector Association="smartwaste.devModel.FK_DeviceHistory_Device" />
         <AssociationConnector Association="smartwaste.devModel.FK_Point_Device" />
         <AssociationConnector Association="smartwaste.devModel.FK_DeviceHistory_DeviceStatus" />
-        <AssociationConnector Association="smartwaste.devModel.FK_DeviceHistory_Person" />
         <AssociationConnector Association="smartwaste.devModel.FK_EmployeeCompanyRequest_Person" />
         <AssociationConnector Association="smartwaste.devModel.FK_EmployeeCompanyRequest_Person1" />
         <AssociationConnector Association="smartwaste.devModel.FK_Identification_IdentificationType" />
@@ -54,28 +64,21 @@
         <AssociationConnector Association="smartwaste.devModel.FK_Person_User" />
         <AssociationConnector Association="smartwaste.devModel.FK_PersonAddress_Person" />
         <AssociationConnector Association="smartwaste.devModel.FK_PointHistory_Person" />
+        <AssociationConnector Association="smartwaste.devModel.FK_Route_Person" />
+        <AssociationConnector Association="smartwaste.devModel.FK_Route_Person2" />
+        <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Person" />
         <AssociationConnector Association="smartwaste.devModel.FK_Point_PointStatus" />
         <AssociationConnector Association="smartwaste.devModel.FK_Point_PointType" />
         <AssociationConnector Association="smartwaste.devModel.FK_PointHistory_Point" />
         <AssociationConnector Association="smartwaste.devModel.FK_RoutePoint_Point" />
+        <AssociationConnector Association="smartwaste.devModel.PK_Point_PointRouteStatus" />
         <AssociationConnector Association="smartwaste.devModel.FK_PointHistory_PointStatus" />
         <AssociationConnector Association="smartwaste.devModel.FK_UserRole_Role" />
-        <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Status" />
-        <AssociationConnector Association="smartwaste.devModel.FK_UserRole_User" />
-        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetPoints" Width="1.5" PointX="6.375" PointY="0.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetPointsDetailed" Width="1.5" PointX="8.375" PointY="0.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.EmailTemplate" Width="1.5" PointX="10.375" PointY="0.75" />
-        <EntityTypeShape EntityType="smartwaste.devModel.PointRouteStatu" Width="1.5" PointX="4.375" PointY="5.875" />
-        <AssociationConnector Association="smartwaste.devModel.PK_Point_PointRouteStatus" />
-        <EntityTypeShape EntityType="smartwaste.devModel.Route" Width="1.5" PointX="11.25" PointY="9.375" />
-        <AssociationConnector Association="smartwaste.devModel.FK_Route_Company" />
-        <AssociationConnector Association="smartwaste.devModel.FK_Route_Person" />
-        <AssociationConnector Association="smartwaste.devModel.FK_Route_Person2" />
         <AssociationConnector Association="smartwaste.devModel.FK_Route_Status" />
         <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Route" />
         <AssociationConnector Association="smartwaste.devModel.FK_RoutePoint_Route" />
-        <EntityTypeShape EntityType="smartwaste.devModel.vw_GetRoutes" Width="1.5" PointX="12.375" PointY="0.75" />
-        <AssociationConnector Association="smartwaste.devModel.fk_company" />
+        <AssociationConnector Association="smartwaste.devModel.FK_RouteHistory_Status" />
+        <AssociationConnector Association="smartwaste.devModel.FK_UserRole_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

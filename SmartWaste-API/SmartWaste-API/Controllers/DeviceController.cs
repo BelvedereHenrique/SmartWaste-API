@@ -10,10 +10,13 @@ namespace SmartWaste_API.Controllers
     public class DeviceController : ApiController
     {
         private readonly IDeviceService _deviceService;
+        private readonly IPointService _pointService;
 
-        public DeviceController(IDeviceService deviceService)
+        public DeviceController(IDeviceService deviceService,
+                                IPointService pointService)
         {
             _deviceService = deviceService;
+            _pointService = pointService;
         }
 
         [HttpGet]
@@ -88,7 +91,7 @@ namespace SmartWaste_API.Controllers
                 if (String.IsNullOrEmpty(deviceID))
                     throw new ArgumentException("Empty device ID");
 
-                _deviceService.SetReady(Guid.Parse(deviceID));
+                _pointService.SetReady(Guid.Parse(deviceID));
 
                 return Ok(new JsonModel<bool>(true));
             }

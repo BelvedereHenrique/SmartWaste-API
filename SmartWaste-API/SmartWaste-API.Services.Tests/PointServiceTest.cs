@@ -29,7 +29,7 @@ namespace SmartWaste_API.Services.Tests
             var pointService = new Mock<IPointRepository>();
             pointService.Setup(x => x.GetPublicList(It.IsAny<PointFilterContract>())).Returns(points);
 
-            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null);
+            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null, null);
 
             var result = service.GetList(new PointFilterContract());
 
@@ -61,7 +61,7 @@ namespace SmartWaste_API.Services.Tests
             var pointService = new Mock<IPointRepository>();
             pointService.Setup(x => x.GetUserList(identity.Person.ID, It.IsAny<PointFilterContract>())).Returns(points);
 
-            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null);
+            var service = (IPointService)new PointService(pointService.Object, securityManager.Object, null, null);
 
             var result = service.GetList(new PointFilterContract());
 
@@ -102,7 +102,7 @@ namespace SmartWaste_API.Services.Tests
                     Assert.AreEqual(editedPoint.Type, PointTypeEnum.User);
                 });
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null, null);
             var result = pointService.SetAsFull();
 
             Assert.IsTrue(result.Success);
@@ -125,7 +125,7 @@ namespace SmartWaste_API.Services.Tests
             var pointRepository = GetPointRepository();
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);
@@ -149,7 +149,7 @@ namespace SmartWaste_API.Services.Tests
             pointRepository.Setup(x => x.GetUserDetailed(person.ID, It.IsAny<PointFilterContract>()));
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);
@@ -177,7 +177,7 @@ namespace SmartWaste_API.Services.Tests
             pointRepository.Setup(x => x.GetUserDetailed(person.ID, It.IsAny<PointFilterContract>())).Returns(point);
             pointRepository.Setup(x => x.Edit(It.IsAny<PointContract>(), It.IsAny<List<PointHistoryContract>>()));
 
-            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null);
+            var pointService = (IPointService)new PointService(pointRepository.Object, identity.Object, null, null);
             var result = pointService.SetAsFull();
 
             Assert.IsFalse(result.Success);

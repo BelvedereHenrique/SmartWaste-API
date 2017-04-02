@@ -12,7 +12,7 @@ namespace SmartWaste_API.Business.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class vw_GetPoints
+    public partial class vw_PointsDetailed2
     {
         public System.Guid ID { get; set; }
         public int StatusID { get; set; }
@@ -22,7 +22,21 @@ namespace SmartWaste_API.Business.Data
         public System.Guid AddressID { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
-        public System.Guid PersonID { get; set; }
-        public System.Guid UserID { get; set; }
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
+        public string ZipCode { get; set; }
+        public string Neighborhood { get; set; }
+        public int CityID { get; set; }
+        public string CityName { get; set; }
+        public int StateID { get; set; }
+        public string StateName { get; set; }
+        public string StateAlias { get; set; }
+        public int CountryID { get; set; }
+        public string CountryName { get; set; }
+        public string CountryAlias { get; set; }
+        public Nullable<System.Guid> PersonID { get; set; }
+        public string Name { get; set; }
+        public Nullable<System.Guid> CompanyID { get; set; }
+        public Nullable<System.Guid> AssignedCompanyID { get; set; }
     }
 }

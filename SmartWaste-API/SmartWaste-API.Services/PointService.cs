@@ -17,16 +17,18 @@ namespace SmartWaste_API.Services
     {
         private readonly IPointRepository _pointRepository;
         private readonly IDeviceService _deviceService;
-        private readonly ISecurityManager<IdentityContract> _user;
         private readonly IAddressService _addressService;
-
+        private readonly ISecurityManager<IdentityContract> _user;
+        
         public PointService(IPointRepository pointRepository,
                             ISecurityManager<IdentityContract> user,
-                            IDeviceService deviceService)
+                            IDeviceService deviceService,
+                            IAddressService addressService)
         {
             _pointRepository = pointRepository;
             _deviceService = deviceService;
             _user = user;
+            _addressService = addressService;
         }
 
         public PointDetailedContract GetDetailed(PointFilterContract filter)
@@ -188,6 +190,26 @@ namespace SmartWaste_API.Services
         public PointContract GetPointByDeviceID(Guid deviceID)
         {
             return _pointRepository.GetPointByDeviceID(deviceID);
+        }
+
+        public void SetReady(Guid deviceID)
+        {
+            var device = _deviceService.Get(deviceID);
+
+            var point = GetPointByDeviceID(deviceID);
+
+            if (device.Status == DeviceStatusEnum.Deactivated)
+                throw new ArgumentException("Device is deactivated and cannot be set to Ready for Collect");
+
+            if (point == null)
+                throw new ArgumentException("There is no point linked with this device");
+
+            if (point.Status == PointStatusEnum.Full)
+                return;
+
+            point.Status = PointStatusEnum.Full;
+
+            Edit(point);
         }
 
         public void RegisterPoint(AddressContract address)

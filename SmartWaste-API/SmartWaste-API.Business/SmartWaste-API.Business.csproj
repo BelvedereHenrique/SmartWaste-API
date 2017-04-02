@@ -194,8 +194,7 @@
       <DependentUpon>DatabaseContext.tt</DependentUpon>
     </Compile>
     <Compile Include="DeviceRepository.cs" />
-    <Compile Include="DeviceHistoryRepository.cs" />
-    <Compile Include="DeviceRepository.cs" />
+    <Compile Include="DeviceHistoryRepository.cs" />    
     <Compile Include="EmailTemplateRepository.cs" />
     <Compile Include="Interfaces\IAccountRepository.cs" />
     <Compile Include="Interfaces\IAddressRepository.cs" />

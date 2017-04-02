@@ -15,7 +15,7 @@ namespace SmartWaste_API.Business.ContractParser
                     Status = (DeviceStatusEnum)device.StatusID,
                     InternalID = device.InternalID,
                     Type = (DeviceTypeEnum)device.TypeID,
-                    BatteryVoltage = entitie.BatteryVoltage
+                    BatteryVoltage = device.BatteryVoltage
             };
         }
         public static List<DeviceContract> ToContract(this List<Device> list)

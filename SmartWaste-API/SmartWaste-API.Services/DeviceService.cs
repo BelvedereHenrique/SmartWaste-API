@@ -9,17 +9,14 @@ namespace SmartWaste_API.Services
 {
     public class DeviceService : IDeviceService
     {
-        private readonly IDeviceRepository _deviceRepository;
-        private readonly IPointService _pointService;
+        private readonly IDeviceRepository _deviceRepository;        
         private readonly IDeviceHistoryRepository _deviceHistoryRepository;
 
         public DeviceService(
             IDeviceRepository deviceRepository,
-            IPointService pointService,
             IDeviceHistoryRepository deviceHistoryRepository)
         {
             _deviceRepository = deviceRepository;
-            _pointService = pointService;
             _deviceHistoryRepository = deviceHistoryRepository;
         }
 
@@ -83,26 +80,6 @@ namespace SmartWaste_API.Services
                 Reason = "Device Created",
                 Status = device.Status
             });
-        }
-
-        public void SetReady(Guid deviceID)
-        {
-            var point = _pointService.GetPointByDeviceID(deviceID);
-
-            var device = _deviceRepository.GetDeviceByPointID(point.ID);
-
-            if (device.Status == DeviceStatusEnum.Deactivated)
-                throw new ArgumentException("Device is deactivated and cannot be set to Ready for Collect");
-
-            if (point == null)
-                throw new ArgumentException("There is no point linked with this device");
-
-            if (point.Status == PointStatusEnum.Full)
-                return;
-
-            point.Status = PointStatusEnum.Full;
-
-            _pointService.Edit(point);
         }
 
         public void Edit(DeviceContract device)

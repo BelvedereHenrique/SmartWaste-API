@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SmarteWaste_API.Contracts.Address;
+using SmartWaste_API.Business.Interfaces;
 using SmartWaste_API.Services.Interfaces;
 using System.Collections.Generic;
 
@@ -53,7 +54,7 @@ namespace SmartWaste_API.Services.Tests
             cityService.Verify(x => x.GetList(stateID), Times.Exactly(1));
         }
         
-        internal IAddressService GetAddressService(ICountryService _countryService, IStateService _stateService, ICityService _cityService, Business.Interfaces.IAddressRepository _addressRepository, IAccountService _accountService)
+        internal IAddressService GetAddressService(ICountryService _countryService, IStateService _stateService, ICityService _cityService, IAddressRepository _addressRepository, IAccountService _accountService)
         {
             return (IAddressService)new AddressService(_countryService, _stateService, _cityService, _accountService, _addressRepository);
         }

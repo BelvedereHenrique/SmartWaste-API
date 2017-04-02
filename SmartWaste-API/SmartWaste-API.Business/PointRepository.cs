@@ -325,7 +325,7 @@ namespace SmartWaste_API.Business
         {
             using (var context = new SmartWasteDatabaseConnection())
             {
-                return context.vw_GetPoints.FirstOrDefault(x => x.DeviceID == deviceID).ToContract();
+                return context.vw_Points2.FirstOrDefault(x => x.DeviceID == deviceID).ToContract();
             }
         }
 
