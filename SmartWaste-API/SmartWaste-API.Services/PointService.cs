@@ -121,7 +121,7 @@ namespace SmartWaste_API.Services
 
             result = SetAsFull(point);
 
-            device.BatteryVoltage = int.Parse(deviceEvent.BatteryVoltage.ToLower().Replace("vw", string.Empty));
+            device.BatteryVoltage = int.Parse(deviceEvent.BatteryVoltage.ToLower().Replace("mv", string.Empty));
             _deviceService.Edit(device);
 
             return result;
