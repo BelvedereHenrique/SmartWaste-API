@@ -29,5 +29,9 @@ namespace SmarteWaste_API.Contracts.Person
         public string ZipCode { get; set; }
         [DataMember]
         public string Neighborhood { get; set; }
+        [DataMember]
+        public decimal Latitude { get; set; }
+        [DataMember]
+        public decimal Longitude { get; set; }
     }
 }

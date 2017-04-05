@@ -5,6 +5,7 @@ using System.Linq;
 using SmarteWaste_API.Contracts.Person;
 using SmartWaste_API.Library;
 using SmartWaste_API.Business.Data;
+using SmarteWaste_API.Contracts.Point;
 
 namespace SmartWaste_API.Business
 {
@@ -54,9 +55,17 @@ namespace SmartWaste_API.Business
                             CompanyID = enterpriseID
                         });
 
-                        //Prepares a point for the new enterprise
-                        AddAccountPoint(context, addressID);
+                        var point = new Data.Point()
+                        {
+                            AddressID = addressID,
+                            PointRouteStatusID = (int)PointRouteStatusEnum.Free,
+                            ID = Guid.NewGuid(),
+                            TypeID = (int)PointTypeEnum.CompanyTrashCan,
+                            StatusID = (int)PointStatusEnum.Empty
+                        };
 
+                        context.Points.Add(point);
+                        
                         context.SaveChanges();
                         transaction.Commit();
                         return enterpriseID;
@@ -111,13 +120,25 @@ namespace SmartWaste_API.Business
                 Line2 = data.Fields.Line2,
                 Neighborhood = "",
                 ZipCode = data.Fields.ZipCode,
+                Latitude = data.Fields.Latitude,
+                Longitude = data.Fields.Longitude
             };
+
             var personAddress = new Data.PersonAddress()
             {
                 ID = Guid.NewGuid(),
                 PersonID = personContract.ID,
                 AddressID = address.ID
             };
+
+            var point = new Data.Point() {
+                AddressID = address.ID,
+                PointRouteStatusID = (int)PointRouteStatusEnum.Free,
+                ID = Guid.NewGuid(),
+                TypeID = (int)PointTypeEnum.User,
+                StatusID = (int)PointStatusEnum.Empty
+            };
+            
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
                 using (var transaction = context.Database.BeginTransaction())
@@ -130,10 +151,8 @@ namespace SmartWaste_API.Business
                         context.Identifications.Add(identification);
                         context.Addresses.Add(address);
                         context.PersonAddresses.Add(personAddress);
-
-                        //Prepares a point for the new user.
-                        AddAccountPoint(context,address.ID);
-
+                        context.Points.Add(point);
+                        
                         context.SaveChanges();
                         transaction.Commit();
                     }
@@ -229,20 +248,6 @@ namespace SmartWaste_API.Business
                 person.CompanyID = companyID;
                 context.SaveChanges();
             }
-        }
-
-        private void AddAccountPoint(SmartWasteDatabaseConnection context, Guid addressID)
-        {
-            var point = new Point()
-            {
-                AddressID = addressID,
-                ID = Guid.NewGuid(),
-                TypeID = 1,
-                StatusID = 1,
-                PointRouteStatusID = 1
-            };
-            context.Points.Add(point);
-
         }
     }
 }

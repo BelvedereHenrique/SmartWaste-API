@@ -191,7 +191,9 @@ namespace SmartWaste_API.Services
                 (!String.IsNullOrEmpty(data.Fields.Name)) &&
                 (!String.IsNullOrEmpty(data.Fields.Line1)) &&
                 (!String.IsNullOrEmpty(data.Fields.Neighborhood)) &&
-                (!String.IsNullOrEmpty(data.Fields.ZipCode))
+                (!String.IsNullOrEmpty(data.Fields.ZipCode)) &&
+                data.Fields.Latitude != 0 &&
+                data.Fields.Longitude != 0
                 )
                 return true;
 
