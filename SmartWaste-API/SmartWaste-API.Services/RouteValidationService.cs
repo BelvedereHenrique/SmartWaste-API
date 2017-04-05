@@ -117,6 +117,14 @@ namespace SmartWaste_API.Services
                 point.PointRouteStatus = PointRouteStatusEnum.Free;
             });
 
+            route.RoutePoints.Where(x => x.IsCollected == null).ToList().ForEach(routePoint =>
+            {
+                routePoint.IsCollected = false;
+                routePoint.CollectedBy = _user.User.Person.ID;
+                routePoint.Reason = "Route disabled.";
+                routePoint.CollectedOn = DateTime.Now;
+            });
+
             return route;
         }
 

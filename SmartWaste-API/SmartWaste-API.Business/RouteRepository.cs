@@ -31,9 +31,9 @@ namespace SmartWaste_API.Business
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                var route = GetFilterDetailedQuery(context, filter).FirstOrDefault().ToContract();   
-                
-                if(route != null)             
+                var route = GetFilterDetailedQuery(context, filter).FirstOrDefault().ToContract();
+
+                if (route != null)
                     route.RoutePoints = context.vw_RoutePointsDetailed.Where(x => x.RouteID == route.ID).ToList().ToContracts();
 
                 return route;
@@ -62,7 +62,7 @@ namespace SmartWaste_API.Business
             if (filter.Status.HasValue)
                 statusID = (int)filter.Status;
 
-            return context.Routes.Where(x =>                
+            return context.Routes.Where(x =>
                 x.StatusID != (int)filter.NotStatus &&
                 x.CompanyID == filter.CompanyID &&
                 (filter.ID == null || filter.ID == x.ID) &&
@@ -112,14 +112,21 @@ namespace SmartWaste_API.Business
         private void EditRoutePoints(Data.SmartWasteDatabaseConnection context, List<RoutePointContract> routePoints)
         {
             if (routePoints != null)
-                routePoints.ForEach(routePoint => {
-                    var r = context.RoutePoints.Find(routePoint.ID);
+            {
+                var routePointIDs = routePoints.Select(x => x.ID).ToList();
+
+                var entities = context.RoutePoints.Where(x => routePointIDs.Contains(x.ID)).ToList();
+
+                routePoints.ForEach(routePoint =>
+                {
+                    var r = entities.First(x => x.ID == routePoint.ID);
 
                     r.IsCollected = routePoint.IsCollected;
                     r.CollectedBy = routePoint.CollectedBy;
                     r.CollectedOn = routePoint.CollectedOn;
                     r.Reason = routePoint.Reason;
                 });
+            }
         }
 
         public void Recreate(RouteDetailedContract oldRoute, RouteDetailedContract newRoute, List<RouteHistoryContract> histories, List<PointDetailedContract> points)
@@ -127,7 +134,7 @@ namespace SmartWaste_API.Business
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
                 Create(context, newRoute);
-                Edit(context, oldRoute);
+                Edit(context, oldRoute, true);
                 SaveHistories(context, histories);
                 EditPoints(context, points, null);
 
@@ -137,24 +144,17 @@ namespace SmartWaste_API.Business
 
         private void EditPoints(Data.SmartWasteDatabaseConnection context, List<PointDetailedContract> points, List<PointHistoryContract> pointHistories)
         {
-            if (points != null)
-            {
-                List<PointHistoryContract> histories = null;
-                points.ForEach((point) =>
-                {
-                    if (pointHistories != null)
-                        histories = pointHistories.Where(h => h.PointID == point.ID).ToList();
-                    else
-                        pointHistories = null;
-
-                    ((IPointInternalRepository)_pointRepository).Edit(context, point, histories);
-                });
-            }
+            ((IPointInternalRepository)_pointRepository).Edit(context, points, pointHistories);
         }
 
-        private void Edit(Data.SmartWasteDatabaseConnection context, RouteDetailedContract route)
+        private void Edit(Data.SmartWasteDatabaseConnection context, RouteDetailedContract route, bool editRoutePoint = false)
         {
-            var entitie = context.Routes.Find(route.ID);
+            Data.Route entitie;
+
+            if(editRoutePoint == true)
+                entitie = context.Routes.Include("RoutePoints").FirstOrDefault(x => x.ID == route.ID);
+            else
+                entitie = context.Routes.FirstOrDefault(x => x.ID == route.ID);
 
             if (entitie == null)
                 throw new NullReferenceException("Route does not exist.");
@@ -168,6 +168,20 @@ namespace SmartWaste_API.Business
             entitie.StatusID = (int)route.Status;
             entitie.NavigationFinishedOn = route.NavigationFinishedOn;
             entitie.NavigationStartedOn = route.NavigationStartedOn;
+
+            if (editRoutePoint == true)
+                foreach (var routePoint in entitie.RoutePoints.ToList())
+                {
+                    var routePointToEdit = route.RoutePoints.Where(x => x.ID == routePoint.ID).FirstOrDefault();
+
+                    if (routePointToEdit == null)
+                        continue;
+
+                    routePoint.CollectedBy = routePointToEdit.CollectedBy;
+                    routePoint.CollectedOn = routePointToEdit.CollectedOn;
+                    routePoint.IsCollected = routePointToEdit.IsCollected;
+                    routePoint.Reason = routePointToEdit.Reason;
+                }
         }
 
         private void SaveHistories(Data.SmartWasteDatabaseConnection context, List<RouteHistoryContract> histories)

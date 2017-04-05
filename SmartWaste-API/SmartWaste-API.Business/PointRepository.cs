@@ -17,7 +17,7 @@ namespace SmartWaste_API.Business
         {
             _pointHistoryRepository = pointHistoryRepository;
         }
-        
+
         public List<PointDetailedContract> GetUserDetailedList(Guid personID, PointFilterContract filter)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
@@ -59,9 +59,11 @@ namespace SmartWaste_API.Business
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                 (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                 (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
-                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
-            );            
+                (filter.Northwest.Longitude == null || x.Longitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
+                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
+            );
         }
 
         public PointContract GetUserPoint(Guid personID, PointFilterContract filter)
@@ -105,8 +107,10 @@ namespace SmartWaste_API.Business
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                 (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                 (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
-                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+                (filter.Northwest.Longitude == null || x.Longitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
+                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
             );
         }
 
@@ -137,8 +141,10 @@ namespace SmartWaste_API.Business
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                 (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                 (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
-                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+                (filter.Northwest.Longitude == null || x.Longitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
+                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
             );
         }
 
@@ -185,8 +191,10 @@ namespace SmartWaste_API.Business
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                 (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
                 (pointRouteStatusID == null || pointRouteStatusID == x.PointRouteStatusID) &&
-                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+                (filter.Northwest.Longitude == null || x.Longitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
+                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
             );
         }
 
@@ -220,8 +228,10 @@ namespace SmartWaste_API.Business
                 (statusID == null || statusID == x.StatusID) &&
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
                 (filter.NotIDs.Count == 0 || !filter.NotIDs.Contains(x.ID)) &&
-                (filter.Northwest.Longitude == null || x.Latitude >= filter.Northwest.Longitude) &&
-                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude)
+                (filter.Northwest.Longitude == null || x.Longitude >= filter.Northwest.Longitude) &&
+                (filter.Southeast.Longitude == null || x.Longitude <= filter.Southeast.Longitude) &&
+                (filter.Northwest.Latitude == null || x.Latitude <= filter.Northwest.Latitude) &&
+                (filter.Southeast.Latitude == null || x.Latitude >= filter.Southeast.Latitude)
             );
         }
 
@@ -243,14 +253,14 @@ namespace SmartWaste_API.Business
             int? statusID = null;
 
             if (filter.Status.HasValue)
-                statusID = (int)filter.Status.Value;            
+                statusID = (int)filter.Status.Value;
 
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
                 return GetPublicDetailedQuery(context, filter).ToList().ToContracts();
             }
         }
-        
+
         public IQueryable<Data.vw_Points2> GetPointsQuery(Data.SmartWasteDatabaseConnection context, PointFilterContract filter)
         {
             int? statusID = null, typeID = null, pointRouteStatusID = null;
@@ -299,11 +309,7 @@ namespace SmartWaste_API.Business
         {
             var entitie = context.Points.Find(point.ID);
 
-            entitie.TypeID = (int)point.Type;
-            entitie.StatusID = (int)point.Status;
-            entitie.AddressID = point.AddressID;
-            entitie.DeviceID = point.DeviceID;
-            entitie.PointRouteStatusID = (int)point.PointRouteStatus;
+            EditPoint(entitie, point);
 
             if (histories != null)
                 histories.ForEach((history) =>
@@ -311,12 +317,61 @@ namespace SmartWaste_API.Business
                 );
         }
 
+        void IPointInternalRepository.Edit(SmartWasteDatabaseConnection context, List<PointContract> points, List<PointHistoryContract> histories)
+        {
+            if (points != null)
+            {
+                var pointIDs = points.Select(x => x.ID).ToList();
+
+                var entitie = context.Points.Where(x => pointIDs.Contains(x.ID)).ToList();
+
+                entitie.ForEach(e =>
+                {
+                    EditPoint(e, points.First(p => p.ID == e.ID));
+                });
+            }
+
+            if (histories != null)
+                histories.ForEach((history) =>
+                    ((IPointHistoryInternalRepository)_pointHistoryRepository).Add(context, history)
+                );
+        }
+
+        void IPointInternalRepository.Edit(SmartWasteDatabaseConnection context, List<PointDetailedContract> points, List<PointHistoryContract> histories)
+        {
+            if (points != null)
+            {
+                var pointIDs = points.Select(x => x.ID).ToList();
+
+                var entitie = context.Points.Where(x => pointIDs.Contains(x.ID)).ToList();
+
+                entitie.ForEach(e =>
+                {
+                    EditPoint(e, points.First(p => p.ID == e.ID));
+                });
+            }
+
+            if (histories != null)
+                histories.ForEach((history) =>
+                    ((IPointHistoryInternalRepository)_pointHistoryRepository).Add(context, history)
+                );
+        }
+
+        private void EditPoint(Data.Point entitie, PointContract point)
+        {
+            entitie.TypeID = (int)point.Type;
+            entitie.StatusID = (int)point.Status;
+            entitie.AddressID = point.AddressID;
+            entitie.DeviceID = point.DeviceID;
+            entitie.PointRouteStatusID = (int)point.PointRouteStatus;
+        }
+
         public PointDetailedContract GetDetailed(Guid deviceID)
         {
             using (var context = new Data.SmartWasteDatabaseConnection())
             {
-                return context.vw_PointsDetailed2.Where(x =>                    
-                    x.DeviceID == deviceID                     
+                return context.vw_PointsDetailed2.Where(x =>
+                    x.DeviceID == deviceID
                 ).FirstOrDefault().ToContract();
             }
         }

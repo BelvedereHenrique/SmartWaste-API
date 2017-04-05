@@ -92,7 +92,7 @@ namespace SmartWaste_API.Services
 
             var histories = GetDisableHistories(result.Result);
 
-            _routeRepository.Edit(result.Result, histories, null, result.Result.RoutePoints.Select(x => x.Point).ToList(), null);
+            _routeRepository.Edit(result.Result, histories, result.Result.RoutePoints, result.Result.RoutePoints.Select(x => x.Point).ToList(), null);
 
             return result;
         }

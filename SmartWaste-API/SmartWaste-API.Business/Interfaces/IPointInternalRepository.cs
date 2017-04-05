@@ -10,5 +10,7 @@ namespace SmartWaste_API.Business.Interfaces
     internal interface IPointInternalRepository
     {
         void Edit(Data.SmartWasteDatabaseConnection context, PointContract point, List<PointHistoryContract> histories);
+        void Edit(Data.SmartWasteDatabaseConnection context, List<PointContract> points, List<PointHistoryContract> histories);
+        void Edit(Data.SmartWasteDatabaseConnection context, List<PointDetailedContract> points, List<PointHistoryContract> histories);
     }
 }
