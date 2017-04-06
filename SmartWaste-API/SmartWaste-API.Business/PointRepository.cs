@@ -52,8 +52,9 @@ namespace SmartWaste_API.Business
 
             return context.vw_PointsDetailed2.Where(x =>
                 // NOTE: Security and required filter.
-                (x.PersonID == filter.PersonID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
+                (x.PersonID == personID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
 
+                (filter.PersonID == null || x.PersonID == filter.PersonID) &&
                 (statusID == null || statusID == x.StatusID) &&
                 (typeID == null || typeID == x.TypeID) &&
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&
@@ -100,8 +101,9 @@ namespace SmartWaste_API.Business
 
             return context.vw_Points2.Where(x =>
                 // NOTE: Security and required filter.
-                (x.PersonID == filter.PersonID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
+                (x.PersonID == personID || x.TypeID == (int)PointTypeEnum.CompanyTrashCan) &&
 
+                (filter.PersonID == null || x.PersonID == filter.PersonID) &&
                 (statusID == null || statusID == x.StatusID) &&
                 (typeID == null || typeID == x.TypeID) &&
                 (filter.IDs.Count == 0 || filter.IDs.Contains(x.ID)) &&

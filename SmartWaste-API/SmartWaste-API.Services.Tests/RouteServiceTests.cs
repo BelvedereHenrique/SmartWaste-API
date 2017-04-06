@@ -196,7 +196,7 @@ namespace SmartWaste_API.Services.Tests
                 histories.Count == 1 &&
                 ValidateDisableHistory(histories.First(), routeResult.ID, person.ID)
                 ), 
-                null,
+                route.RoutePoints,
                 It.IsAny<List<PointDetailedContract>>(),
                 null
                 ), Times.Once);

@@ -28,6 +28,7 @@ namespace SmartWaste_API.Tests.Models
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsFalse(model.CanInviteUserToYourCompany);
             Assert.IsFalse(model.CanSeeMapLegendColors);
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
@@ -53,6 +54,7 @@ namespace SmartWaste_API.Tests.Models
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsFalse(model.CanInviteUserToYourCompany);
             Assert.IsTrue(model.CanSeeMapLegendColors);
             Assert.IsTrue(model.CanNavigateRoutes);
             Assert.IsFalse(model.CanSaveRoutes);
@@ -78,12 +80,33 @@ namespace SmartWaste_API.Tests.Models
             Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
             Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
 
+            Assert.IsFalse(model.CanInviteUserToYourCompany);
             Assert.IsFalse(model.CanSeeMapLegendColors);
             Assert.IsFalse(model.CanNavigateRoutes);
             Assert.IsTrue(model.CanSaveRoutes);
             Assert.IsTrue(model.ShowRoutesMenu);
             Assert.IsFalse(model.CanSetTrashcanAsFull);
             Assert.IsFalse(model.CanSeeAllPointDetails);
+        }
+
+        [TestMethod]
+        public void TestCompanyAdminUser()
+        {
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new System.Collections.Generic.List<string>() {
+                RolesName.COMPANY_ADMIN
+            });
+
+            var model = new SecurityModel(identity.Object.User);
+
+            Assert.AreEqual(model.PersonID, person.ID);
+            Assert.AreEqual(model.Name, person.Name);
+            Assert.AreEqual(model.CompanyName, String.Empty);
+            Assert.AreEqual(model.Roles.Count, identity.Object.User.Roles.Count);
+            Assert.IsTrue(model.Roles.Any(x => identity.Object.User.Roles.Any(r => r == x)));
+
+            Assert.IsTrue(model.CanInviteUserToYourCompany);
         }
     }
 }

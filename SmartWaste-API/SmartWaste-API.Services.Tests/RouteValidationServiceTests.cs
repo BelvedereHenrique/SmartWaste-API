@@ -170,6 +170,12 @@ namespace SmartWaste_API.Services.Tests
         [TestMethod]
         public void DisableRouteTest()
         {
+            var person = SecurityManagerHelper.GetPersonContract(true);
+            var user = SecurityManagerHelper.GetUserContract();
+            var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>() {
+                RolesName.COMPANY_ROUTE
+            });
+
             var route = new RouteDetailedContract()
             {
                 Status = RouteStatusEnum.Opened,
@@ -187,12 +193,18 @@ namespace SmartWaste_API.Services.Tests
                 }
             };
 
-            var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, null, null);
+            var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, identity.Object, null);
 
             var disabledRoute = routeValidationService.Disable(route);
 
             Assert.AreEqual(disabledRoute.Status, RouteStatusEnum.Disabled);
-            Assert.IsTrue(disabledRoute.RoutePoints.All(p => p.Point.PointRouteStatus == PointRouteStatusEnum.Free));
+            Assert.IsTrue(disabledRoute.RoutePoints.All(p => 
+                p.Point.PointRouteStatus == PointRouteStatusEnum.Free &&
+                p.CollectedOn.Value.Date == DateTime.Now.Date &&
+                p.CollectedBy == person.ID &&
+                p.IsCollected != null &&
+                !String.IsNullOrWhiteSpace(p.Reason)
+            ));
         }
 
         [TestMethod]
@@ -381,13 +393,15 @@ namespace SmartWaste_API.Services.Tests
                 RolesName.COMPANY_ROUTE
             });
 
-            var assignedPerson = new PersonContract() {
+            var assignedPerson = new PersonContract()
+            {
                 ID = Guid.NewGuid(),
                 UserID = Guid.NewGuid(),
                 CompanyID = person.CompanyID
             };
 
-            var assignedUser = new UserContract() {
+            var assignedUser = new UserContract()
+            {
                 ID = assignedPerson.UserID
             };
 
@@ -396,9 +410,9 @@ namespace SmartWaste_API.Services.Tests
 
             var userService = GetUserService();
             userService.Setup(x => x.Get(It.IsAny<UserFilterContract>())).Returns(assignedUser);
-            
+
             var points = GetPointDetailedContracts();
-            
+
             var pointService = GetPointService();
             pointService.Setup(x => x.GetDetailedList(It.IsAny<PointFilterContract>())).Returns(points);
 
@@ -542,8 +556,9 @@ namespace SmartWaste_API.Services.Tests
                 PointRouteStatus = PointRouteStatusEnum.InARoute,
                 Status = PointStatusEnum.Full
             });
-            
-            var oldRoute = new RouteDetailedContract() {
+
+            var oldRoute = new RouteDetailedContract()
+            {
                 RoutePoints = new List<RoutePointContract>() {
                     new RoutePointContract() {
                         Point = new PointDetailedContract()
@@ -755,7 +770,7 @@ namespace SmartWaste_API.Services.Tests
             Assert.AreEqual(result.Messages.Count, 2);
             Assert.IsTrue(result.Messages.All(x => x.IsError && !String.IsNullOrWhiteSpace(x.Message)));
             Assert.IsNotNull(result.Result);
-            
+
             personService.Verify(x => x.Get(It.Is((PersonFilterContract filter) =>
                 filter.ID == assignedPerson.ID
             )), Times.Once);
@@ -779,7 +794,7 @@ namespace SmartWaste_API.Services.Tests
                 RolesName.COMPANY_ROUTE
             });
 
-            var routeValidationService = (IRouteValidationService)new RouteValidationService(null,null, identity.Object, null);
+            var routeValidationService = (IRouteValidationService)new RouteValidationService(null, null, identity.Object, null);
             var result = routeValidationService.GetFilterForCompanyUser(RouteStatusEnum.Closed);
 
             Assert.IsTrue(result.Success);
@@ -850,7 +865,8 @@ namespace SmartWaste_API.Services.Tests
                 RolesName.COMPANY_ROUTE
             });
 
-            var filter = new RouteFilterContract() {
+            var filter = new RouteFilterContract()
+            {
                 ID = Guid.NewGuid()
             };
 
@@ -860,7 +876,7 @@ namespace SmartWaste_API.Services.Tests
             Assert.IsTrue(result.Success);
             Assert.AreEqual(result.Messages.Count, 0);
             Assert.AreEqual(result.Result.ID, filter.ID);
-            Assert.AreEqual(result.Result.CompanyID, person.CompanyID);            
+            Assert.AreEqual(result.Result.CompanyID, person.CompanyID);
             Assert.AreEqual(result.Result.NotStatus, RouteStatusEnum.Disabled);
         }
 
@@ -871,7 +887,8 @@ namespace SmartWaste_API.Services.Tests
             var user = SecurityManagerHelper.GetUserContract();
             var identity = SecurityManagerHelper.GetAuthenticatedIdentity(person, user, new List<string>());
 
-            var filter = new RouteFilterContract() {
+            var filter = new RouteFilterContract()
+            {
                 ID = Guid.NewGuid()
             };
 

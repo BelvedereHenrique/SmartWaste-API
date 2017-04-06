@@ -109,6 +109,22 @@ namespace SmartWaste_API.Controllers
 
         [HttpPost]
         [Authorize]
+        public IHttpActionResult GetOwnPoint()
+        {
+            try
+            {
+                return Ok(new JsonModel<PointDetailedContract>(_pointService.GetOwnPoint()));
+            }
+            catch (Exception ex)
+            {
+                var error = new JsonModel<bool>(false);
+                error.AddError(ex);
+                return Ok(error);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
         public IHttpActionResult SetAsFull()
         {
             try

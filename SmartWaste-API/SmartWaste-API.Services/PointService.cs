@@ -235,5 +235,15 @@ namespace SmartWaste_API.Services
             _pointRepository.AddCompanyPoint(pointContract,personID.Value);
 
         }
+
+        public PointDetailedContract GetOwnPoint()
+        {
+            if (!_user.User.IsAuthenticated)
+                throw new UnauthorizedAccessException();
+
+            return GetDetailed(new PointFilterContract() {
+                PersonID = _user.User.Person.ID
+            });
+        }
     }
 }

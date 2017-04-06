@@ -26,6 +26,14 @@ namespace SmartWaste_API.Models
             this.Roles = identity.Roles;
         }
 
+        public bool CanInviteUserToYourCompany
+        {
+            get
+            {
+                return this.Roles.Any(x => x == RolesName.COMPANY_ADMIN);
+            }
+        }
+
         public bool ShowRoutesMenu
         {
             get

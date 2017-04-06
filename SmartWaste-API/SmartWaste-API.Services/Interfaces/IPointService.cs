@@ -19,5 +19,6 @@ namespace SmartWaste_API.Services.Interfaces
         void RegisterPoint(AddressContract address);
         OperationResult SetAsFull(DeviceEventContract device);
         void SetReady(Guid deviceID);
+        PointDetailedContract GetOwnPoint();
     }
 }
