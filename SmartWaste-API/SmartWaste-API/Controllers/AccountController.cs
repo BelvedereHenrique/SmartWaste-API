@@ -200,8 +200,7 @@ namespace SmartWaste_API.Controllers
                 return Ok(new JsonModel<bool>(ex));
             }
         }
-
-        [Authorize]
+        
         [HttpPost]
         public IHttpActionResult SetEnterprisePermission(Models.EnterprisePermissionModel model)
         {

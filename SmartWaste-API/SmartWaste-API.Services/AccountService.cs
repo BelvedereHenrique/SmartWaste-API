@@ -49,7 +49,7 @@ namespace SmartWaste_API.Services
                 var e = AddEnterprise(enterprise);
                 AddEnterpriseToLoggedUser(e);
                 SetCompanyRolesToLoggedUser();
-                RestartPassword(_user.User.Login);
+                //RestartPassword(_user.User.Login);
                 await SendEnterpriseEmail(enterprise.Name);
                 return e;
             }
